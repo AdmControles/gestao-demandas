@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Acompanhe o status e o histórico de andamento das demandas.">
+    <title>Status das demandas</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --blue: #0759ad;
+            --blue-dark: #073d76;
+            --ink: #122238;
+            --muted: #68788d;
+            --line: #e2e9f2;
+            --surface: #fff;
+            --background: #f3f6fa;
+            --soft-blue: #eaf3ff;
+            --shadow: 0 12px 32px rgba(22, 48, 82, .06);
+        }
+        * { box-sizing: border-box; }
+        [hidden] { display: none !important; }
+        body {
+            margin: 0;
+            background: var(--background);
+            color: var(--ink);
+            font: 14px/1.5 "Segoe UI", Arial, sans-serif;
+        }
+        button, input, select { font: inherit; }
+        button { cursor: pointer; }
+        .shell { margin: 0 auto; max-width: 1280px; padding: 28px 24px 44px; }
+        .hero {
+            align-items: center;
+            background: linear-gradient(120deg, #fff 22%, #edf5ff);
+            border: 1px solid #dce8f6;
+            border-radius: 18px;
+            box-shadow: var(--shadow);
+            display: flex;
+            gap: 24px;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            overflow: hidden;
+            padding: 28px 30px;
+            position: relative;
+        }
+        .hero::after {
+            background: radial-gradient(circle, rgba(7, 89, 173, .13), transparent 68%);
+            content: "";
+            height: 300px;
+            pointer-events: none;
+            position: absolute;
+            right: -90px;
+            top: -160px;
+            width: 420px;
+        }
+        .hero-copy, .hero-actions { position: relative; z-index: 1; }
+        .eyebrow {
+            color: var(--blue);
+            font-size: .68rem;
+            font-weight: 750;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+        }
+        h1 { font-size: clamp(1.7rem, 4vw, 2.25rem); letter-spacing: -.04em; line-height: 1.1; margin: 5px 0 8px; }
+        .hero p { color: var(--muted); margin: 0; max-width: 620px; }
+        .hero-actions { align-items: flex-end; display: flex; flex-direction: column; gap: 9px; min-width: 210px; }
+        .hero-buttons { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+        .primary-button, .secondary-button {
+            align-items: center;
+            border: 0;
+            border-radius: 9px;
+            display: inline-flex;
+            font-weight: 650;
+            justify-content: center;
+            min-height: 40px;
+            padding: 0 15px;
+            transition: background .18s, transform .18s, box-shadow .18s;
+        }
+        .primary-button { background: var(--blue); box-shadow: 0 5px 14px rgba(7, 89, 173, .18); color: #fff; }
+        .primary-button:hover { background: var(--blue-dark); box-shadow: 0 7px 18px rgba(7, 89, 173, .23); transform: translateY(-1px); }
+        .secondary-button { background: #fff; border: 1px solid var(--line); color: var(--blue-dark); }
+        .secondary-button:hover { background: var(--soft-blue); }
+        .primary-button:focus-visible, .secondary-button:focus-visible, input:focus-visible, select:focus-visible, .demand-card:focus-visible {
+            outline: 3px solid #8fc1f7;
+            outline-offset: 2px;
+        }
+        .file-meta { color: var(--muted); font-size: .72rem; text-align: right; }
+        .connection-panel {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(22, 48, 82, .025);
+            margin-bottom: 16px;
+            padding: 15px 18px;
+        }
+        .connection-top { align-items: center; display: flex; gap: 12px; justify-content: space-between; }
+        .connection-title { font-size: .83rem; font-weight: 700; }
+        .connection-description, .privacy-note { color: var(--muted); font-size: .75rem; }
+        .connection-description { margin: 2px 0 0; }
+        .privacy-note { margin: 11px 2px 0; }
+        .connection-setup { border-top: 1px solid var(--line); margin-top: 14px; padding-top: 12px; }
+        .connection-setup summary { color: var(--blue-dark); cursor: pointer; font-size: .75rem; font-weight: 650; }
+        .setup-help { color: var(--muted); font-size: .72rem; margin: 10px 0 0; }
+        .json-example {
+            background: #f3f6fa;
+            border-radius: 8px;
+            color: var(--blue-dark);
+            font: .7rem/1.55 Consolas, "Courier New", monospace;
+            margin-top: 10px;
+            overflow-x: auto;
+            padding: 12px;
+        }
+        .manual-import { margin-top: 10px; }
+        .manual-import summary { color: var(--blue-dark); cursor: pointer; font-size: .72rem; }
+        .manual-import .primary-button { margin-top: 9px; }
+        .status-message { border-radius: 9px; display: none; margin: 0 0 14px; padding: 11px 14px; }
+        .status-message.visible { display: block; }
+        .status-message.error { background: #fff1f0; border: 1px solid #ffd4d0; color: #9a2c22; }
+        .status-message.success { background: #edf9f1; border: 1px solid #cfead7; color: #21683a; }
+        .metrics { display: grid; gap: 10px; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-bottom: 16px; }
+        .metric {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(22, 48, 82, .025);
+            min-height: 90px;
+            padding: 15px 17px;
+        }
+        .metric-label { color: var(--muted); font-size: .74rem; font-weight: 600; }
+        .metric-value { color: var(--ink); font-size: 1.55rem; font-weight: 750; letter-spacing: -.04em; line-height: 1.25; margin-top: 5px; }
+        .workspace {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        .workspace-heading {
+            align-items: center;
+            border-bottom: 1px solid var(--line);
+            display: flex;
+            gap: 14px;
+            justify-content: space-between;
+            padding: 16px 19px;
+        }
+        .workspace-heading h2 { font-size: .98rem; margin: 0; }
+        .workspace-heading p { color: var(--muted); font-size: .75rem; margin: 2px 0 0; }
+        .filters { display: flex; gap: 8px; }
+        .filters input, .filters select {
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            color: var(--ink);
+            min-height: 36px;
+            padding: 0 10px;
+        }
+        .filters input { min-width: 235px; }
+        .content { display: grid; grid-template-columns: minmax(330px, .88fr) minmax(0, 1.12fr); min-height: 470px; }
+        .demand-list { border-right: 1px solid var(--line); max-height: 680px; overflow: auto; padding: 10px; }
+        .list-summary { color: var(--muted); font-size: .72rem; padding: 3px 8px 8px; }
+        .demand-card {
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 9px;
+            color: inherit;
+            display: block;
+            margin: 0 0 5px;
+            padding: 11px 12px;
+            text-align: left;
+            transition: background .15s, border-color .15s;
+            width: 100%;
+        }
+        .demand-card:hover { background: #f8fbff; border-color: #e8eff8; }
+        .demand-card[aria-current="true"] { background: #eef5ff; border-color: #cfe1f7; }
+        .card-top { align-items: center; display: flex; gap: 8px; justify-content: space-between; }
+        .demand-id { color: var(--muted); font-size: .68rem; font-weight: 650; }
+        .card-title { display: block; font-size: .83rem; font-weight: 670; line-height: 1.35; margin: 5px 0 7px; }
+        .card-bottom { align-items: center; display: flex; gap: 8px; justify-content: space-between; }
+        .card-category { color: var(--muted); font-size: .69rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .pill {
+            background: #eff3f8;
+            border: 1px solid transparent;
+            border-radius: 999px;
+            color: #4b5e75;
+            display: inline-block;
+            flex: 0 0 auto;
+            font-size: .65rem;
+            font-weight: 650;
+            line-height: 1.5;
+            max-width: 160px;
+            overflow: hidden;
+            padding: 2px 8px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .pill[data-tone="progress"] { background: #eaf3ff; color: #0759ad; }
+        .pill[data-tone="blocked"] { background: #fff0e9; color: #a64617; }
+        .pill[data-tone="paused"] { background: #fff7df; color: #80600c; }
+        .pill[data-tone="done"] { background: #eaf7ee; color: #277241; }
+        .pill[data-tone="new"] { background: #f0f2f5; color: #536174; }
+        .detail { min-width: 0; padding: 22px 24px; }
+        .detail-empty { align-items: center; color: var(--muted); display: flex; flex-direction: column; height: 100%; justify-content: center; min-height: 360px; text-align: center; }
+        .empty-mark { align-items: center; background: var(--soft-blue); border-radius: 15px; color: var(--blue); display: flex; font-size: 1.55rem; height: 54px; justify-content: center; margin-bottom: 13px; width: 54px; }
+        .detail-empty strong { color: var(--ink); font-size: .96rem; }
+        .detail-empty p { font-size: .78rem; margin: 5px auto 0; max-width: 300px; }
+        .detail-head { border-bottom: 1px solid var(--line); padding-bottom: 17px; }
+        .detail-id { color: var(--blue); font-size: .7rem; font-weight: 700; letter-spacing: .04em; }
+        .detail-head h3 { font-size: 1.22rem; letter-spacing: -.025em; line-height: 1.3; margin: 5px 0 11px; }
+        .detail-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+        .detail-tags .pill { background: #f2f5f9; }
+        .current-status { align-items: flex-start; background: #f7faff; border: 1px solid #e2ebf6; border-radius: 10px; display: flex; gap: 12px; justify-content: space-between; margin: 17px 0 21px; padding: 13px 14px; }
+        .current-status-label { color: var(--muted); display: block; font-size: .69rem; margin-bottom: 3px; }
+        .current-status strong { font-size: .88rem; }
+        .current-date { color: var(--muted); font-size: .7rem; text-align: right; }
+        .timeline-title { font-size: .81rem; margin: 0 0 12px; }
+        .timeline { list-style: none; margin: 0; padding: 0 0 0 4px; }
+        .timeline-item { border-left: 2px solid #dce8f5; margin-left: 5px; padding: 0 0 17px 18px; position: relative; }
+        .timeline-item:last-child { border-left-color: transparent; padding-bottom: 0; }
+        .timeline-item::before { background: #fff; border: 2px solid #6fa4dc; border-radius: 50%; content: ""; height: 8px; left: -6px; position: absolute; top: 4px; width: 8px; }
+        .timeline-item:first-child::before { background: var(--blue); border-color: var(--blue); box-shadow: 0 0 0 4px #e5f0fc; }
+        .timeline-top { align-items: baseline; display: flex; gap: 10px; justify-content: space-between; }
+        .timeline-action { font-size: .77rem; font-weight: 700; }
+        .timeline-date { color: var(--muted); flex: 0 0 auto; font-size: .66rem; }
+        .timeline-state { color: var(--muted); font-size: .72rem; margin-top: 2px; }
+        .timeline-empty { color: var(--muted); font-size: .77rem; }
+        .loading-note { color: var(--muted); font-size: .72rem; }
+        .footer { color: var(--muted); font-size: .7rem; padding: 15px 2px 0; text-align: center; }
+        .visually-hidden { clip: rect(0, 0, 0, 0); clip-path: inset(50%); height: 1px; overflow: hidden; position: absolute; white-space: nowrap; width: 1px; }
+        @media (max-width: 820px) {
+            .shell { padding: 16px 12px 28px; }
+            .hero { align-items: flex-start; flex-direction: column; padding: 22px 20px; }
+            .hero-actions { align-items: flex-start; }
+            .hero-buttons { justify-content: flex-start; }
+            .file-meta { text-align: left; }
+            .content { grid-template-columns: 1fr; }
+            .demand-list { border-bottom: 1px solid var(--line); border-right: 0; max-height: 380px; }
+            .detail { min-height: 330px; padding: 19px; }
+        }
+        @media (max-width: 560px) {
+            .connection-top { align-items: flex-start; flex-direction: column; }
+            .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .metric { min-height: 78px; padding: 12px; }
+            .metric-value { font-size: 1.35rem; }
+            .workspace-heading { align-items: flex-start; flex-direction: column; }
+            .filters { flex-direction: column; width: 100%; }
+            .filters input, .filters select { width: 100%; }
+            .timeline-top { align-items: flex-start; flex-direction: column; gap: 1px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+        }
+    </style>
+</head>
+<body>
+    <main class="shell">
+        <header class="hero">
+            <div class="hero-copy">
+                <div class="eyebrow">Painel de acompanhamento</div>
+                <h1>Status das demandas</h1>
+                <p>Veja em um só lugar a situação atual, as etapas percorridas e as últimas atualizações de cada demanda.</p>
+            </div>
+            <div class="hero-actions">
+                <div class="hero-buttons">
+                    <button class="primary-button" id="refresh-json" type="button">Atualizar dados</button>
+                    <a class="secondary-button" id="open-sharepoint" href="https://brfcorp.sharepoint.com/:x:/r/sites/arquivoscompartilhadosriscos/_layouts/15/doc2.aspx?sourcedoc=%7B4D9DDF0B-1E57-4875-B066-C68DA8F39A63%7D&amp;file=Miguel%20Marques.xlsm&amp;action=default&amp;mobileredirect=true" target="_blank" rel="noopener noreferrer">Abrir planilha fonte</a>
+                </div>
+                <div class="file-meta" id="data-meta" aria-live="polite">Aguardando demandas.json...</div>
+                <details class="manual-import">
+                    <summary>Importar arquivo Excel manualmente</summary>
+                    <label class="primary-button" for="workbook-file">Escolher arquivo .xlsm</label>
+                </details>
+                <input class="visually-hidden" id="workbook-file" type="file" accept=".xlsm,.xlsx">
+                <div class="file-meta" id="file-meta"></div>
+            </div>
+        </header>
+        <section class="connection-panel" aria-label="Fonte e privacidade dos dados">
+            <div class="connection-top">
+                <div>
+                    <div class="connection-title">Atualização automática pelo JSON</div>
+                    <p class="connection-description">O painel lê <code>demandas.json</code> publicado junto desta página e verifica atualizações a cada cinco minutos. Um fluxo autorizado deve gerar esse JSON a partir das abas <strong>activities</strong> e <strong>logs</strong> da planilha.</p>
+                </div>
+            </div>
+            <p class="privacy-note"><strong>Privacidade:</strong> arquivos no GitHub Pages público podem ser lidos por qualquer pessoa, inclusive o JSON. Não publique nele dados internos/confidenciais; para isso, o destino do JSON e o painel precisam de controle de acesso corporativo.</p>
+            <details class="connection-setup">
+                <summary>Formato esperado para demandas.json</summary>
+                <p class="setup-help">O processo que exportar a planilha deve criar um objeto com <code>schemaVersion</code> igual a 1, <code>generatedAt</code> em data/hora ISO 8601 e <code>demands</code> como lista. Cada demanda tem <code>id</code>, <code>title</code>, <code>category</code>, <code>type</code> e <code>logs</code>; cada evento contém <code>action</code>, <code>status</code> e <code>date</code>. O evento mais recente determina o status exibido.</p>
+                <pre class="json-example"><code>{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-02T20:00:00Z",
+  "demands": [{
+    "id": "6219",
+    "title": "Exemplo de título",
+    "category": "Categoria",
+    "type": "Melhoria",
+    "logs": [
+      { "action": "Cadastrar", "status": "Não Iniciado", "date": "2026-10-01T12:00:00Z" }
+    ]
+  }]
+}</code></pre>
+            </details>
+        </section>
+        <div id="status-message" class="status-message" role="status" aria-live="polite"></div>
+        <section class="metrics" aria-label="Resumo das demandas">
+            <article class="metric"><div class="metric-label">Demandas cadastradas</div><div class="metric-value" id="metric-total">—</div></article>
+            <article class="metric"><div class="metric-label">Em andamento</div><div class="metric-value" id="metric-progress">—</div></article>
+            <article class="metric"><div class="metric-label">Bloqueadas</div><div class="metric-value" id="metric-blocked">—</div></article>
+            <article class="metric"><div class="metric-label">Última atualização</div><div class="metric-value" id="metric-updated">—</div></article>
+        </section>
+        <section class="workspace" aria-labelledby="workspace-title">
+            <header class="workspace-heading">
+                <div>
+                    <h2 id="workspace-title">Demandas</h2>
+                    <p>Selecione uma demanda para consultar o histórico cronológico do fluxo.</p>
+                </div>
+                <div class="filters">
+                    <label class="visually-hidden" for="search">Buscar demanda</label>
+                    <input id="search" type="search" placeholder="Buscar por título, ID ou categoria..." disabled>
+                    <label class="visually-hidden" for="status-filter">Filtrar por status</label>
+                    <select id="status-filter" disabled><option value="">Todos os status</option></select>
+                </div>
+            </header>
+            <div class="content">
+                <div class="demand-list" id="demand-list" aria-label="Lista de demandas" aria-live="polite">
+                    <div class="detail-empty" id="list-empty">
+                        <div class="empty-mark" aria-hidden="true">↻</div>
+                        <strong>Aguardando dados de demandas</strong>
+                        <p>O painel será preenchido assim que demandas.json for publicado.</p>
+                    </div>
+                </div>
+                <section class="detail" id="demand-detail" aria-label="Detalhes da demanda">
+                    <div class="detail-empty">
+                        <div class="empty-mark" aria-hidden="true">↗</div>
+                        <strong>O fluxo aparece aqui</strong>
+                        <p>Escolha uma demanda na lista para ver o status atual e cada etapa registrada na planilha.</p>
+                    </div>
+                </section>
+            </div>
+        </section>
+        <footer class="footer">Fonte de dados: demandas.json. O painel atualiza automaticamente a cada cinco minutos quando aberto.</footer>
+    </main>
+    <script>
+        (() => {
+            "use strict";
+
+            const fileInput = document.querySelector("#workbook-file");
+            const statusMessage = document.querySelector("#status-message");
+            const fileMeta = document.querySelector("#file-meta");
+            const dataMeta = document.querySelector("#data-meta");
+            const refreshJsonButton = document.querySelector("#refresh-json");
+            const searchInput = document.querySelector("#search");
+            const statusFilter = document.querySelector("#status-filter");
+            const demandList = document.querySelector("#demand-list");
+            const detail = document.querySelector("#demand-detail");
+            const jsonUrl = new URL("demandas.json", location.href);
+            const jsonRefreshInterval = 5 * 60 * 1000;
+            let demands = [];
+            let selectedId = null;
+            let sourceFileName = "";
+            let jsonRefreshTimer = null;
+            let jsonRequestInProgress = false;
+
+            const normalize = (value) => String(value ?? "")
+                .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase().replace(/[^a-z0-9]+/g, "");
+
+            function showMessage(message, kind) {
+                statusMessage.textContent = message;
+                statusMessage.className = `status-message visible ${kind}`;
+            }
+
+            function columnIndex(reference) {
+                const letters = reference.match(/[A-Z]+/i)?.[0]?.toUpperCase() || "";
+                let index = 0;
+                for (const letter of letters) index = index * 26 + letter.charCodeAt(0) - 64;
+                return index - 1;
+            }
+
+            function normalizeZipPath(path) {
+                const parts = [];
+                for (const part of path.replace(/\\/g, "/").split("/")) {
+                    if (!part || part === ".") continue;
+                    if (part === "..") parts.pop();
+                    else parts.push(part);
+                }
+                return parts.join("/");
+            }
+
+            function readZipDirectory(bytes) {
+                const view = new DataView(bytes);
+                const minimum = Math.max(0, bytes.byteLength - 65557);
+                let endOffset = -1;
+                for (let offset = bytes.byteLength - 22; offset >= minimum; offset--) {
+                    if (view.getUint32(offset, true) === 0x06054b50) {
+                        endOffset = offset;
+                        break;
+                    }
+                }
+                if (endOffset < 0) throw new Error("O arquivo não parece ser uma planilha .xlsx/.xlsm válida.");
+
+                const entries = view.getUint16(endOffset + 10, true);
+                let offset = view.getUint32(endOffset + 16, true);
+                const decoder = new TextDecoder();
+                const files = new Map();
+                for (let index = 0; index < entries; index++) {
+                    if (view.getUint32(offset, true) !== 0x02014b50) throw new Error("Não foi possível ler o índice do arquivo Excel.");
+                    const method = view.getUint16(offset + 10, true);
+                    const compressedSize = view.getUint32(offset + 20, true);
+                    const nameLength = view.getUint16(offset + 28, true);
+                    const extraLength = view.getUint16(offset + 30, true);
+                    const commentLength = view.getUint16(offset + 32, true);
+                    const localOffset = view.getUint32(offset + 42, true);
+                    const name = decoder.decode(new Uint8Array(bytes, offset + 46, nameLength));
+                    files.set(name, { method, compressedSize, localOffset });
+                    offset += 46 + nameLength + extraLength + commentLength;
+                }
+                return { view, files };
+            }
+
+            async function unzipEntry(bytes, archive, path) {
+                const entry = archive.files.get(path);
+                if (!entry) return null;
+                if (archive.view.getUint32(entry.localOffset, true) !== 0x04034b50) throw new Error(`Entrada inválida no arquivo: ${path}`);
+                const nameLength = archive.view.getUint16(entry.localOffset + 26, true);
+                const extraLength = archive.view.getUint16(entry.localOffset + 28, true);
+                const start = entry.localOffset + 30 + nameLength + extraLength;
+                const compressed = bytes.slice(start, start + entry.compressedSize);
+                if (entry.method === 0) return compressed;
+                if (entry.method !== 8) throw new Error("A compactação usada nesta planilha não é compatível com este navegador.");
+                if (typeof DecompressionStream === "undefined") throw new Error("Este navegador não oferece suporte à leitura local de planilhas. Atualize o navegador ou exporte as abas para CSV.");
+                const stream = new Blob([compressed]).stream().pipeThrough(new DecompressionStream("deflate-raw"));
+                return new Response(stream).arrayBuffer();
+            }
+
+            function xmlDocument(bytes) {
+                const doc = new DOMParser().parseFromString(new TextDecoder().decode(bytes), "application/xml");
+                if (doc.querySelector("parsererror")) throw new Error("Uma parte da planilha está corrompida ou em formato não reconhecido.");
+                return doc;
+            }
+
+            async function parseWorkbook(file) {
+                const bytes = await file.arrayBuffer();
+                const archive = readZipDirectory(bytes);
+                const workbookBytes = await unzipEntry(bytes, archive, "xl/workbook.xml");
+                const relationshipsBytes = await unzipEntry(bytes, archive, "xl/_rels/workbook.xml.rels");
+                if (!workbookBytes || !relationshipsBytes) throw new Error("Não encontrei a estrutura de abas esperada neste arquivo Excel.");
+
+                const workbook = xmlDocument(workbookBytes);
+                const relationships = xmlDocument(relationshipsBytes);
+                const targets = new Map();
+                for (const relation of relationships.getElementsByTagName("Relationship")) {
+                    const target = relation.getAttribute("Target");
+                    targets.set(relation.getAttribute("Id"), normalizeZipPath(target.startsWith("/") ? target : `xl/${target}`));
+                }
+                const sheets = new Map();
+                for (const sheet of workbook.getElementsByTagName("sheet")) {
+                    const id = sheet.getAttribute("r:id") || sheet.getAttributeNS("http://schemas.openxmlformats.org/officeDocument/2006/relationships", "id");
+                    const path = targets.get(id);
+                    if (path) sheets.set(normalize(sheet.getAttribute("name")), path);
+                }
+
+                let sharedStrings = [];
+                const stringsBytes = await unzipEntry(bytes, archive, "xl/sharedStrings.xml");
+                if (stringsBytes) {
+                    const stringsDoc = xmlDocument(stringsBytes);
+                    sharedStrings = Array.from(stringsDoc.getElementsByTagName("si"), (item) =>
+                        Array.from(item.getElementsByTagName("t"), (text) => text.textContent || "").join(""));
+                }
+
+                async function readSheet(name) {
+                    const path = sheets.get(normalize(name));
+                    if (!path) throw new Error(`A aba "${name}" não foi encontrada. A planilha precisa conter as abas activities e logs.`);
+                    const sheetBytes = await unzipEntry(bytes, archive, path);
+                    const sheetDoc = xmlDocument(sheetBytes);
+                    const rows = [];
+                    for (const rowNode of sheetDoc.getElementsByTagName("row")) {
+                        const values = [];
+                        for (const cell of rowNode.children) {
+                            if (cell.localName !== "c") continue;
+                            const index = columnIndex(cell.getAttribute("r"));
+                            const type = cell.getAttribute("t");
+                            let value = cell.getElementsByTagName("v")[0]?.textContent ?? "";
+                            if (type === "s" && value !== "") value = sharedStrings[Number(value)] ?? "";
+                            else if (type === "inlineStr") value = Array.from(cell.getElementsByTagName("t"), (text) => text.textContent || "").join("");
+                            values[index] = value;
+                        }
+                        rows.push(values);
+                    }
+                    return rows;
+                }
+
+                const activityRows = await readSheet("activities");
+                const logRows = await readSheet("logs");
+                return { activityRows, logRows };
+            }
+
+            function findTable(rows, requiredHeaders, sheetName) {
+                const headerIndex = rows.findIndex((row) => {
+                    const headers = (row || []).map(normalize);
+                    return requiredHeaders.every((aliases) => headers.some((header) => aliases.includes(header)));
+                });
+                if (headerIndex < 0) throw new Error(`Não encontrei os cabeçalhos necessários na aba "${sheetName}". Verifique se a tabela contém os campos esperados.`);
+                const headers = rows[headerIndex].map((value) => normalize(value));
+                const column = (aliases) => headers.findIndex((header) => aliases.includes(header));
+                const records = rows.slice(headerIndex + 1).map((row) => {
+                    const values = row || [];
+                    return Object.fromEntries(headers.map((header, index) => [header, values[index] ?? ""]));
+                }).filter((row) => Object.values(row).some((value) => String(value).trim() !== ""));
+                return { column, records, headerIndex };
+            }
+
+            const aliases = {
+                id: ["activityid", "idatividade", "iddemanda"],
+                title: ["titulo", "titulodademanda", "demanda"],
+                category: ["categoria"],
+                type: ["tipo"],
+                logId: ["logid", "idlog"],
+                action: ["acao", "atividade", "etapa"],
+                status: ["status", "situacao"],
+                date: ["data", "datadoevento", "dataatualizacao"]
+            };
+
+            function excelDate(value) {
+                if (typeof value === "number" || /^\d+(\.\d+)?$/.test(String(value).trim())) {
+                    const serial = Number(value);
+                    if (serial > 20000 && serial < 100000) return new Date(Date.UTC(1899, 11, 30) + serial * 86400000);
+                }
+                const text = String(value ?? "").trim();
+                const local = text.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?$/);
+                if (local) {
+                    const year = Number(local[3]) < 100 ? 2000 + Number(local[3]) : Number(local[3]);
+                    return new Date(year, Number(local[2]) - 1, Number(local[1]), Number(local[4] || 0), Number(local[5] || 0), Number(local[6] || 0));
+                }
+                const parsed = new Date(text);
+                return Number.isNaN(parsed.getTime()) ? null : parsed;
+            }
+
+            function displayDate(date) {
+                return date ? new Intl.DateTimeFormat("pt-BR", { dateStyle: "medium", timeStyle: "short" }).format(date) : "Data não informada";
+            }
+
+            function statusTone(value) {
+                const status = normalize(value);
+                if (status.includes("bloque")) return "blocked";
+                if (status.includes("paus")) return "paused";
+                if (status.includes("conclu") || status.includes("finaliz") || status.includes("encerr")) return "done";
+                if (status.includes("desenvolv") || status.includes("valid") || status.includes("execu") || status.includes("andamento")) return "progress";
+                if (!status || status.includes("naoiniciado") || status.includes("cadastrar")) return "new";
+                return "";
+            }
+
+            function buildDemands(activityRows, logRows) {
+                const activityTable = findTable(activityRows, [aliases.id, aliases.title], "activities");
+                const logTable = findTable(logRows, [aliases.id, aliases.action, aliases.status, aliases.date], "logs");
+                const activityField = (record, field) => record[aliases[field].map(normalize).find((name) => name in record) || ""];
+                const logsById = new Map();
+                for (const record of logTable.records) {
+                    const id = String(activityField(record, "id")).trim();
+                    if (!id) continue;
+                    const date = excelDate(activityField(record, "date"));
+                    const log = {
+                        action: String(activityField(record, "action") || "Atualização").trim(),
+                        status: String(activityField(record, "status") || "").trim(),
+                        date,
+                        order: Number(activityField(record, "logId")) || 0
+                    };
+                    if (!logsById.has(id)) logsById.set(id, []);
+                    logsById.get(id).push(log);
+                }
+                for (const logs of logsById.values()) logs.sort((a, b) => {
+                    if (a.date && b.date) return b.date - a.date || b.order - a.order;
+                    if (a.date) return -1;
+                    if (b.date) return 1;
+                    return b.order - a.order;
+                });
+
+                const seen = new Set();
+                return activityTable.records.map((record) => {
+                    const id = String(activityField(record, "id")).trim();
+                    const title = String(activityField(record, "title") || "Demanda sem título").trim();
+                    const category = String(activityField(record, "category") || "").trim();
+                    const type = String(activityField(record, "type") || "").trim();
+                    if (!id || seen.has(id)) return null;
+                    seen.add(id);
+                    const logs = logsById.get(id) || [];
+                    return {
+                        id, title, category, type, logs,
+                        status: logs[0]?.status || "Sem movimentação registrada",
+                        updatedAt: logs.find((log) => log.date)?.date || null
+                    };
+                }).filter(Boolean);
+            }
+
+            function parseDemandsJson(payload) {
+                if (!payload || typeof payload !== "object" || !Array.isArray(payload.demands)) {
+                    throw new Error("demandas.json inválido: esperado um objeto com uma lista \"demands\".");
+                }
+                if (payload.schemaVersion !== 1) {
+                    throw new Error(`Versão do JSON não suportada (${String(payload.schemaVersion)}). Atualize o formato para schemaVersion 1.`);
+                }
+                const seen = new Set();
+                return payload.demands.map((item, index) => {
+                    if (!item || typeof item !== "object" || item.id == null || !String(item.title || "").trim()) {
+                        throw new Error(`Demanda inválida na posição ${index + 1} de demandas.json: cada item precisa de id e title.`);
+                    }
+                    const id = String(item.id).trim();
+                    if (seen.has(id)) throw new Error(`demandas.json contém o ID duplicado ${id}.`);
+                    seen.add(id);
+                    if (item.logs != null && !Array.isArray(item.logs)) {
+                        throw new Error(`A lista de eventos da demanda ${id} precisa ser um array.`);
+                    }
+                    const logs = (item.logs || []).map((log, logIndex) => {
+                        if (!log || typeof log !== "object") {
+                            throw new Error(`Evento ${logIndex + 1} da demanda ${id} está inválido.`);
+                        }
+                        return {
+                            action: String(log.action || "Atualização").trim(),
+                            status: String(log.status || "").trim(),
+                            date: excelDate(log.date),
+                            order: Number(log.order) || 0
+                        };
+                    }).sort((a, b) => {
+                        if (a.date && b.date) return b.date - a.date || b.order - a.order;
+                        if (a.date) return -1;
+                        if (b.date) return 1;
+                        return b.order - a.order;
+                    });
+                    return {
+                        id,
+                        title: String(item.title).trim(),
+                        category: String(item.category || "").trim(),
+                        type: String(item.type || "").trim(),
+                        status: logs[0]?.status || String(item.status || "Sem movimentação registrada").trim(),
+                        updatedAt: logs.find((log) => log.date)?.date || excelDate(item.updatedAt),
+                        logs
+                    };
+                }).sort((a, b) => {
+                    if (a.updatedAt && b.updatedAt) return b.updatedAt - a.updatedAt;
+                    if (a.updatedAt) return -1;
+                    if (b.updatedAt) return 1;
+                    return a.title.localeCompare(b.title, "pt-BR");
+                });
+            }
+
+            function renderDemands(nextDemands, sourceLabel) {
+                const previousSelection = selectedId;
+                demands = nextDemands;
+                selectedId = demands.some((demand) => demand.id === previousSelection)
+                    ? previousSelection
+                    : demands[0]?.id || null;
+                renderStatusOptions();
+                renderMetrics();
+                renderList();
+                if (selectedId) {
+                    renderDetail(demands.find((demand) => demand.id === selectedId));
+                } else {
+                    detail.innerHTML = `<div class="detail-empty"><div class="empty-mark" aria-hidden="true">↗</div><strong>Aguardando uma demanda</strong><p>Nenhuma demanda foi publicada no arquivo JSON.</p></div>`;
+                }
+                searchInput.disabled = false;
+                dataMeta.textContent = sourceLabel;
+            }
+
+            async function loadJsonData() {
+                if (jsonRequestInProgress) return;
+                jsonRequestInProgress = true;
+                refreshJsonButton.disabled = true;
+                statusMessage.className = "status-message";
+                if (!demands.length) dataMeta.textContent = "Buscando demandas.json...";
+                try {
+                    const url = new URL(jsonUrl);
+                    url.searchParams.set("_", String(Date.now()));
+                    const response = await fetch(url, { cache: "no-store", headers: { Accept: "application/json" } });
+                    if (!response.ok) throw new Error(`Não foi possível carregar demandas.json (${response.status}). Confirme se o arquivo está publicado junto ao painel.`);
+                    const payload = await response.json();
+                    const nextDemands = parseDemandsJson(payload);
+                    const generatedAt = excelDate(payload.generatedAt);
+                    renderDemands(nextDemands, `JSON atualizado${generatedAt ? ` em ${displayDate(generatedAt)}` : ""} · ${nextDemands.length} demanda(s)`);
+                    showMessage(`Dados sincronizados: ${nextDemands.length} demandas lidas de demandas.json.`, "success");
+                    sourceFileName = "";
+                } catch (error) {
+                    dataMeta.textContent = demands.length
+                        ? `${demands.length} demanda(s) · última sincronização JSON falhou`
+                        : "Aguardando demandas.json válido.";
+                    showMessage(error instanceof Error ? error.message : "Falha ao sincronizar demandas.json.", "error");
+                } finally {
+                    jsonRequestInProgress = false;
+                    refreshJsonButton.disabled = false;
+                }
+            }
+
+            function renderMetrics() {
+                document.querySelector("#metric-total").textContent = String(demands.length);
+                document.querySelector("#metric-progress").textContent = String(demands.filter((demand) => statusTone(demand.status) === "progress").length);
+                document.querySelector("#metric-blocked").textContent = String(demands.filter((demand) => statusTone(demand.status) === "blocked").length);
+                const latest = demands.reduce((date, demand) => demand.updatedAt && (!date || demand.updatedAt > date) ? demand.updatedAt : date, null);
+                document.querySelector("#metric-updated").textContent = latest ? new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "short" }).format(latest) : "—";
+            }
+
+            function renderStatusOptions() {
+                const current = statusFilter.value;
+                const statuses = [...new Set(demands.map((demand) => demand.status))].sort((a, b) => a.localeCompare(b, "pt-BR"));
+                statusFilter.replaceChildren(new Option("Todos os status", ""));
+                for (const status of statuses) statusFilter.add(new Option(status, status));
+                if (statuses.includes(current)) statusFilter.value = current;
+                statusFilter.disabled = false;
+            }
+
+            function visibleDemands() {
+                const query = normalize(searchInput.value);
+                const status = statusFilter.value;
+                return demands.filter((demand) => {
+                    const searchable = normalize(`${demand.id} ${demand.title} ${demand.category} ${demand.type} ${demand.status}`);
+                    return (!query || searchable.includes(query)) && (!status || demand.status === status);
+                });
+            }
+
+            function renderList() {
+                const items = visibleDemands();
+                demandList.replaceChildren();
+                const summary = document.createElement("div");
+                summary.className = "list-summary";
+                summary.textContent = `${items.length} de ${demands.length} demanda(s)`;
+                demandList.append(summary);
+                if (!items.length) {
+                    const empty = document.createElement("div");
+                    empty.className = "timeline-empty";
+                    empty.textContent = demands.length
+                        ? "Nenhuma demanda corresponde aos filtros selecionados."
+                        : "Nenhuma demanda foi publicada no arquivo demandas.json.";
+                    demandList.append(empty);
+                    return;
+                }
+                for (const demand of items) {
+                    const button = document.createElement("button");
+                    button.type = "button";
+                    button.className = "demand-card";
+                    button.setAttribute("aria-current", String(demand.id === selectedId));
+                    button.setAttribute("aria-label", `Demanda ${demand.id}: ${demand.title}. Status: ${demand.status}`);
+                    const top = document.createElement("span");
+                    top.className = "card-top";
+                    const id = document.createElement("span");
+                    id.className = "demand-id";
+                    id.textContent = `DEMANDA ${demand.id}`;
+                    const badge = document.createElement("span");
+                    badge.className = "pill";
+                    if (statusTone(demand.status)) badge.dataset.tone = statusTone(demand.status);
+                    badge.textContent = demand.status;
+                    top.append(id, badge);
+                    const title = document.createElement("span");
+                    title.className = "card-title";
+                    title.textContent = demand.title;
+                    const bottom = document.createElement("span");
+                    bottom.className = "card-bottom";
+                    const category = document.createElement("span");
+                    category.className = "card-category";
+                    category.textContent = demand.category || demand.type || "Sem categoria";
+                    const date = document.createElement("span");
+                    date.className = "demand-id";
+                    date.textContent = demand.updatedAt ? displayDate(demand.updatedAt) : "Sem data";
+                    bottom.append(category, date);
+                    button.append(top, title, bottom);
+                    button.addEventListener("click", () => {
+                        selectedId = demand.id;
+                        renderList();
+                        renderDetail(demand);
+                    });
+                    demandList.append(button);
+                }
+            }
+
+            function renderDetail(demand) {
+                detail.replaceChildren();
+                const head = document.createElement("header");
+                head.className = "detail-head";
+                const id = document.createElement("div");
+                id.className = "detail-id";
+                id.textContent = `DEMANDA ${demand.id}`;
+                const title = document.createElement("h3");
+                title.textContent = demand.title;
+                const tags = document.createElement("div");
+                tags.className = "detail-tags";
+                for (const value of [demand.category, demand.type].filter(Boolean)) {
+                    const tag = document.createElement("span");
+                    tag.className = "pill";
+                    tag.textContent = value;
+                    tags.append(tag);
+                }
+                head.append(id, title, tags);
+
+                const current = document.createElement("div");
+                current.className = "current-status";
+                const currentInfo = document.createElement("div");
+                const label = document.createElement("span");
+                label.className = "current-status-label";
+                label.textContent = "Status atual";
+                const value = document.createElement("strong");
+                value.textContent = demand.status;
+                currentInfo.append(label, value);
+                const currentDate = document.createElement("span");
+                currentDate.className = "current-date";
+                currentDate.textContent = demand.updatedAt ? `Última atualização\n${displayDate(demand.updatedAt)}` : "Sem data de movimentação";
+                current.append(currentInfo, currentDate);
+
+                const heading = document.createElement("h4");
+                heading.className = "timeline-title";
+                heading.textContent = `Histórico do fluxo · ${demand.logs.length} registro(s)`;
+                const timeline = document.createElement("ol");
+                timeline.className = "timeline";
+                if (!demand.logs.length) {
+                    const empty = document.createElement("li");
+                    empty.className = "timeline-empty";
+                    empty.textContent = "Ainda não há registros de andamento para esta demanda na aba logs.";
+                    timeline.append(empty);
+                } else {
+                    for (const log of demand.logs) {
+                        const item = document.createElement("li");
+                        item.className = "timeline-item";
+                        const top = document.createElement("div");
+                        top.className = "timeline-top";
+                        const action = document.createElement("span");
+                        action.className = "timeline-action";
+                        action.textContent = log.action;
+                        const date = document.createElement("time");
+                        date.className = "timeline-date";
+                        date.textContent = displayDate(log.date);
+                        if (log.date) date.dateTime = log.date.toISOString();
+                        top.append(action, date);
+                        const state = document.createElement("div");
+                        state.className = "timeline-state";
+                        state.textContent = log.status || "Status não informado";
+                        item.append(top, state);
+                        timeline.append(item);
+                    }
+                }
+                detail.append(head, current, heading, timeline);
+            }
+
+            async function loadWorkbook(file) {
+                if (!file) return;
+                fileMeta.textContent = `Lendo ${file.name}...`;
+                try {
+                    const { activityRows, logRows } = await parseWorkbook(file);
+                    const nextDemands = buildDemands(activityRows, logRows);
+                    if (!nextDemands.length) throw new Error("Não encontrei demandas válidas na aba activities.");
+                    nextDemands.sort((a, b) => {
+                        if (a.updatedAt && b.updatedAt) return b.updatedAt - a.updatedAt;
+                        if (a.updatedAt) return -1;
+                        if (b.updatedAt) return 1;
+                        return a.title.localeCompare(b.title, "pt-BR");
+                    });
+                    sourceFileName = file.name;
+                    renderDemands(nextDemands, `Importado localmente: ${file.name} · ${nextDemands.length} demanda(s)`);
+                    fileMeta.textContent = `${file.name} · ${demands.length} demanda(s)`;
+                    showMessage(`Arquivo carregado: ${demands.length} demandas e ${demands.reduce((total, demand) => total + demand.logs.length, 0)} registros de fluxo.`, "success");
+                } catch (error) {
+                    fileMeta.textContent = sourceFileName ? `${sourceFileName} · última importação válida` : "Aguardando uma planilha válida.";
+                    throw error;
+                }
+            }
+
+            refreshJsonButton.addEventListener("click", loadJsonData);
+            fileInput.addEventListener("change", async () => {
+                try {
+                    await loadWorkbook(fileInput.files?.[0]);
+                } catch (error) {
+                    showMessage(error instanceof Error ? error.message : "Falha inesperada ao ler a planilha.", "error");
+                }
+            });
+            searchInput.addEventListener("input", renderList);
+            statusFilter.addEventListener("change", renderList);
+            loadJsonData();
+            jsonRefreshTimer = setInterval(() => {
+                if (document.visibilityState === "visible") loadJsonData();
+            }, jsonRefreshInterval);
+        })();
+    </script>
+</body>
+</html>
