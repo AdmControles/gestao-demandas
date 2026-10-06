@@ -955,9 +955,9 @@
                 const width = timeline.scrollWidth;
                 const height = timeline.scrollHeight;
                 if (!height) return;
-                path.setAttribute("viewBox", `0 0 ${width} ${height}`);
-                path.setAttribute("width", String(width));
-                path.setAttribute("height", String(height));
+                pathSvg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+                pathSvg.setAttribute("width", String(width));
+                pathSvg.setAttribute("height", String(height));
                 const points = items.map((item) => ({
                     x: item.offsetLeft + item.offsetWidth / 2,
                     y: item.offsetTop + 8.5
