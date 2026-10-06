@@ -117,7 +117,7 @@
             padding: 8px 11px;
         }
         .workspace-heading h2 { font-size: .84rem; margin: 0; }
-        .workspace-heading p { color: var(--muted); font-size: .66rem; margin: 1px 0 0; }
+        .workspace-heading p { display: none; }
         .status-shortcuts { border-bottom: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 5px; padding: 7px 10px; }
         .status-shortcut {
             align-items: center;
@@ -137,7 +137,7 @@
         .shortcut-count { color: var(--muted); font-size: .6rem; font-weight: 750; }
         .status-shortcut[aria-pressed="true"] .shortcut-count { color: var(--blue); }
         .status-shortcut:focus-visible { outline: 3px solid #8fc1f7; outline-offset: 2px; }
-        .filters { display: flex; gap: 8px; }
+        .filters { display: flex; gap: 6px; }
         .filters input, .filters select {
             background: #fff;
             border: 1px solid var(--line);
@@ -147,20 +147,20 @@
             padding: 0 8px;
             font-size: .68rem;
         }
-        .filters input { min-width: 210px; }
+        .filters input { min-width: 190px; }
         .content { display: flex; flex-direction: column; min-width: 0; }
-        .demand-list { max-width: 100%; min-width: 0; overflow-x: auto; padding: 4px 10px 10px; }
-        .list-summary { color: var(--muted); font-size: .62rem; padding: 4px 2px; }
-        .demand-table-head, .demand-row { align-items: center; display: grid; gap: 10px; grid-template-columns: minmax(220px, 1fr) 72px minmax(120px, .55fr) minmax(120px, .55fr); min-width: 620px; }
-        .demand-table-head { color: var(--muted); font-size: .6rem; font-weight: 700; padding: 5px 9px; text-transform: uppercase; }
+        .demand-list { max-width: 100%; min-width: 0; overflow-x: auto; padding: 2px 8px 7px; }
+        .list-summary { color: var(--muted); font-size: .59rem; padding: 2px; }
+        .demand-table-head, .demand-row { align-items: center; display: grid; gap: 8px; grid-template-columns: minmax(180px, 1.4fr) 62px minmax(125px, 1fr) minmax(100px, .8fr) minmax(110px, .9fr); min-width: 760px; }
+        .demand-table-head { color: var(--muted); font-size: .58rem; font-weight: 700; padding: 4px 8px; text-transform: uppercase; }
         .demand-row {
             background: #fff;
             border: 1px solid #e8edf3;
             border-radius: 6px;
             color: var(--ink);
-            margin-bottom: 4px;
-            min-height: 36px;
-            padding: 5px 9px;
+            margin-bottom: 2px;
+            min-height: 30px;
+            padding: 3px 8px;
             text-align: left;
             transition: background .15s, border-color .15s;
             width: 100%;
@@ -168,8 +168,8 @@
         .demand-row:hover, .demand-row[aria-current="true"] { background: #f3f8ff; border-color: #cfe1f7; }
         .row-demand { min-width: 0; }
         .row-title { display: block; font-size: .68rem; font-weight: 670; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .row-id { color: var(--muted); font-size: .56rem; }
         .row-priority { background: #fff7df; border-radius: 4px; color: #80600c; font-size: .62rem; font-weight: 750; justify-self: start; padding: 2px 6px; }
+        .row-category { color: #52647a; font-size: .62rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .row-owner { color: #52647a; font-size: .64rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .row-status { font-size: .6rem; justify-self: start; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .pill {
@@ -194,27 +194,23 @@
         .pill[data-tone="paused"] { background: #fff7df; color: #80600c; }
         .pill[data-tone="done"] { background: #eaf7ee; color: #277241; }
         .pill[data-tone="new"] { background: #f0f2f5; color: #536174; }
-        .detail { background: #fff; border: 1px solid var(--line); border-radius: 8px; margin-bottom: 8px; min-width: 0; overflow: hidden; padding: 7px 10px; }
-        .detail-head { align-items: baseline; display: flex; flex-wrap: wrap; gap: 5px 10px; margin-bottom: 5px; }
-        .detail-id { color: var(--blue); font-size: .58rem; font-weight: 700; }
-        .detail-head h3 { font-size: .7rem; margin: 0; }
-        .timeline-title { font-size: .66rem; margin: 0; }
-        .timeline { align-items: stretch; display: flex; gap: 0; list-style: none; margin: 0; overflow-x: auto; padding: 7px 4px 12px; position: relative; }
-        .timeline-path { height: 26px; left: 4px; overflow: visible; pointer-events: none; position: absolute; top: 7px; z-index: 0; }
+        .detail { background: #fff; border: 1px solid var(--line); border-radius: 8px; margin-bottom: 6px; min-width: 0; overflow: hidden; padding: 5px 9px; }
+        .detail-head { align-items: baseline; display: flex; flex-wrap: wrap; gap: 5px 10px; margin-bottom: 1px; }
+        .detail-head h3 { font-size: .72rem; margin: 0; }
+        .timeline { display: grid; gap: 2px 0; list-style: none; margin: 0; overflow: hidden; padding: 5px 4px 4px; position: relative; }
+        .timeline-path { height: 100%; inset: 0; overflow: visible; pointer-events: none; position: absolute; width: 100%; z-index: 0; }
         .timeline-path path { fill: none; stroke: #bfd7ef; stroke-linecap: round; stroke-width: 2; }
-        .timeline-item { flex: 0 0 142px; min-height: 58px; padding: 0 10px; position: relative; text-align: center; z-index: 1; }
+        .timeline-item { min-width: 0; min-height: 43px; padding: 0 5px 3px; position: relative; text-align: center; z-index: 1; }
         .timeline-item::before { background: #fff; border: 2px solid #8ab5e1; border-radius: 50%; content: ""; height: 9px; left: calc(50% - 5px); position: absolute; top: 0; width: 9px; z-index: 1; }
-        .timeline-item:nth-child(even)::before { top: 10px; }
         .timeline-item:first-child::before { background: var(--blue); border-color: var(--blue); box-shadow: 0 0 0 3px #e5f0fc; }
         .timeline-item[data-tone="validation"]::before { border-color: #3281c2; }
         .timeline-item[data-tone="paused"]::before { border-color: #d7a72d; }
         .timeline-item[data-tone="blocked"]::before { border-color: #df665f; }
         .timeline-item[data-tone="done"]::before { border-color: #55a66d; }
-        .timeline-top { display: flex; flex-direction: column; gap: 2px; padding-top: 14px; }
-        .timeline-item:nth-child(even) .timeline-top { padding-top: 24px; }
-        .timeline-action { font-size: .65rem; font-weight: 750; }
-        .timeline-date { color: var(--muted); font-size: .55rem; }
-        .timeline-state { color: var(--muted); font-size: .57rem; margin-top: 2px; }
+        .timeline-top { display: flex; flex-direction: column; gap: 1px; padding-top: 12px; }
+        .timeline-action { font-size: .62rem; font-weight: 750; line-height: 1.25; }
+        .timeline-date { color: var(--muted); font-size: .53rem; }
+        .timeline-state { color: var(--muted); font-size: .53rem; line-height: 1.25; margin-top: 2px; }
         .timeline-empty { color: var(--muted); font-size: .65rem; padding: 5px 2px; }
         .loading-note { color: var(--muted); font-size: .72rem; }
         .visually-hidden { clip: rect(0, 0, 0, 0); clip-path: inset(50%); height: 1px; overflow: hidden; position: absolute; white-space: nowrap; width: 1px; }
@@ -239,7 +235,6 @@
             .workspace-heading { align-items: flex-start; flex-direction: column; gap: 6px; padding: 8px; }
             .filters { flex-direction: column; width: 100%; }
             .filters input, .filters select { width: 100%; }
-            .timeline-item { flex-basis: 126px; }
         }
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
@@ -271,20 +266,17 @@
         </section>
         <section class="detail" id="demand-detail" aria-label="Histórico do fluxo">
             <div class="detail-head">
-                <div class="detail-id">SELECIONE UMA DEMANDA</div>
-                <h3>Histórico do fluxo</h3>
+                <h3>Selecione uma demanda</h3>
             </div>
-            <h4 class="timeline-title">Histórico do fluxo · 0 registro(s)</h4>
         </section>
         <section class="workspace" aria-labelledby="workspace-title">
             <header class="workspace-heading">
-                <div>
-                    <h2 id="workspace-title">Demandas</h2>
-                    <p>Veja o andamento e abra uma demanda para consultar o histórico.</p>
-                </div>
+                <h2 id="workspace-title">Demandas</h2>
                 <div class="filters">
                     <label class="visually-hidden" for="search">Buscar demanda</label>
-                    <input id="search" type="search" placeholder="Buscar por título, ID ou categoria..." disabled>
+                    <input id="search" type="search" placeholder="Buscar demanda..." disabled>
+                    <label class="visually-hidden" for="category-filter">Filtrar por categoria</label>
+                    <select id="category-filter" disabled><option value="">Todas as categorias</option></select>
                     <label class="visually-hidden" for="status-filter">Filtrar por status</label>
                     <select id="status-filter" disabled><option value="">Todos os status</option></select>
                 </div>
@@ -313,6 +305,7 @@
             const dataMeta = document.querySelector("#data-meta");
             const refreshJsonButton = document.querySelector("#refresh-json");
             const searchInput = document.querySelector("#search");
+            const categoryFilter = document.querySelector("#category-filter");
             const statusFilter = document.querySelector("#status-filter");
             const statusShortcuts = [...document.querySelectorAll("[data-status-shortcut]")];
             const demandList = document.querySelector("#demand-list");
@@ -325,6 +318,7 @@
             let quickStatusFilter = "";
             let jsonRefreshTimer = null;
             let jsonRequestInProgress = false;
+            let timelineObserver = null;
 
             const normalize = (value) => String(value ?? "")
                 .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
@@ -629,6 +623,7 @@
                 selectedId = demands.some((demand) => demand.id === previousSelection)
                     ? previousSelection
                     : demands[0]?.id || null;
+                renderCategoryOptions();
                 renderStatusOptions();
                 renderStatusShortcuts();
                 renderMetrics();
@@ -688,6 +683,16 @@
                 statusFilter.disabled = false;
             }
 
+            function renderCategoryOptions() {
+                const current = categoryFilter.value;
+                const categories = [...new Set(demands.map((demand) => demand.category).filter(Boolean))]
+                    .sort((a, b) => a.localeCompare(b, "pt-BR"));
+                categoryFilter.replaceChildren(new Option("Todas as categorias", ""));
+                for (const category of categories) categoryFilter.add(new Option(category, category));
+                if (categories.includes(current)) categoryFilter.value = current;
+                categoryFilter.disabled = false;
+            }
+
             function renderStatusShortcuts() {
                 for (const button of statusShortcuts) {
                     const tone = button.dataset.statusShortcut;
@@ -701,10 +706,12 @@
 
             function visibleDemands() {
                 const query = normalize(searchInput.value);
+                const category = categoryFilter.value;
                 const status = statusFilter.value;
                 return demands.filter((demand) => {
-                    const searchable = normalize(`${demand.id} ${demand.title} ${demand.category} ${demand.type} ${demand.status} ${demand.owner} ${demand.priority}`);
+                    const searchable = normalize(`${demand.title} ${demand.category} ${demand.type} ${demand.status} ${demand.owner} ${demand.priority}`);
                     return (!query || searchable.includes(query)) &&
+                        (!category || demand.category === category) &&
                         (!status || demand.status === status) &&
                         (!quickStatusFilter || statusTone(demand.status) === quickStatusFilter);
                 });
@@ -720,7 +727,7 @@
                 const tableHead = document.createElement("div");
                 tableHead.className = "demand-table-head";
                 tableHead.setAttribute("aria-hidden", "true");
-                for (const label of ["Demanda", "Prioridade", "Ponto focal", "Status"]) {
+                for (const label of ["Demanda", "Prioridade", "Categoria", "Ponto focal", "Status"]) {
                     const cell = document.createElement("span");
                     cell.textContent = label;
                     tableHead.append(cell);
@@ -752,19 +759,19 @@
                     row.type = "button";
                     row.className = "demand-row";
                     row.setAttribute("aria-current", String(demand.id === selectedId));
-                    row.setAttribute("aria-label", `Demanda ${demand.id}: ${demand.title}. Prioridade ${demand.priority || "não informada"}. Ponto focal ${demand.owner || "não informado"}. Status ${demand.status}.`);
+                    row.setAttribute("aria-label", `${demand.title}. Prioridade ${demand.priority || "não informada"}. Categoria ${demand.category || "não informada"}. Ponto focal ${demand.owner || "não informado"}. Status ${demand.status}.`);
                     const name = document.createElement("span");
                     name.className = "row-demand";
                     const title = document.createElement("span");
                     title.className = "row-title";
                     title.textContent = demand.title;
-                    const id = document.createElement("span");
-                    id.className = "row-id";
-                    id.textContent = `#${demand.id} · ${demand.category || demand.type || "Sem categoria"}`;
-                    name.append(title, id);
+                    name.append(title);
                     const priority = document.createElement("span");
                     priority.className = "row-priority";
                     priority.textContent = demand.priority || "—";
+                    const category = document.createElement("span");
+                    category.className = "row-category";
+                    category.textContent = demand.category || "Sem categoria";
                     const owner = document.createElement("span");
                     owner.className = "row-owner";
                     owner.textContent = demand.owner || "Não informado";
@@ -773,7 +780,7 @@
                     const tone = statusTone(demand.status);
                     if (tone) status.dataset.tone = tone;
                     status.textContent = demand.status;
-                    row.append(name, priority, owner, status);
+                    row.append(name, priority, category, owner, status);
                     row.addEventListener("click", () => {
                         selectedId = demand.id;
                         renderList();
@@ -783,20 +790,50 @@
                 }
             }
 
+            function layoutTimeline(timeline, items, path) {
+                const width = timeline.clientWidth;
+                if (!width || !items.length) return;
+                const columnCount = Math.max(1, Math.floor(width / 112));
+                timeline.style.gridTemplateColumns = `repeat(${columnCount}, minmax(0, 1fr))`;
+                items.forEach((item, index) => {
+                    const row = Math.floor(index / columnCount);
+                    const positionInRow = index % columnCount;
+                    const itemsInRow = Math.min(columnCount, items.length - row * columnCount);
+                    const column = row % 2 === 0 ? positionInRow + 1 : itemsInRow - positionInRow;
+                    item.style.gridColumn = String(column);
+                    item.style.gridRow = String(row + 1);
+                });
+                requestAnimationFrame(() => {
+                    const height = timeline.clientHeight;
+                    if (!height) return;
+                    path.setAttribute("viewBox", `0 0 ${width} ${height}`);
+                    path.setAttribute("width", String(width));
+                    path.setAttribute("height", String(height));
+                    const points = items.map((item) => ({
+                        x: item.offsetLeft + item.offsetWidth / 2,
+                        y: item.offsetTop + 5
+                    }));
+                    let pathData = `M ${points[0].x} ${points[0].y}`;
+                    for (let index = 1; index < points.length; index += 1) {
+                        const previous = points[index - 1];
+                        const point = points[index];
+                        const middleX = (previous.x + point.x) / 2;
+                        pathData += ` C ${middleX} ${previous.y}, ${middleX} ${point.y}, ${point.x} ${point.y}`;
+                    }
+                    path.setAttribute("d", pathData);
+                });
+            }
+
             function renderDetail(demand) {
+                if (timelineObserver) timelineObserver.disconnect();
+                timelineObserver = null;
                 detail.replaceChildren();
                 const head = document.createElement("header");
                 head.className = "detail-head";
-                const id = document.createElement("div");
-                id.className = "detail-id";
-                id.textContent = demand ? `DEMANDA ${demand.id}` : "HISTÓRICO DO FLUXO";
                 const title = document.createElement("h3");
                 title.textContent = demand ? demand.title : "Selecione uma demanda";
-                head.append(id, title);
+                head.append(title);
 
-                const heading = document.createElement("h4");
-                heading.className = "timeline-title";
-                heading.textContent = `Histórico do fluxo · ${demand?.logs.length || 0} registro(s)`;
                 const timeline = document.createElement("ol");
                 timeline.className = "timeline";
                 if (!demand?.logs.length) {
@@ -810,23 +847,10 @@
                     const pathSvg = document.createElementNS(svgNamespace, "svg");
                     pathSvg.classList.add("timeline-path");
                     pathSvg.setAttribute("aria-hidden", "true");
-                    pathSvg.setAttribute("width", String(chronologicalLogs.length * 142));
-                    pathSvg.setAttribute("height", "26");
-                    pathSvg.setAttribute("viewBox", `0 0 ${chronologicalLogs.length * 142} 26`);
                     const path = document.createElementNS(svgNamespace, "path");
-                    const nodes = chronologicalLogs.map((_, index) => ({
-                        x: index * 142 + 71,
-                        y: index % 2 === 0 ? 4 : 14
-                    }));
-                    let pathData = `M ${nodes[0].x} ${nodes[0].y}`;
-                    for (let index = 1; index < nodes.length; index += 1) {
-                        const previous = nodes[index - 1];
-                        const node = nodes[index];
-                        pathData += ` Q ${(previous.x + node.x) / 2} ${previous.y} ${node.x} ${node.y}`;
-                    }
-                    path.setAttribute("d", pathData);
                     pathSvg.append(path);
                     timeline.append(pathSvg);
+                    const timelineItems = [];
                     for (const log of chronologicalLogs) {
                         const item = document.createElement("li");
                         item.className = "timeline-item";
@@ -836,14 +860,23 @@
                         const action = document.createElement("span");
                         action.className = "timeline-action";
                         const actionKey = normalize(log.action);
+                        const eventKey = normalize(`${log.action} ${log.status}`);
                         let mappedLifecycleAction = true;
-                        if (actionKey.includes("cadastr")) {
+                        let description = "";
+                        if (eventKey.includes("bloque") && eventKey.includes("adm")) {
+                            action.textContent = "Bloqueado ADM";
+                            description = "A demanda aguarda uma ação do ponto focal.";
+                        } else if (eventKey.includes("bloque") && eventKey.includes("ti")) {
+                            action.textContent = "Bloqueado TI";
+                            description = "A demanda aguarda uma ação da equipe de TI.";
+                        } else if (actionKey.includes("cadastr")) {
                             action.textContent = "Cadastrado";
                         } else if (actionKey.includes("inici") || actionKey.includes("start")) {
                             startCount += 1;
                             action.textContent = startCount === 1 ? "Iniciado" : "Retomado";
-                        } else if (actionKey.includes("paus")) {
+                        } else if (eventKey.includes("paus")) {
                             action.textContent = "Pausado";
+                            description = "Uma ou mais demandas requerem prioridade neste momento.";
                         } else {
                             mappedLifecycleAction = false;
                             action.textContent = log.action;
@@ -857,12 +890,16 @@
                         top.append(action, date);
                         const state = document.createElement("div");
                         state.className = "timeline-state";
-                        state.textContent = mappedLifecycleAction ? "" : log.status;
+                        state.textContent = description || (mappedLifecycleAction ? "" : log.status);
                         item.append(top, state);
                         timeline.append(item);
+                        timelineItems.push(item);
                     }
+                    layoutTimeline(timeline, timelineItems, path);
+                    timelineObserver = new ResizeObserver(() => layoutTimeline(timeline, timelineItems, path));
+                    timelineObserver.observe(timeline);
                 }
-                detail.append(head, heading, timeline);
+                detail.append(head, timeline);
             }
 
             refreshJsonButton.addEventListener("click", loadJsonData);
@@ -874,6 +911,14 @@
                 });
             });
             searchInput.addEventListener("input", renderList);
+            categoryFilter.addEventListener("change", () => {
+                const items = visibleDemands();
+                if (!items.some((demand) => demand.id === selectedId)) {
+                    selectedId = items[0]?.id || null;
+                    renderDetail(items[0] || null);
+                }
+                renderList();
+            });
             statusFilter.addEventListener("change", renderList);
             loadJsonData();
             jsonRefreshTimer = setInterval(() => {
