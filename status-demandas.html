@@ -1064,7 +1064,7 @@
                 head.append(title);
 
                 const timeline = document.createElement("ol");
-                timeline.className = "timeline";                 if (demand.logs.length > 11) timeline.classList.add("timeline-scrollable");
+                timeline.className = "timeline";                 if ((demand?.logs.length || 0) > 11) timeline.classList.add("timeline-scrollable");
                 detail.append(head, timeline);
                 if (!demand?.logs.length) {
                     const empty = document.createElement("li");
