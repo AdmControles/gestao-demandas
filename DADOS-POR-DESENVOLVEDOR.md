@@ -1,14 +1,16 @@
 # Dados por desenvolvedor
 
-Cada desenvolvedor deve publicar seu JSON no arquivo correspondente na raiz do repositório:
+Cada desenvolvedor deve publicar o JSON exportado da sua planilha na raiz da branch `main`, usando o nome correspondente:
 
-| Desenvolvedor | Arquivo |
+| Desenvolvedor | Arquivo no repositório |
 | --- | --- |
-| Miguel Marques | `demandas.json` |
+| Miguel Marques | `demandas-miguel.json` |
 | Ramon Pacheco | `demandas-ramon.json` |
 | Gabriel Macial | `demandas-gabriel.json` |
 | Guilherme Pardo | `demandas-guilherme.json` |
 
-Os arquivos devem manter o formato `schemaVersion: 1`, com `generatedAt` e a lista `demands`. Os três arquivos novos começam vazios e podem ser substituídos pelo JSON exportado de cada planilha.
+O arquivo baixado da planilha pode se chamar `demandas.json`. Antes de enviar, renomeie-o conforme a tabela acima ou informe esse nome ao carregar o arquivo no GitHub. Substitua somente o JSON da própria pessoa; não junte os arquivos nem substitua o arquivo de outro desenvolvedor.
 
-O painel solicita a chave cadastrada para o nome escolhido antes de carregar o respectivo arquivo. Como o site e os arquivos ficam públicos no GitHub Pages, esse passo serve apenas como bloqueio visual: não impede que alguém leia o HTML, encontre as chaves ou acesse os JSONs diretamente.
+O painel usa a pessoa escolhida no popup para carregar automaticamente o arquivo associado. Os JSONs devem manter o formato exportado com `schemaVersion: 1`, `generatedAt` e a lista `demands`. Os arquivos de Ramon, Gabriel e Guilherme começam vazios e podem ser substituídos pelas exportações correspondentes.
+
+Como o site e os dados ficam públicos no GitHub Pages, o popup de chave é apenas um bloqueio visual; ele não impede que alguém leia o código ou acesse diretamente os arquivos JSON.
