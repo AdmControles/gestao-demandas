@@ -670,7 +670,6 @@
                     const nextDemands = parseDemandsJson(payload);
                     const generatedAt = excelDate(payload.generatedAt);
                     renderDemands(nextDemands, `Atualizado${generatedAt ? ` em ${displayDate(generatedAt)}` : ""}`);
-                    showMessage("Painel atualizado.", "success");
                 } catch (error) {
                     dataMeta.textContent = demands.length
                         ? "Não foi possível atualizar"
