@@ -257,6 +257,33 @@
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
         }
+    
+        .filters { flex-wrap: wrap; }
+        .print-table-button { background: #eef5fd; border: 1px solid #cbdced; border-radius: 6px; color: #174b7e; cursor: pointer; font: inherit; font-size: .66rem; font-weight: 650; min-height: 29px; padding: 0 9px; white-space: nowrap; }
+        .print-table-button:hover { background: #e2eefb; }
+        .demand-table-head, .demand-row { grid-template-columns: minmax(160px, 1.35fr) 55px minmax(115px, 1fr) minmax(85px, .7fr) minmax(145px, 1.25fr) minmax(100px, .8fr) minmax(110px, .9fr); min-width: 900px; }
+        .row-type, .row-reason { color: #52647a; font-size: .62rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .row-reason { max-width: 100%; }
+        .timeline-card { cursor: help; }
+        .timeline-card:focus-visible { outline: 2px solid #3281c2; outline-offset: 2px; }
+        @media print {
+            @page { size: landscape; margin: 10mm; }
+            body * { visibility: hidden !important; }
+            .workspace, .workspace * { visibility: visible !important; }
+            body { background: #fff !important; }
+            .shell { margin: 0 !important; max-width: none !important; padding: 0 !important; }
+            .workspace { border: 0 !important; box-shadow: none !important; left: 0; overflow: visible !important; position: absolute; top: 0; width: 100%; }
+            .workspace-heading { border-bottom: 1px solid #999 !important; justify-content: flex-start !important; padding: 0 0 8px !important; }
+            .workspace-heading .filters, .print-table-button { display: none !important; }
+            .workspace-heading h2 { font-size: 14pt !important; }
+            .content, .demand-list { max-width: none !important; overflow: visible !important; padding: 0 !important; }
+            .demand-table-head, .demand-row { gap: 5px !important; grid-template-columns: 1.5fr 55px 1fr .8fr 1.4fr 1fr 1fr !important; min-width: 0 !important; }
+            .demand-table-head { font-size: 8pt !important; }
+            .demand-row { background: #fff !important; border: 1px solid #bbb !important; border-radius: 0 !important; break-inside: avoid; color: #111 !important; min-height: 0 !important; page-break-inside: avoid; padding: 4px !important; }
+            .row-title, .row-type, .row-reason, .row-category, .row-owner, .row-status { color: #111 !important; font-size: 8pt !important; white-space: normal !important; }
+            .row-title, .row-reason { overflow: visible !important; text-overflow: clip !important; }
+            .row-priority { font-size: 8pt !important; }
+        }
     </style>
 </head>
 <body>
@@ -300,11 +327,14 @@
         <section class="workspace" aria-labelledby="workspace-title">
             <header class="workspace-heading">
                 <h2 id="workspace-title">Demandas</h2>
+                <button class="print-table-button" id="print-table" type="button" title="Imprimir ou salvar a tabela completa em PDF">Imprimir tabela</button>
                 <div class="filters">
                     <label class="visually-hidden" for="search">Buscar demanda</label>
                     <input id="search" type="search" placeholder="Buscar demanda..." disabled>
                     <label class="visually-hidden" for="category-filter">Filtrar por categoria</label>
                     <select id="category-filter" disabled><option value="">Todas as categorias</option></select>
+                    <label class="visually-hidden" for="type-filter">Filtrar por tipo</label>
+                    <select id="type-filter" disabled><option value="">Todos os tipos</option></select>
                     <label class="visually-hidden" for="status-filter">Filtrar por status</label>
                     <select id="status-filter" disabled><option value="">Todos os status</option></select>
                 </div>
@@ -349,7 +379,9 @@
             const refreshJsonButton = document.querySelector("#refresh-json");
             const searchInput = document.querySelector("#search");
             const categoryFilter = document.querySelector("#category-filter");
+            const typeFilter = document.querySelector("#type-filter");
             const statusFilter = document.querySelector("#status-filter");
+            const printTableButton = document.querySelector("#print-table");
             const developerFilter = document.querySelector("#developer-filter");
             const accessGate = document.querySelector("#access-gate");
             const accessForm = document.querySelector("#access-form");
@@ -682,7 +714,8 @@
                             action: String(log.action || "Atualização").trim(),
                             status: String(log.status || "").trim(),
                             date: excelDate(log.date),
-                            order: Number(log.order) || 0
+                            order: Number(log.order) || 0,
+                            sourceData: log.sourceData && typeof log.sourceData === "object" ? log.sourceData : {}
                         };
                     }).sort((a, b) => {
                         if (a.date && b.date) return b.date - a.date || b.order - a.order;
@@ -695,13 +728,21 @@
                         const match = Object.entries(activityData).find(([key]) => names.includes(normalize(key)));
                         return match ? String(match[1] ?? "").trim() : "";
                     };
+                    const logValue = (...names) => {
+                        for (const log of logs) {
+                            const match = Object.entries(log.sourceData).find(([key, value]) => names.includes(normalize(key)) && String(value ?? "").trim());
+                            if (match) return String(match[1]).trim();
+                        }
+                        return "";
+                    };
                     return {
                         id,
                         title: String(item.title).trim(),
                         category: String(item.category || "").trim(),
-                        type: String(item.type || "").trim(),
-                        owner: String(item.owner || activityValue("pontofocal", "responsavel")).trim(),
-                        priority: String(item.priority || activityValue("prioridade")).trim(),
+                        type: String(item.type || activityValue("tipo") || "").trim(),
+                        reason: String(item.reason || activityValue("motivo") || logValue("motivo") || activityValue("observacoes") || logValue("observacoes") || activityValue("detalhes") || logValue("detalhes")).trim(),
+                        owner: String(item.owner || activityValue("pontofocal", "responsavel") || logValue("pontofocal", "responsavel")).trim(),
+                        priority: String(item.priority || activityValue("prioridade") || logValue("prioridade")).trim(),
                         status: logs[0]?.status || String(item.status || "Sem movimentação registrada").trim(),
                         updatedAt: logs.find((log) => log.date)?.date || excelDate(item.updatedAt),
                         logs
@@ -721,6 +762,7 @@
                     ? previousSelection
                     : demands[0]?.id || null;
                 renderCategoryOptions();
+                renderTypeOptions();
                 renderStatusOptions();
                 renderMetrics();
                 renderList();
@@ -781,6 +823,16 @@
                 statusFilter.disabled = false;
             }
 
+            function renderTypeOptions() {
+                const current = typeFilter.value;
+                const types = [...new Set(demands.map((demand) => demand.type).filter(Boolean))]
+                    .sort((a, b) => a.localeCompare(b, "pt-BR"));
+                typeFilter.replaceChildren(new Option("Todos os tipos", ""));
+                for (const type of types) typeFilter.add(new Option(type, type));
+                if (types.includes(current)) typeFilter.value = current;
+                typeFilter.disabled = false;
+            }
+
             function renderCategoryOptions() {
                 const current = categoryFilter.value;
                 const categories = [...new Set(demands.map((demand) => demand.category).filter(Boolean))]
@@ -794,11 +846,13 @@
             function visibleDemands() {
                 const query = normalize(searchInput.value);
                 const category = categoryFilter.value;
+                const type = typeFilter.value;
                 const status = statusFilter.value;
                 return demands.filter((demand) => {
-                    const searchable = normalize(`${demand.title} ${demand.category} ${demand.type} ${demand.status} ${demand.owner} ${demand.priority}`);
-                    return                     (!query || searchable.includes(query)) &&
+                    const searchable = normalize(`${demand.title} ${demand.category} ${demand.type} ${demand.reason} ${demand.status} ${demand.owner} ${demand.priority}`);
+                    return (!query || searchable.includes(query)) &&
                     (!category || demand.category === category) &&
+                    (!type || demand.type === type) &&
                     (!status || demand.status === status);
                 });
             }
@@ -813,7 +867,7 @@
                 const tableHead = document.createElement("div");
                 tableHead.className = "demand-table-head";
                 tableHead.setAttribute("aria-hidden", "true");
-                for (const label of ["Demanda", "Prioridade", "Categoria", "Ponto focal", "Status"]) {
+                for (const label of ["Demanda", "Prioridade", "Categoria", "Tipo", "Motivo", "Ponto focal", "Status"]) {
                     const cell = document.createElement("span");
                     cell.textContent = label;
                     tableHead.append(cell);
@@ -845,7 +899,7 @@
                     row.type = "button";
                     row.className = "demand-row";
                     row.setAttribute("aria-current", String(demand.id === selectedId));
-                    row.setAttribute("aria-label", `${demand.title}. Prioridade ${demand.priority || "não informada"}. Categoria ${demand.category || "não informada"}. Ponto focal ${demand.owner || "não informado"}. Status ${demand.status}.`);
+                    row.setAttribute("aria-label", `${demand.title}. Prioridade ${demand.priority || "não informada"}. Categoria ${demand.category || "não informada"}. Tipo ${demand.type || "não informado"}. Motivo ${demand.reason || "não informado"}. Ponto focal ${demand.owner || "não informado"}. Status ${demand.status}.`);
                     const name = document.createElement("span");
                     name.className = "row-demand";
                     const title = document.createElement("span");
@@ -858,6 +912,13 @@
                     const category = document.createElement("span");
                     category.className = "row-category";
                     category.textContent = demand.category || "Sem categoria";
+                    const type = document.createElement("span");
+                    type.className = "row-type";
+                    type.textContent = demand.type || "—";
+                    const reason = document.createElement("span");
+                    reason.className = "row-reason";
+                    reason.textContent = normalize(demand.type).includes("correc") ? (demand.reason || "Não informado") : "—";
+                    reason.title = reason.textContent;
                     const owner = document.createElement("span");
                     owner.className = "row-owner";
                     owner.textContent = demand.owner || "Não informado";
@@ -866,7 +927,7 @@
                     const tone = statusTone(demand.status);
                     if (tone) status.dataset.tone = tone;
                     status.textContent = demand.status;
-                    row.append(name, priority, category, owner, status);
+                    row.append(name, priority, category, type, reason, owner, status);
                     row.addEventListener("click", () => {
                         selectedId = demand.id;
                         renderList();
@@ -932,6 +993,34 @@
                 pathSvg.replaceChildren(pathSvg.querySelector("defs"), path, ...arrows);
             }
 
+            function formatElapsed(milliseconds) {
+                const totalMinutes = Math.max(0, Math.floor(milliseconds / 60000));
+                const days = Math.floor(totalMinutes / 1440);
+                const hours = Math.floor((totalMinutes % 1440) / 60);
+                const minutes = totalMinutes % 60;
+                const parts = [];
+                if (days) parts.push(`${days} dia(s)`);
+                if (hours) parts.push(`${hours} hora(s)`);
+                if (minutes) parts.push(`${minutes} minuto(s)`);
+                else if (!parts.length) parts.push("menos de 1 minuto");
+                return parts.join(" ");
+            }
+
+            function timelineDurationTitle(log, nextLog) {
+                const start = log.date;
+                const end = nextLog?.date || (nextLog ? null : new Date());
+                const format = (date) => date ? new Intl.DateTimeFormat("pt-BR", { dateStyle: "short", timeStyle: "short" }).format(date) : "data não informada";
+                const elapsed = start && end ? formatElapsed(end.getTime() - start.getTime()) : "indisponível";
+                return `Início: ${format(start)}\nFim: ${nextLog ? format(end) : `Agora (${format(end)})`}\nTempo nesta etapa: ${elapsed}`;
+            }
+
+            function registrationDescription(type) {
+                const value = String(type || "").trim();
+                const key = normalize(value);
+                if (key === "melhoria" || key === "correcao") return `Ação: Uma ${value.toLocaleLowerCase("pt-BR")}`;
+                return value ? `Ação: ${value}` : "Ação não informada";
+            }
+
             function renderDetail(demand) {
                 if (timelineObserver) timelineObserver.disconnect();
                 timelineObserver = null;
@@ -975,13 +1064,23 @@
                     pathSvg.append(definitions, path);
                     timeline.append(pathSvg);
                     const timelineItems = [];
-                    for (const log of chronologicalLogs) {
+                    for (const [logIndex, log] of chronologicalLogs.entries()) {
+                        const nextLog = chronologicalLogs[logIndex + 1] || null;
                         const item = document.createElement("li");
                         item.className = "timeline-item";
                         item.dataset.tone = statusTone(log.status);
                         item.dataset.step = String(timelineItems.length + 1);
                         const card = document.createElement("div");
                         card.className = "timeline-card";
+                        card.tabIndex = 0;
+                        const updateDurationTooltip = () => {
+                            const duration = timelineDurationTitle(log, nextLog);
+                            card.title = duration;
+                            card.setAttribute("aria-label", `${log.action}. ${duration.replaceAll("\n", ". ")}`);
+                        };
+                        updateDurationTooltip();
+                        card.addEventListener("mouseenter", updateDurationTooltip);
+                        card.addEventListener("focus", updateDurationTooltip);
                         const top = document.createElement("div");
                         top.className = "timeline-top";
                         const action = document.createElement("span");
@@ -996,8 +1095,12 @@
                         } else if (eventKey.includes("bloque") && eventKey.includes("ti")) {
                             action.textContent = "Bloqueado TI";
                             description = "A demanda aguarda uma ação da TI.";
+                        } else if (actionKey.includes("valid") || eventKey.includes("em valid")) {
+                            action.textContent = "Em validação";
+                            description = "Entrou em validação com a área de negócio.";
                         } else if (actionKey.includes("cadastr")) {
                             action.textContent = "Cadastrado";
+                            description = registrationDescription(demand.type);
                         } else if (actionKey.includes("inici") || actionKey.includes("start")) {
                             startCount += 1;
                             action.textContent = startCount === 1 ? "Iniciado" : "Retomado";
@@ -1029,7 +1132,17 @@
                 }
             }
 
+            function updateFilteredList() {
+                const items = visibleDemands();
+                if (!items.some((demand) => demand.id === selectedId)) {
+                    selectedId = items[0]?.id || null;
+                    renderDetail(items[0] || null);
+                }
+                renderList();
+            }
+
             refreshJsonButton.addEventListener("click", loadJsonData);
+            printTableButton.addEventListener("click", () => window.print());
             accessDeveloper.addEventListener("change", () => {
                 accessKey.value = "";
                 accessError.textContent = "";
@@ -1041,15 +1154,9 @@
                 if (event.key === "Escape") event.preventDefault();
             });
             searchInput.addEventListener("input", renderList);
-            categoryFilter.addEventListener("change", () => {
-                const items = visibleDemands();
-                if (!items.some((demand) => demand.id === selectedId)) {
-                    selectedId = items[0]?.id || null;
-                    renderDetail(items[0] || null);
-                }
-                renderList();
-            });
-            statusFilter.addEventListener("change", renderList);
+            categoryFilter.addEventListener("change", updateFilteredList);
+            typeFilter.addEventListener("change", updateFilteredList);
+            statusFilter.addEventListener("change", updateFilteredList);
             showAccessGate();
             jsonRefreshTimer = setInterval(() => {
                 if (currentDeveloper && document.visibilityState === "visible") loadJsonData();
