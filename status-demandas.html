@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Acompanhe o status e o histórico de andamento das demandas.">
-    <title>Status das demandas</title>
+    <title>Gerenciador</title>
     <style>
         :root {
             color-scheme: light;
@@ -337,15 +337,15 @@
             .demand-row .row-demand, .demand-row .row-title { text-align: left !important; }
             .row-reason { white-space: normal !important; }
         }
-        .timeline.timeline-tooltip-open { padding-bottom: var(--timeline-tooltip-space, 9px); }
-</style>
+        
+        .timeline { justify-content: space-between; }     </style>
 </head>
 <body>
     <main class="shell">
         <header class="hero">
             <div class="hero-copy">
-                <div class="eyebrow">Painel de acompanhamento</div>
-                <h1>Status das demandas</h1>
+                <div class="eyebrow">Fluxo de Demandas do Time de Automação</div>
+                <h1>Gerenciador</h1>
                 <div class="file-meta" id="data-meta" aria-live="polite">Aguardando acesso</div>
             </div>
             <div class="hero-actions">
@@ -1104,7 +1104,7 @@
                         item.className = "timeline-item";
                         item.dataset.tone = statusTone(log.status);
                         item.dataset.step = String(timelineItems.length + 1);                         item.dataset.progress = logIndex === chronologicalLogs.length - 1 ? "current" : "past";
-                        const canToggleStep = chronologicalLogs.length > 3 && logIndex > 0 && logIndex < chronologicalLogs.length - 2;                         const isInitiallyVisible = chronologicalLogs.length <= 3 || logIndex === 0 || logIndex >= chronologicalLogs.length - 2 || expandedTimelineSteps.has(logIndex);
+                        const canToggleStep = chronologicalLogs.length > 3 && logIndex > 0 && logIndex < chronologicalLogs.length - 1;                         const isInitiallyVisible = chronologicalLogs.length <= 3 || logIndex === 0 || logIndex === chronologicalLogs.length - 1 || expandedTimelineSteps.has(logIndex);
                         if (!isInitiallyVisible) item.classList.add("timeline-collapsed");
                         const card = document.createElement("div");
                         card.className = "timeline-card";
@@ -1140,28 +1140,28 @@
                                 tooltip.style.top = `${top}px`;
                                 tooltip.style.transform = "none";
 
-                                const timelineRect = timeline.getBoundingClientRect();
-                                const tooltipRect = tooltip.getBoundingClientRect();
-                                const extraSpace = Math.max(9, tooltipRect.bottom - timelineRect.bottom + 9);
-                                timeline.style.setProperty("--timeline-tooltip-space", `${extraSpace}px`);
-                                timeline.classList.add("timeline-tooltip-open");
-                                requestAnimationFrame(() => layoutTimeline(timeline, timelineItems, path, pathSvg));
+                                
+                                
+                                
+                                
+                                
+                                
                             });
                             card.setAttribute("aria-label", rows.map((row) => `${row.label}: ${row.value}`).join(". "));
                         };
                         updateDurationTooltip();
                         const closeTimelineTooltipSpace = () => {
-                            timeline.classList.remove("timeline-tooltip-open");
-                            timeline.style.removeProperty("--timeline-tooltip-space");
-                            requestAnimationFrame(() => layoutTimeline(timeline, timelineItems, path, pathSvg));
+                            
+                            
+                            
                         };
                         card.addEventListener("mouseenter", updateDurationTooltip);
                         card.addEventListener("mouseleave", () => {
-                            if (!card.matches(":focus, :focus-within")) closeTimelineTooltipSpace();
+                            
                         });
                         card.addEventListener("focus", updateDurationTooltip);
                         card.addEventListener("blur", () => {
-                            if (!card.matches(":hover")) closeTimelineTooltipSpace();
+                            
                         });
                         const top = document.createElement("div");
                         top.className = "timeline-top";
