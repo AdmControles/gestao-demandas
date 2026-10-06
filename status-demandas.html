@@ -185,8 +185,8 @@
         .timeline::-webkit-scrollbar { height: 5px; }
         .timeline::-webkit-scrollbar-thumb { background: #c4d4e5; border-radius: 999px; }
         .timeline-path { left: 0; overflow: visible; pointer-events: none; position: absolute; top: 0; z-index: 0; }
-        .timeline-path path { fill: none; stroke: #a9bdd3; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.5; }
-        .timeline-path polygon { fill: #6f95bc; }
+        .timeline-path path { fill: none; stroke: url(#timeline-gradient); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.5; }
+        .timeline-path polygon { fill: #8eacc9; }
         .timeline-item { flex: 0 0 clamp(104px, 8.5vw, 120px); min-height: 0; padding: 0 5px 1px; position: relative; text-align: center; z-index: 1; }
         .timeline-item::before { align-items: center; background: #fff; border: 2px solid #9db9d7; border-radius: 50%; box-shadow: 0 2px 7px rgba(24, 62, 100, .12); color: #45698e; content: attr(data-step); display: flex; font-size: .47rem; font-weight: 800; height: 17px; justify-content: center; left: calc(50% - 9px); line-height: 1; position: absolute; top: 0; width: 17px; z-index: 2; }
         .timeline-item:first-child::before { background: var(--blue); border-color: var(--blue); box-shadow: 0 0 0 4px #e5f0fc, 0 2px 7px rgba(24, 62, 100, .12); color: white; }
@@ -337,8 +337,7 @@
             .demand-row .row-demand, .demand-row .row-title { text-align: left !important; }
             .row-reason { white-space: normal !important; }
         }
-        .timeline { justify-content: space-between; }
-        .timeline.timeline-tooltip-open { padding-bottom: 145px; }
+        .timeline.timeline-tooltip-open { padding-bottom: var(--timeline-tooltip-space, 9px); }
 </style>
 </head>
 <body>
@@ -972,7 +971,7 @@
                     const secondControl = { x: point.x - dx * 0.42, y: point.y };
                     pathData += ` C ${firstControl.x} ${firstControl.y}, ${secondControl.x} ${secondControl.y}, ${point.x} ${point.y}`;
 
-                    const t = 0.58;
+                    const t = 0.55;
                     const inverse = 1 - t;
                     const arrowX = inverse ** 3 * previous.x +
                         3 * inverse ** 2 * t * firstControl.x +
@@ -995,9 +994,9 @@
                     const perpendicularY = directionX;
                     const arrow = document.createElementNS(svgNamespace, "polygon");
                     arrow.setAttribute("points", [
-                        `${arrowX + directionX * 5},${arrowY + directionY * 5}`,
-                        `${arrowX - directionX * 3.5 + perpendicularX * 3},${arrowY - directionY * 3.5 + perpendicularY * 3}`,
-                        `${arrowX - directionX * 3.5 - perpendicularX * 3},${arrowY - directionY * 3.5 - perpendicularY * 3}`
+                        `${arrowX + directionX * 4},${arrowY + directionY * 4}`,
+                        `${arrowX - directionX * 3 + perpendicularX * 2.5},${arrowY - directionY * 3 + perpendicularY * 2.5}`,
+                        `${arrowX - directionX * 3 - perpendicularX * 2.5},${arrowY - directionY * 3 - perpendicularY * 2.5}`
                     ].join(" "));
                     arrows.push(arrow);
                 }
@@ -1135,25 +1134,34 @@
                                 const tooltipWidth = tooltip.offsetWidth;
                                 if (!tooltipWidth) return;
                                 const left = Math.min(Math.max(cardRect.left + cardRect.width / 2 - tooltipWidth / 2, 8), window.innerWidth - tooltipWidth - 8);
-                                const aboveTop = cardRect.top - tooltip.offsetHeight - 9;                                 const showBelow = true;                                 const top = showBelow ? cardRect.bottom + 9 : aboveTop;                                 tooltip.classList.toggle("below", showBelow);                                 tooltip.style.left = `${left}px`;                                 tooltip.style.top = `${Math.max(8, Math.min(top, window.innerHeight - tooltip.offsetHeight - 8))}px`;
+                                const top = cardRect.bottom + 9;
+                                tooltip.classList.add("below");
+                                tooltip.style.left = `${left}px`;
+                                tooltip.style.top = `${top}px`;
                                 tooltip.style.transform = "none";
+
+                                const timelineRect = timeline.getBoundingClientRect();
+                                const tooltipRect = tooltip.getBoundingClientRect();
+                                const extraSpace = Math.max(9, tooltipRect.bottom - timelineRect.bottom + 9);
+                                timeline.style.setProperty("--timeline-tooltip-space", `${extraSpace}px`);
+                                timeline.classList.add("timeline-tooltip-open");
+                                requestAnimationFrame(() => layoutTimeline(timeline, timelineItems, path, pathSvg));
                             });
                             card.setAttribute("aria-label", rows.map((row) => `${row.label}: ${row.value}`).join(". "));
                         };
                         updateDurationTooltip();
-                        card.addEventListener("mouseenter", () => {
-                            timeline.classList.add("timeline-tooltip-open");
-                            updateDurationTooltip();
-                        });
+                        const closeTimelineTooltipSpace = () => {
+                            timeline.classList.remove("timeline-tooltip-open");
+                            timeline.style.removeProperty("--timeline-tooltip-space");
+                            requestAnimationFrame(() => layoutTimeline(timeline, timelineItems, path, pathSvg));
+                        };
+                        card.addEventListener("mouseenter", updateDurationTooltip);
                         card.addEventListener("mouseleave", () => {
-                            if (!card.matches(":focus, :focus-within")) timeline.classList.remove("timeline-tooltip-open");
+                            if (!card.matches(":focus, :focus-within")) closeTimelineTooltipSpace();
                         });
-                        card.addEventListener("focus", () => {
-                            timeline.classList.add("timeline-tooltip-open");
-                            updateDurationTooltip();
-                        });
+                        card.addEventListener("focus", updateDurationTooltip);
                         card.addEventListener("blur", () => {
-                            if (!card.matches(":hover")) timeline.classList.remove("timeline-tooltip-open");
+                            if (!card.matches(":hover")) closeTimelineTooltipSpace();
                         });
                         const top = document.createElement("div");
                         top.className = "timeline-top";
