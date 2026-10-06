@@ -80,7 +80,7 @@
         .primary-button:hover { background: var(--blue-dark); box-shadow: 0 7px 18px rgba(7, 89, 173, .23); transform: translateY(-1px); }
         .secondary-button { background: #fff; border: 1px solid var(--line); color: var(--blue-dark); }
         .secondary-button:hover { background: var(--soft-blue); }
-        .primary-button:focus-visible, .secondary-button:focus-visible, input:focus-visible, select:focus-visible, .demand-card:focus-visible {
+        .primary-button:focus-visible, .secondary-button:focus-visible, input:focus-visible, select:focus-visible, .demand-row:focus-visible, .status-shortcut:focus-visible {
             outline: 3px solid #8fc1f7;
             outline-offset: 2px;
         }
@@ -89,7 +89,7 @@
         .status-message.visible { display: block; }
         .status-message.error { background: #fff1f0; border: 1px solid #ffd4d0; color: #9a2c22; }
         .status-message.success { background: #edf9f1; border: 1px solid #cfead7; color: #21683a; }
-        .metrics { display: grid; gap: 7px; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-bottom: 9px; }
+        .metrics { display: grid; gap: 7px; grid-template-columns: repeat(5, minmax(0, 1fr)); margin-bottom: 9px; }
         .metric {
             background: var(--surface);
             border: 1px solid var(--line);
@@ -148,45 +148,30 @@
             font-size: .68rem;
         }
         .filters input { min-width: 210px; }
-        .content { display: flex; flex-direction: column; }
-        .demand-list { display: grid; gap: 8px; grid-template-columns: repeat(6, minmax(170px, 1fr)); overflow-x: auto; padding: 9px; }
-        .list-summary { color: var(--muted); font-size: .62rem; grid-column: 1 / -1; padding: 0 2px; }
-        .flow-lane { background: #f7f9fc; border: 1px solid #e8edf4; border-radius: 7px; min-width: 0; padding: 6px; }
-        .flow-lane-heading { align-items: center; border-bottom: 2px solid #ccd6e3; display: flex; gap: 6px; justify-content: space-between; margin-bottom: 5px; padding: 2px 2px 5px; }
-        .flow-lane[data-tone="new"] .flow-lane-heading { border-color: #9aa8b8; }
-        .flow-lane[data-tone="progress"] .flow-lane-heading { border-color: #4091df; }
-        .flow-lane[data-tone="paused"] .flow-lane-heading { border-color: #d7a72d; }
-        .flow-lane[data-tone="blocked"] .flow-lane-heading { border-color: #df665f; }
-        .flow-lane[data-tone="done"] .flow-lane-heading { border-color: #55a66d; }
-        .flow-lane[data-tone="other"] .flow-lane-heading { border-color: #9b83cf; }
-        .flow-lane-title { color: #33465e; font-size: .65rem; font-weight: 750; }
-        .flow-lane-count { align-items: center; background: #e9eef5; border-radius: 999px; color: #52647a; display: inline-flex; font-size: .58rem; font-weight: 750; justify-content: center; min-width: 19px; padding: 1px 5px; }
-        .demand-card {
-            background: transparent;
-            border: 1px solid transparent;
-            border-radius: 6px;
-            color: inherit;
-            display: block;
+        .content { display: flex; flex-direction: column; min-width: 0; }
+        .demand-list { max-width: 100%; min-width: 0; overflow-x: auto; padding: 4px 10px 10px; }
+        .list-summary { color: var(--muted); font-size: .62rem; padding: 4px 2px; }
+        .demand-table-head, .demand-row { align-items: center; display: grid; gap: 10px; grid-template-columns: minmax(220px, 1fr) 72px minmax(120px, .55fr) minmax(120px, .55fr); min-width: 620px; }
+        .demand-table-head { color: var(--muted); font-size: .6rem; font-weight: 700; padding: 5px 9px; text-transform: uppercase; }
+        .demand-row {
             background: #fff;
-            border-color: #e7edf4;
-            margin: 0 0 5px;
-            padding: 7px;
+            border: 1px solid #e8edf3;
+            border-radius: 6px;
+            color: var(--ink);
+            margin-bottom: 4px;
+            min-height: 36px;
+            padding: 5px 9px;
             text-align: left;
             transition: background .15s, border-color .15s;
             width: 100%;
         }
-        .demand-card:hover { background: #f8fbff; border-color: #e8eff8; }
-        .demand-card[aria-current="true"] { background: #eef5ff; border-color: #cfe1f7; }
-        .card-top { align-items: center; display: flex; gap: 8px; justify-content: space-between; }
-        .demand-id { color: var(--muted); font-size: .68rem; font-weight: 650; }
-        .card-title { display: block; font-size: .68rem; font-weight: 670; line-height: 1.3; margin: 4px 0 5px; }
-        .card-bottom { align-items: center; display: flex; gap: 8px; justify-content: space-between; }
-        .card-category { color: var(--muted); font-size: .6rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .card-owner { color: var(--muted); font-size: .58rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .card-context, .card-meta { align-items: center; display: flex; gap: 7px; min-width: 0; }
-        .card-meta { flex: 0 0 auto; }
-        .card-priority { background: #fff7df; border-radius: 4px; color: #80600c; font-size: .55rem; font-weight: 750; padding: 1px 4px; }
-        .demand-date { color: var(--muted); font-size: .55rem; white-space: nowrap; }
+        .demand-row:hover, .demand-row[aria-current="true"] { background: #f3f8ff; border-color: #cfe1f7; }
+        .row-demand { min-width: 0; }
+        .row-title { display: block; font-size: .68rem; font-weight: 670; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .row-id { color: var(--muted); font-size: .56rem; }
+        .row-priority { background: #fff7df; border-radius: 4px; color: #80600c; font-size: .62rem; font-weight: 750; justify-self: start; padding: 2px 6px; }
+        .row-owner { color: #52647a; font-size: .64rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .row-status { font-size: .6rem; justify-self: start; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .pill {
             background: #eff3f8;
             border: 1px solid transparent;
@@ -204,35 +189,33 @@
             white-space: nowrap;
         }
         .pill[data-tone="progress"] { background: #eaf3ff; color: #0759ad; }
+        .pill[data-tone="validation"] { background: #e8f3ff; color: #1764a8; }
         .pill[data-tone="blocked"] { background: #fff0e9; color: #a64617; }
         .pill[data-tone="paused"] { background: #fff7df; color: #80600c; }
         .pill[data-tone="done"] { background: #eaf7ee; color: #277241; }
         .pill[data-tone="new"] { background: #f0f2f5; color: #536174; }
-        .detail { border-top: 1px solid var(--line); min-width: 0; padding: 12px 14px; }
-        .detail-empty { align-items: center; color: var(--muted); display: flex; flex-direction: column; justify-content: center; min-height: 90px; text-align: center; }
-        .empty-mark { align-items: center; background: var(--soft-blue); border-radius: 15px; color: var(--blue); display: flex; font-size: 1.55rem; height: 54px; justify-content: center; margin-bottom: 13px; width: 54px; }
-        .detail-empty strong { color: var(--ink); font-size: .96rem; }
-        .detail-empty p { font-size: .78rem; margin: 5px auto 0; max-width: 300px; }
-        .detail-head { border-bottom: 1px solid var(--line); padding-bottom: 17px; }
-        .detail-id { color: var(--blue); font-size: .7rem; font-weight: 700; letter-spacing: .04em; }
-        .detail-head h3 { font-size: .95rem; letter-spacing: -.025em; line-height: 1.3; margin: 3px 0 7px; }
-        .detail-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-        .detail-tags .pill { background: #f2f5f9; }
-        .current-status { align-items: flex-start; background: #f7faff; border: 1px solid #e2ebf6; border-radius: 10px; display: flex; gap: 12px; justify-content: space-between; margin: 17px 0 21px; padding: 13px 14px; }
-        .current-status-label { color: var(--muted); display: block; font-size: .69rem; margin-bottom: 3px; }
-        .current-status strong { font-size: .88rem; }
-        .current-date { color: var(--muted); font-size: .7rem; text-align: right; }
-        .timeline-title { font-size: .81rem; margin: 0 0 12px; }
-        .timeline { list-style: none; margin: 0; padding: 0 0 0 4px; }
-        .timeline-item { border-left: 2px solid #dce8f5; margin-left: 5px; padding: 0 0 10px 12px; position: relative; }
-        .timeline-item:last-child { border-left-color: transparent; padding-bottom: 0; }
-        .timeline-item::before { background: #fff; border: 2px solid #6fa4dc; border-radius: 50%; content: ""; height: 8px; left: -6px; position: absolute; top: 4px; width: 8px; }
-        .timeline-item:first-child::before { background: var(--blue); border-color: var(--blue); box-shadow: 0 0 0 4px #e5f0fc; }
-        .timeline-top { align-items: baseline; display: flex; gap: 10px; justify-content: space-between; }
-        .timeline-action { font-size: .77rem; font-weight: 700; }
-        .timeline-date { color: var(--muted); flex: 0 0 auto; font-size: .66rem; }
-        .timeline-state { color: var(--muted); font-size: .72rem; margin-top: 2px; }
-        .timeline-empty { color: var(--muted); font-size: .77rem; }
+        .detail { background: #fff; border: 1px solid var(--line); border-radius: 8px; margin-bottom: 8px; min-width: 0; overflow: hidden; padding: 7px 10px; }
+        .detail-head { align-items: baseline; display: flex; flex-wrap: wrap; gap: 5px 10px; margin-bottom: 5px; }
+        .detail-id { color: var(--blue); font-size: .58rem; font-weight: 700; }
+        .detail-head h3 { font-size: .7rem; margin: 0; }
+        .timeline-title { font-size: .66rem; margin: 0; }
+        .timeline { align-items: stretch; display: flex; gap: 0; list-style: none; margin: 0; overflow-x: auto; padding: 7px 4px 12px; position: relative; }
+        .timeline-path { height: 26px; left: 4px; overflow: visible; pointer-events: none; position: absolute; top: 7px; z-index: 0; }
+        .timeline-path path { fill: none; stroke: #bfd7ef; stroke-linecap: round; stroke-width: 2; }
+        .timeline-item { flex: 0 0 142px; min-height: 58px; padding: 0 10px; position: relative; text-align: center; z-index: 1; }
+        .timeline-item::before { background: #fff; border: 2px solid #8ab5e1; border-radius: 50%; content: ""; height: 9px; left: calc(50% - 5px); position: absolute; top: 0; width: 9px; z-index: 1; }
+        .timeline-item:nth-child(even)::before { top: 10px; }
+        .timeline-item:first-child::before { background: var(--blue); border-color: var(--blue); box-shadow: 0 0 0 3px #e5f0fc; }
+        .timeline-item[data-tone="validation"]::before { border-color: #3281c2; }
+        .timeline-item[data-tone="paused"]::before { border-color: #d7a72d; }
+        .timeline-item[data-tone="blocked"]::before { border-color: #df665f; }
+        .timeline-item[data-tone="done"]::before { border-color: #55a66d; }
+        .timeline-top { display: flex; flex-direction: column; gap: 2px; padding-top: 14px; }
+        .timeline-item:nth-child(even) .timeline-top { padding-top: 24px; }
+        .timeline-action { font-size: .65rem; font-weight: 750; }
+        .timeline-date { color: var(--muted); font-size: .55rem; }
+        .timeline-state { color: var(--muted); font-size: .57rem; margin-top: 2px; }
+        .timeline-empty { color: var(--muted); font-size: .65rem; padding: 5px 2px; }
         .loading-note { color: var(--muted); font-size: .72rem; }
         .visually-hidden { clip: rect(0, 0, 0, 0); clip-path: inset(50%); height: 1px; overflow: hidden; position: absolute; white-space: nowrap; width: 1px; }
         @media (max-width: 820px) {
@@ -241,18 +224,22 @@
             .hero-actions { align-items: flex-end; }
             .hero-buttons { justify-content: flex-start; }
             .file-meta { text-align: right; }
-            .demand-list { grid-template-columns: repeat(6, minmax(155px, 1fr)); }
-            .detail { min-height: 160px; padding: 10px; }
+            .metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            .metric:last-child { grid-column: span 2; }
+            .metric-updated { font-size: .68rem; white-space: normal; }
+            .demand-list { padding-left: 6px; padding-right: 6px; }
+            .detail { padding: 7px; }
         }
         @media (max-width: 560px) {
-            .metrics { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; }
+            .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; }
             .metric { min-height: 48px; padding: 6px; }
             .metric-value { font-size: 1rem; }
-            .metric-updated { font-size: .58rem; white-space: normal; }
+            .metric-updated { font-size: .7rem; white-space: normal; }
+            .metric:last-child { grid-column: 1 / -1; }
             .workspace-heading { align-items: flex-start; flex-direction: column; gap: 6px; padding: 8px; }
             .filters { flex-direction: column; width: 100%; }
             .filters input, .filters select { width: 100%; }
-            .timeline-top { align-items: flex-start; flex-direction: column; gap: 1px; }
+            .timeline-item { flex-basis: 126px; }
         }
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
@@ -278,8 +265,16 @@
         <section class="metrics" aria-label="Resumo das demandas">
             <article class="metric"><div class="metric-label">Demandas cadastradas</div><div class="metric-value" id="metric-total">—</div></article>
             <article class="metric"><div class="metric-label">Em andamento</div><div class="metric-value" id="metric-progress">—</div></article>
+            <article class="metric"><div class="metric-label">Em validação</div><div class="metric-value" id="metric-validation">—</div></article>
             <article class="metric"><div class="metric-label">Bloqueadas</div><div class="metric-value" id="metric-blocked">—</div></article>
             <article class="metric"><div class="metric-label">Última atualização</div><div class="metric-value metric-updated" id="metric-updated">—</div></article>
+        </section>
+        <section class="detail" id="demand-detail" aria-label="Histórico do fluxo">
+            <div class="detail-head">
+                <div class="detail-id">SELECIONE UMA DEMANDA</div>
+                <h3>Histórico do fluxo</h3>
+            </div>
+            <h4 class="timeline-title">Histórico do fluxo · 0 registro(s)</h4>
         </section>
         <section class="workspace" aria-labelledby="workspace-title">
             <header class="workspace-heading">
@@ -297,6 +292,7 @@
             <nav class="status-shortcuts" aria-label="Filtrar demandas por situação">
                 <button class="status-shortcut" type="button" data-status-shortcut="" aria-pressed="true">Todas <span class="shortcut-count" data-shortcut-count="">0</span></button>
                 <button class="status-shortcut" type="button" data-status-shortcut="progress" aria-pressed="false">Em andamento <span class="shortcut-count" data-shortcut-count="progress">0</span></button>
+                <button class="status-shortcut" type="button" data-status-shortcut="validation" aria-pressed="false">Em validação <span class="shortcut-count" data-shortcut-count="validation">0</span></button>
                 <button class="status-shortcut" type="button" data-status-shortcut="blocked" aria-pressed="false">Bloqueadas <span class="shortcut-count" data-shortcut-count="blocked">0</span></button>
                 <button class="status-shortcut" type="button" data-status-shortcut="paused" aria-pressed="false">Pausadas <span class="shortcut-count" data-shortcut-count="paused">0</span></button>
                 <button class="status-shortcut" type="button" data-status-shortcut="done" aria-pressed="false">Concluídas <span class="shortcut-count" data-shortcut-count="done">0</span></button>
@@ -304,19 +300,8 @@
             </nav>
             <div class="content">
                 <div class="demand-list" id="demand-list" aria-label="Lista de demandas" aria-live="polite">
-                    <div class="detail-empty" id="list-empty">
-                        <div class="empty-mark" aria-hidden="true">↻</div>
-                        <strong>Aguardando dados de demandas</strong>
-                        <p>As demandas aparecerão aqui quando os dados forem atualizados.</p>
-                    </div>
+                    <div class="timeline-empty" id="list-empty">Carregando demandas...</div>
                 </div>
-                <section class="detail" id="demand-detail" aria-label="Detalhes da demanda">
-                    <div class="detail-empty">
-                        <div class="empty-mark" aria-hidden="true">↗</div>
-                        <strong>O fluxo aparece aqui</strong>
-                        <p>Escolha uma demanda na lista para ver o status e as etapas do fluxo.</p>
-                    </div>
-                </section>
             </div>
         </section>
     </main>
@@ -332,6 +317,7 @@
             const statusShortcuts = [...document.querySelectorAll("[data-status-shortcut]")];
             const demandList = document.querySelector("#demand-list");
             const detail = document.querySelector("#demand-detail");
+            const svgNamespace = "http://www.w3.org/2000/svg";
             const jsonUrl = new URL("demandas.json", location.href);
             const jsonRefreshInterval = 5 * 60 * 1000;
             let demands = [];
@@ -524,7 +510,8 @@
                 if (status.includes("bloque")) return "blocked";
                 if (status.includes("paus")) return "paused";
                 if (status.includes("conclu") || status.includes("finaliz") || status.includes("encerr")) return "done";
-                if (status.includes("desenvolv") || status.includes("valid") || status.includes("execu") || status.includes("andamento")) return "progress";
+                if (status.includes("valid")) return "validation";
+                if (status.includes("desenvolv") || status.includes("execu") || status.includes("andamento") || status.includes("iniciado") || status.includes("retomado")) return "progress";
                 if (!status || status.includes("naoiniciado") || status.includes("cadastrar")) return "new";
                 return "";
             }
@@ -649,7 +636,7 @@
                 if (selectedId) {
                     renderDetail(demands.find((demand) => demand.id === selectedId));
                 } else {
-                    detail.innerHTML = `<div class="detail-empty"><div class="empty-mark" aria-hidden="true">↗</div><strong>Aguardando uma demanda</strong><p>Nenhuma demanda disponível no momento.</p></div>`;
+                    renderDetail(null);
                 }
                 searchInput.disabled = false;
                 dataMeta.textContent = sourceLabel;
@@ -684,6 +671,7 @@
             function renderMetrics() {
                 document.querySelector("#metric-total").textContent = String(demands.length);
                 document.querySelector("#metric-progress").textContent = String(demands.filter((demand) => statusTone(demand.status) === "progress").length);
+                document.querySelector("#metric-validation").textContent = String(demands.filter((demand) => statusTone(demand.status) === "validation").length);
                 document.querySelector("#metric-blocked").textContent = String(demands.filter((demand) => statusTone(demand.status) === "blocked").length);
                 const latest = demands.reduce((date, demand) => demand.updatedAt && (!date || demand.updatedAt > date) ? demand.updatedAt : date, null);
                 document.querySelector("#metric-updated").textContent = latest
@@ -729,106 +717,69 @@
                 summary.className = "list-summary";
                 summary.textContent = `${items.length} de ${demands.length} demanda(s)`;
                 demandList.append(summary);
+                const tableHead = document.createElement("div");
+                tableHead.className = "demand-table-head";
+                tableHead.setAttribute("aria-hidden", "true");
+                for (const label of ["Demanda", "Prioridade", "Ponto focal", "Status"]) {
+                    const cell = document.createElement("span");
+                    cell.textContent = label;
+                    tableHead.append(cell);
+                }
+                demandList.append(tableHead);
                 if (!items.length) {
                     const empty = document.createElement("div");
                     empty.className = "timeline-empty";
                     empty.textContent = demands.length
                         ? "Nenhuma demanda corresponde aos filtros selecionados."
                         : "Nenhuma demanda disponível no momento.";
-                    empty.style.gridColumn = "1 / -1";
                     demandList.append(empty);
                     return;
                 }
-                const stages = [
-                    { tone: "new", label: "Não iniciadas" },
-                    { tone: "progress", label: "Em andamento" },
-                    { tone: "paused", label: "Pausadas" },
-                    { tone: "blocked", label: "Bloqueadas" },
-                    { tone: "done", label: "Concluídas" },
-                    { tone: "other", label: "Outros status" }
-                ];
-                const showEmptyStages = !searchInput.value && !statusFilter.value && !quickStatusFilter;
-                for (const stage of stages) {
-                    const stageDemands = items.filter((demand) => (statusTone(demand.status) || "other") === stage.tone);
-                    if (!showEmptyStages && !stageDemands.length) continue;
-                    const lane = document.createElement("section");
-                    lane.className = "flow-lane";
-                    lane.dataset.tone = stage.tone;
-                    lane.setAttribute("aria-label", `${stage.label}: ${stageDemands.length} demanda(s)`);
-                    const heading = document.createElement("header");
-                    heading.className = "flow-lane-heading";
-                    const label = document.createElement("span");
-                    label.className = "flow-lane-title";
-                    label.textContent = stage.label;
-                    const count = document.createElement("span");
-                    count.className = "flow-lane-count";
-                    count.textContent = String(stageDemands.length);
-                    heading.append(label, count);
-                    lane.append(heading);
-                    for (const demand of stageDemands) {
-                        const button = document.createElement("button");
-                        button.type = "button";
-                        button.className = "demand-card";
-                        button.setAttribute("aria-current", String(demand.id === selectedId));
-                        button.setAttribute("aria-label", `Demanda ${demand.id}: ${demand.title}. Status: ${demand.status}`);
-                        const top = document.createElement("span");
-                        top.className = "card-top";
-                        const id = document.createElement("span");
-                        id.className = "demand-id";
-                        id.textContent = `#${demand.id}`;
-                        const badge = document.createElement("span");
-                        badge.className = "pill";
-                        if (statusTone(demand.status)) badge.dataset.tone = statusTone(demand.status);
-                        badge.textContent = demand.status;
-                        top.append(id, badge);
-                        const title = document.createElement("span");
-                        title.className = "card-title";
-                        title.textContent = demand.title;
-                        const bottom = document.createElement("span");
-                        bottom.className = "card-bottom";
-                        const context = document.createElement("span");
-                        context.className = "card-context";
-                        const category = document.createElement("span");
-                        category.className = "card-category";
-                        category.textContent = demand.category || demand.type || "Sem categoria";
-                        context.append(category);
-                        if (demand.owner || demand.updatedAt) {
-                            const owner = document.createElement("span");
-                            owner.className = "card-owner";
-                            owner.textContent = demand.owner ? `· ${demand.owner}` : "";
-                            context.append(owner);
-                        }
-                        bottom.append(context);
-                        const meta = document.createElement("span");
-                        meta.className = "card-meta";
-                        if (demand.priority) {
-                            const priority = document.createElement("span");
-                            priority.className = "card-priority";
-                            priority.textContent = demand.priority;
-                            meta.append(priority);
-                        }
-                        if (demand.updatedAt) {
-                            const date = document.createElement("span");
-                            date.className = "demand-date";
-                            date.textContent = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }).format(demand.updatedAt);
-                            meta.append(date);
-                        }
-                        bottom.append(meta);
-                        button.append(top, title, bottom);
-                        button.addEventListener("click", () => {
-                            selectedId = demand.id;
-                            renderList();
-                            renderDetail(demand);
-                        });
-                        lane.append(button);
-                    }
-                    if (!stageDemands.length) {
-                        const emptyStage = document.createElement("div");
-                        emptyStage.className = "loading-note";
-                        emptyStage.textContent = "Sem demandas";
-                        lane.append(emptyStage);
-                    }
-                    demandList.append(lane);
+                const priorityNumber = (priority) => {
+                    const match = String(priority || "").trim().match(/^P?(\d+)$/i);
+                    return match ? Number(match[1]) : Number.POSITIVE_INFINITY;
+                };
+                items.sort((a, b) => {
+                    const priorityDifference = priorityNumber(a.priority) - priorityNumber(b.priority);
+                    if (priorityDifference) return priorityDifference;
+                    if (!a.priority && b.priority) return 1;
+                    if (a.priority && !b.priority) return -1;
+                    if (a.priority && b.priority && a.priority !== b.priority) return a.priority.localeCompare(b.priority, "pt-BR");
+                    return (b.updatedAt?.getTime() || 0) - (a.updatedAt?.getTime() || 0);
+                });
+                for (const demand of items) {
+                    const row = document.createElement("button");
+                    row.type = "button";
+                    row.className = "demand-row";
+                    row.setAttribute("aria-current", String(demand.id === selectedId));
+                    row.setAttribute("aria-label", `Demanda ${demand.id}: ${demand.title}. Prioridade ${demand.priority || "não informada"}. Ponto focal ${demand.owner || "não informado"}. Status ${demand.status}.`);
+                    const name = document.createElement("span");
+                    name.className = "row-demand";
+                    const title = document.createElement("span");
+                    title.className = "row-title";
+                    title.textContent = demand.title;
+                    const id = document.createElement("span");
+                    id.className = "row-id";
+                    id.textContent = `#${demand.id} · ${demand.category || demand.type || "Sem categoria"}`;
+                    name.append(title, id);
+                    const priority = document.createElement("span");
+                    priority.className = "row-priority";
+                    priority.textContent = demand.priority || "—";
+                    const owner = document.createElement("span");
+                    owner.className = "row-owner";
+                    owner.textContent = demand.owner || "Não informado";
+                    const status = document.createElement("span");
+                    status.className = "row-status pill";
+                    const tone = statusTone(demand.status);
+                    if (tone) status.dataset.tone = tone;
+                    status.textContent = demand.status;
+                    row.append(name, priority, owner, status);
+                    row.addEventListener("click", () => {
+                        selectedId = demand.id;
+                        renderList();
+                        renderDetail(demand);
+                    });
+                    demandList.append(row);
                 }
             }
 
@@ -838,65 +789,80 @@
                 head.className = "detail-head";
                 const id = document.createElement("div");
                 id.className = "detail-id";
-                id.textContent = `DEMANDA ${demand.id}`;
+                id.textContent = demand ? `DEMANDA ${demand.id}` : "HISTÓRICO DO FLUXO";
                 const title = document.createElement("h3");
-                title.textContent = demand.title;
-                const tags = document.createElement("div");
-                tags.className = "detail-tags";
-                for (const value of [demand.category, demand.type].filter(Boolean)) {
-                    const tag = document.createElement("span");
-                    tag.className = "pill";
-                    tag.textContent = value;
-                    tags.append(tag);
-                }
-                head.append(id, title, tags);
-
-                const current = document.createElement("div");
-                current.className = "current-status";
-                const currentInfo = document.createElement("div");
-                const label = document.createElement("span");
-                label.className = "current-status-label";
-                label.textContent = "Status atual";
-                const value = document.createElement("strong");
-                value.textContent = demand.status;
-                currentInfo.append(label, value);
-                const currentDate = document.createElement("span");
-                currentDate.className = "current-date";
-                currentDate.textContent = demand.updatedAt ? `Última atualização\n${displayDate(demand.updatedAt)}` : "Sem data de movimentação";
-                current.append(currentInfo, currentDate);
+                title.textContent = demand ? demand.title : "Selecione uma demanda";
+                head.append(id, title);
 
                 const heading = document.createElement("h4");
                 heading.className = "timeline-title";
-                heading.textContent = `Histórico do fluxo · ${demand.logs.length} registro(s)`;
+                heading.textContent = `Histórico do fluxo · ${demand?.logs.length || 0} registro(s)`;
                 const timeline = document.createElement("ol");
                 timeline.className = "timeline";
-                if (!demand.logs.length) {
+                if (!demand?.logs.length) {
                     const empty = document.createElement("li");
                     empty.className = "timeline-empty";
-                    empty.textContent = "Ainda não há registros de andamento para esta demanda na aba logs.";
+                    empty.textContent = demand ? "Ainda não há etapas registradas." : "O histórico da demanda selecionada aparecerá aqui.";
                     timeline.append(empty);
                 } else {
-                    for (const log of demand.logs) {
+                    const chronologicalLogs = [...demand.logs].reverse();
+                    let startCount = 0;
+                    const pathSvg = document.createElementNS(svgNamespace, "svg");
+                    pathSvg.classList.add("timeline-path");
+                    pathSvg.setAttribute("aria-hidden", "true");
+                    pathSvg.setAttribute("width", String(chronologicalLogs.length * 142));
+                    pathSvg.setAttribute("height", "26");
+                    pathSvg.setAttribute("viewBox", `0 0 ${chronologicalLogs.length * 142} 26`);
+                    const path = document.createElementNS(svgNamespace, "path");
+                    const nodes = chronologicalLogs.map((_, index) => ({
+                        x: index * 142 + 71,
+                        y: index % 2 === 0 ? 4 : 14
+                    }));
+                    let pathData = `M ${nodes[0].x} ${nodes[0].y}`;
+                    for (let index = 1; index < nodes.length; index += 1) {
+                        const previous = nodes[index - 1];
+                        const node = nodes[index];
+                        pathData += ` Q ${(previous.x + node.x) / 2} ${previous.y} ${node.x} ${node.y}`;
+                    }
+                    path.setAttribute("d", pathData);
+                    pathSvg.append(path);
+                    timeline.append(pathSvg);
+                    for (const log of chronologicalLogs) {
                         const item = document.createElement("li");
                         item.className = "timeline-item";
+                        item.dataset.tone = statusTone(log.status);
                         const top = document.createElement("div");
                         top.className = "timeline-top";
                         const action = document.createElement("span");
                         action.className = "timeline-action";
-                        action.textContent = log.action;
+                        const actionKey = normalize(log.action);
+                        let mappedLifecycleAction = true;
+                        if (actionKey.includes("cadastr")) {
+                            action.textContent = "Cadastrado";
+                        } else if (actionKey.includes("inici") || actionKey.includes("start")) {
+                            startCount += 1;
+                            action.textContent = startCount === 1 ? "Iniciado" : "Retomado";
+                        } else if (actionKey.includes("paus")) {
+                            action.textContent = "Pausado";
+                        } else {
+                            mappedLifecycleAction = false;
+                            action.textContent = log.action;
+                        }
                         const date = document.createElement("time");
                         date.className = "timeline-date";
-                        date.textContent = displayDate(log.date);
+                        date.textContent = log.date
+                            ? new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" }).format(log.date)
+                            : "Data não informada";
                         if (log.date) date.dateTime = log.date.toISOString();
                         top.append(action, date);
                         const state = document.createElement("div");
                         state.className = "timeline-state";
-                        state.textContent = log.status || "Status não informado";
+                        state.textContent = mappedLifecycleAction ? "" : log.status;
                         item.append(top, state);
                         timeline.append(item);
                     }
                 }
-                detail.append(head, current, heading, timeline);
+                detail.append(head, heading, timeline);
             }
 
             refreshJsonButton.addEventListener("click", loadJsonData);
