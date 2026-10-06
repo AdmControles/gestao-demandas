@@ -80,7 +80,7 @@
         .primary-button:hover { background: var(--blue-dark); box-shadow: 0 7px 18px rgba(7, 89, 173, .23); transform: translateY(-1px); }
         .secondary-button { background: #fff; border: 1px solid var(--line); color: var(--blue-dark); }
         .secondary-button:hover { background: var(--soft-blue); }
-        .primary-button:focus-visible, .secondary-button:focus-visible, input:focus-visible, select:focus-visible, .demand-row:focus-visible, .status-shortcut:focus-visible {
+        .primary-button:focus-visible, .secondary-button:focus-visible, input:focus-visible, select:focus-visible, .demand-row:focus-visible {
             outline: 3px solid #8fc1f7;
             outline-offset: 2px;
         }
@@ -118,25 +118,6 @@
         }
         .workspace-heading h2 { font-size: .84rem; margin: 0; }
         .workspace-heading p { display: none; }
-        .status-shortcuts { border-bottom: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 5px; padding: 7px 10px; }
-        .status-shortcut {
-            align-items: center;
-            background: #f5f7fa;
-            border: 1px solid var(--line);
-            border-radius: 999px;
-            color: #4b5e75;
-            display: inline-flex;
-            font-size: .64rem;
-            font-weight: 650;
-            gap: 7px;
-            min-height: 25px;
-            padding: 0 8px;
-            transition: background .15s, border-color .15s, color .15s;
-        }
-        .status-shortcut:hover, .status-shortcut[aria-pressed="true"] { background: var(--soft-blue); border-color: #c7ddf5; color: var(--blue-dark); }
-        .shortcut-count { color: var(--muted); font-size: .6rem; font-weight: 750; }
-        .status-shortcut[aria-pressed="true"] .shortcut-count { color: var(--blue); }
-        .status-shortcut:focus-visible { outline: 3px solid #8fc1f7; outline-offset: 2px; }
         .filters { display: flex; gap: 6px; }
         .filters input, .filters select {
             background: #fff;
@@ -199,15 +180,16 @@
         .detail-head h3 { font-size: .72rem; margin: 0; }
         .timeline { display: grid; gap: 2px 0; list-style: none; margin: 0; overflow: hidden; padding: 5px 4px 4px; position: relative; }
         .timeline-path { height: 100%; inset: 0; overflow: visible; pointer-events: none; position: absolute; width: 100%; z-index: 0; }
-        .timeline-path path { fill: none; stroke: #bfd7ef; stroke-linecap: round; stroke-width: 2; }
+        .timeline-path path { fill: none; stroke: #9dbfe2; stroke-linecap: round; stroke-width: 2; }
+        .timeline-path polygon { fill: #6d9dcc; }
         .timeline-item { min-width: 0; min-height: 43px; padding: 0 5px 3px; position: relative; text-align: center; z-index: 1; }
-        .timeline-item::before { background: #fff; border: 2px solid #8ab5e1; border-radius: 50%; content: ""; height: 9px; left: calc(50% - 5px); position: absolute; top: 0; width: 9px; z-index: 1; }
-        .timeline-item:first-child::before { background: var(--blue); border-color: var(--blue); box-shadow: 0 0 0 3px #e5f0fc; }
+        .timeline-item::before { align-items: center; background: #fff; border: 2px solid #8ab5e1; border-radius: 50%; color: var(--blue-dark); content: attr(data-step); display: flex; font-size: .47rem; font-weight: 800; height: 15px; justify-content: center; left: calc(50% - 8px); line-height: 1; position: absolute; top: 0; width: 15px; z-index: 1; }
+        .timeline-item:first-child::before { background: var(--blue); border-color: var(--blue); box-shadow: 0 0 0 3px #e5f0fc; color: white; }
         .timeline-item[data-tone="validation"]::before { border-color: #3281c2; }
         .timeline-item[data-tone="paused"]::before { border-color: #d7a72d; }
         .timeline-item[data-tone="blocked"]::before { border-color: #df665f; }
         .timeline-item[data-tone="done"]::before { border-color: #55a66d; }
-        .timeline-top { display: flex; flex-direction: column; gap: 1px; padding-top: 12px; }
+        .timeline-top { display: flex; flex-direction: column; gap: 1px; padding-top: 18px; }
         .timeline-action { font-size: .62rem; font-weight: 750; line-height: 1.25; }
         .timeline-date { color: var(--muted); font-size: .53rem; }
         .timeline-state { color: var(--muted); font-size: .53rem; line-height: 1.25; margin-top: 2px; }
@@ -288,15 +270,6 @@
                     <select id="status-filter" disabled><option value="">Todos os status</option></select>
                 </div>
             </header>
-            <nav class="status-shortcuts" aria-label="Filtrar demandas por situação">
-                <button class="status-shortcut" type="button" data-status-shortcut="" aria-pressed="true">Todas <span class="shortcut-count" data-shortcut-count="">0</span></button>
-                <button class="status-shortcut" type="button" data-status-shortcut="progress" aria-pressed="false">Em andamento <span class="shortcut-count" data-shortcut-count="progress">0</span></button>
-                <button class="status-shortcut" type="button" data-status-shortcut="validation" aria-pressed="false">Em validação <span class="shortcut-count" data-shortcut-count="validation">0</span></button>
-                <button class="status-shortcut" type="button" data-status-shortcut="blocked" aria-pressed="false">Bloqueadas <span class="shortcut-count" data-shortcut-count="blocked">0</span></button>
-                <button class="status-shortcut" type="button" data-status-shortcut="paused" aria-pressed="false">Pausadas <span class="shortcut-count" data-shortcut-count="paused">0</span></button>
-                <button class="status-shortcut" type="button" data-status-shortcut="done" aria-pressed="false">Concluídas <span class="shortcut-count" data-shortcut-count="done">0</span></button>
-                <button class="status-shortcut" type="button" data-status-shortcut="new" aria-pressed="false">Não iniciadas <span class="shortcut-count" data-shortcut-count="new">0</span></button>
-            </nav>
             <div class="content">
                 <div class="demand-list" id="demand-list" aria-label="Lista de demandas" aria-live="polite">
                     <div class="timeline-empty" id="list-empty">Carregando demandas...</div>
@@ -314,7 +287,6 @@
             const searchInput = document.querySelector("#search");
             const categoryFilter = document.querySelector("#category-filter");
             const statusFilter = document.querySelector("#status-filter");
-            const statusShortcuts = [...document.querySelectorAll("[data-status-shortcut]")];
             const demandList = document.querySelector("#demand-list");
             const detail = document.querySelector("#demand-detail");
             const svgNamespace = "http://www.w3.org/2000/svg";
@@ -322,7 +294,6 @@
             const jsonRefreshInterval = 5 * 60 * 1000;
             let demands = [];
             let selectedId = null;
-            let quickStatusFilter = "";
             let jsonRefreshTimer = null;
             let jsonRequestInProgress = false;
             let timelineObserver = null;
@@ -632,7 +603,6 @@
                     : demands[0]?.id || null;
                 renderCategoryOptions();
                 renderStatusOptions();
-                renderStatusShortcuts();
                 renderMetrics();
                 renderList();
                 if (selectedId) {
@@ -700,27 +670,15 @@
                 categoryFilter.disabled = false;
             }
 
-            function renderStatusShortcuts() {
-                for (const button of statusShortcuts) {
-                    const tone = button.dataset.statusShortcut;
-                    const count = tone
-                        ? demands.filter((demand) => statusTone(demand.status) === tone).length
-                        : demands.length;
-                    button.querySelector("[data-shortcut-count]").textContent = String(count);
-                    button.setAttribute("aria-pressed", String(quickStatusFilter === tone));
-                }
-            }
-
             function visibleDemands() {
                 const query = normalize(searchInput.value);
                 const category = categoryFilter.value;
                 const status = statusFilter.value;
                 return demands.filter((demand) => {
                     const searchable = normalize(`${demand.title} ${demand.category} ${demand.type} ${demand.status} ${demand.owner} ${demand.priority}`);
-                    return (!query || searchable.includes(query)) &&
-                        (!category || demand.category === category) &&
-                        (!status || demand.status === status) &&
-                        (!quickStatusFilter || statusTone(demand.status) === quickStatusFilter);
+                    return                     (!query || searchable.includes(query)) &&
+                    (!category || demand.category === category) &&
+                    (!status || demand.status === status);
                 });
             }
 
@@ -797,7 +755,7 @@
                 }
             }
 
-            function layoutTimeline(timeline, items, path) {
+            function layoutTimeline(timeline, items, path, pathSvg) {
                 const width = timeline.clientWidth;
                 if (!width || !items.length) return;
                 const columnCount = Math.max(1, Math.floor(width / 112));
@@ -805,8 +763,7 @@
                 items.forEach((item, index) => {
                     const row = Math.floor(index / columnCount);
                     const positionInRow = index % columnCount;
-                    const itemsInRow = Math.min(columnCount, items.length - row * columnCount);
-                    const column = row % 2 === 0 ? positionInRow + 1 : itemsInRow - positionInRow;
+                    const column = row % 2 === 0 ? positionInRow + 1 : columnCount - positionInRow;
                     item.style.gridColumn = String(column);
                     item.style.gridRow = String(row + 1);
                 });
@@ -821,13 +778,47 @@
                         y: item.offsetTop + 5
                     }));
                     let pathData = `M ${points[0].x} ${points[0].y}`;
+                    const arrows = [];
                     for (let index = 1; index < points.length; index += 1) {
                         const previous = points[index - 1];
                         const point = points[index];
-                        const middleX = (previous.x + point.x) / 2;
-                        pathData += ` C ${middleX} ${previous.y}, ${middleX} ${point.y}, ${point.x} ${point.y}`;
+                        const dx = point.x - previous.x;
+                        const dy = point.y - previous.y;
+                        const firstControl = { x: previous.x + dx * 0.42, y: previous.y + dy * 0.08 };
+                        const secondControl = { x: point.x - dx * 0.42, y: point.y - dy * 0.08 };
+                        pathData += ` C ${firstControl.x} ${firstControl.y}, ${secondControl.x} ${secondControl.y}, ${point.x} ${point.y}`;
+
+                        const t = 0.55;
+                        const inverse = 1 - t;
+                        const arrowX = inverse ** 3 * previous.x +
+                            3 * inverse ** 2 * t * firstControl.x +
+                            3 * inverse * t ** 2 * secondControl.x +
+                            t ** 3 * point.x;
+                        const arrowY = inverse ** 3 * previous.y +
+                            3 * inverse ** 2 * t * firstControl.y +
+                            3 * inverse * t ** 2 * secondControl.y +
+                            t ** 3 * point.y;
+                        const tangentX = 3 * inverse ** 2 * (firstControl.x - previous.x) +
+                            6 * inverse * t * (secondControl.x - firstControl.x) +
+                            3 * t ** 2 * (point.x - secondControl.x);
+                        const tangentY = 3 * inverse ** 2 * (firstControl.y - previous.y) +
+                            6 * inverse * t * (secondControl.y - firstControl.y) +
+                            3 * t ** 2 * (point.y - secondControl.y);
+                        const tangentLength = Math.hypot(tangentX, tangentY) || 1;
+                        const directionX = tangentX / tangentLength;
+                        const directionY = tangentY / tangentLength;
+                        const perpendicularX = -directionY;
+                        const perpendicularY = directionX;
+                        const arrow = document.createElementNS(svgNamespace, "polygon");
+                        arrow.setAttribute("points", [
+                            `${arrowX + directionX * 4},${arrowY + directionY * 4}`,
+                            `${arrowX - directionX * 3 + perpendicularX * 2.5},${arrowY - directionY * 3 + perpendicularY * 2.5}`,
+                            `${arrowX - directionX * 3 - perpendicularX * 2.5},${arrowY - directionY * 3 - perpendicularY * 2.5}`
+                        ].join(" "));
+                        arrows.push(arrow);
                     }
                     path.setAttribute("d", pathData);
+                    pathSvg.replaceChildren(path, ...arrows);
                 });
             }
 
@@ -862,6 +853,7 @@
                         const item = document.createElement("li");
                         item.className = "timeline-item";
                         item.dataset.tone = statusTone(log.status);
+                        item.dataset.step = String(timelineItems.length + 1);
                         const top = document.createElement("div");
                         top.className = "timeline-top";
                         const action = document.createElement("span");
@@ -902,21 +894,14 @@
                         timeline.append(item);
                         timelineItems.push(item);
                     }
-                    layoutTimeline(timeline, timelineItems, path);
-                    timelineObserver = new ResizeObserver(() => layoutTimeline(timeline, timelineItems, path));
+                    layoutTimeline(timeline, timelineItems, path, pathSvg);
+                    timelineObserver = new ResizeObserver(() => layoutTimeline(timeline, timelineItems, path, pathSvg));
                     timelineObserver.observe(timeline);
                 }
                 detail.append(head, timeline);
             }
 
             refreshJsonButton.addEventListener("click", loadJsonData);
-            statusShortcuts.forEach((button) => {
-                button.addEventListener("click", () => {
-                    quickStatusFilter = button.dataset.statusShortcut;
-                    renderStatusShortcuts();
-                    renderList();
-                });
-            });
             searchInput.addEventListener("input", renderList);
             categoryFilter.addEventListener("change", () => {
                 const items = visibleDemands();
