@@ -315,7 +315,7 @@
         .timeline-step-toggle:hover, .timeline-step-toggle:focus-visible { background: #e8f1fb; border-color: var(--blue); outline: 2px solid #8fc1f7; outline-offset: 2px; }         .timeline-item.has-toggle::before { content: none; }         .timeline-step-toggle { align-items: center; background: #fff; border: 2px solid #aab4c0; border-radius: 50%; color: #657181; display: flex; font-size: .47rem; font-weight: 800; height: 17px; justify-content: center; left: calc(50% - 9px); line-height: 1; margin: 0; padding: 0; position: absolute; top: 0; width: 17px; z-index: 4; }         .timeline-step-toggle:hover, .timeline-step-toggle:focus-visible { background: #e8f1fb; border-color: var(--blue); outline: 2px solid #8fc1f7; outline-offset: 2px; }         .timeline-item[data-progress="past"]::before { background: #f0f2f5; border-color: #aab4c0; color: #657181; }         .timeline-item[data-progress="past"] .timeline-card { background: linear-gradient(155deg, #fff, #f3f5f7); border-color: #dfe4ea; border-top-color: #aab4c0; }         .timeline-item[data-progress="past"] .timeline-action { color: #596675; }         .timeline-item[data-progress="past"] .timeline-date, .timeline-item[data-progress="past"] .timeline-state { color: #788493; }         .timeline-item[data-progress="current"]::before { background: #25804a; border-color: #25804a; color: #fff; }         .timeline-item[data-progress="current"] .timeline-card { background: linear-gradient(155deg, #fff, #edf7f0); border-color: #c7e4d0; border-top-color: #25804a; }         .timeline-item[data-progress="current"] .timeline-action { color: #216c40; }         .demand-row-hidden { display: none !important; }         .demand-list-toggle { background: #f4f8fc; border: 1px solid #d4e0ed; border-radius: 6px; color: #315a83; cursor: pointer; display: block; font: inherit; font-size: .65rem; font-weight: 650; margin: 5px auto 2px; min-height: 27px; padding: 0 10px; }         .demand-list-toggle:hover, .demand-list-toggle:focus-visible { background: #e8f1fb; border-color: #9db9d7; outline: 2px solid #8fc1f7; outline-offset: 2px; }         @media print { .demand-row-hidden { display: grid !important; } .demand-list-toggle { display: none !important; } }
         @media (max-width: 820px) { .workspace-heading { grid-template-columns: 1fr; } .filters { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
         @media (max-width: 560px) { .filters { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; } .filters input, .filters select { min-width: 0; width: 100%; } }
-             .table-actions { position: relative; }         .table-actions-menu { background: #fff; border: 1px solid #d5e0ec; border-radius: 8px; box-shadow: 0 8px 24px rgba(15, 23, 42, .16); display: grid; gap: 3px; min-width: 190px; padding: 5px; position: absolute; right: 0; top: calc(100% + 5px); z-index: 20; }         .table-actions-menu[hidden] { display: none; }         .table-actions-menu button { background: transparent; border: 0; border-radius: 5px; color: #193b5b; cursor: pointer; font: inherit; font-size: .7rem; padding: 8px 10px; text-align: left; }         .table-actions-menu button:hover, .table-actions-menu button:focus-visible { background: #eef5fd; outline: none; }         .print-heading { display: none; }         @media print {             @page { size: landscape; margin: 9mm; }             body { background: #fff !important; color: #172b40 !important; font-family: Arial, sans-serif !important; }             body * { visibility: hidden !important; }             .workspace, .workspace * { visibility: visible !important; }             .shell { margin: 0 !important; max-width: none !important; padding: 0 !important; }             .workspace { border: 0 !important; box-shadow: none !important; left: 0 !important; overflow: visible !important; position: absolute !important; top: 0 !important; width: 100% !important; }             .workspace-heading { border: 0 !important; display: block !important; padding: 0 !important; }             .workspace-heading .filters, .table-actions { display: none !important; }             .print-heading { border-bottom: 2px solid #0759ad; display: block !important; margin: 0 0 9px !important; padding: 0 0 7px !important; }             .print-heading h2 { color: #0759ad !important; font-size: 16pt !important; margin: 0 0 3px !important; }             .print-heading p { color: #52647a !important; font-size: 8pt !important; margin: 0 !important; }             .content, .demand-list { max-height: none !important; max-width: none !important; overflow: visible !important; padding: 0 !important; width: 100% !important; }             .list-summary { color: #52647a !important; font-size: 8pt !important; margin: 0 0 5px !important; padding: 0 0 3px !important; }             .demand-table-head, .demand-row { box-sizing: border-box !important; gap: 5px !important; grid-template-columns: 2fr .48fr 1.25fr .78fr 1.55fr 1.05fr 1fr !important; min-width: 0 !important; text-align: center !important; width: 100% !important; }             .demand-table-head { background: #e8f0f8 !important; border: 1px solid #9fb4c9 !important; color: #153d63 !important; font-size: 7.5pt !important; padding: 6px 4px !important; print-color-adjust: exact; -webkit-print-color-adjust: exact; }             .demand-row { appearance: none !important; background: #fff !important; border: 0 !important; border-bottom: 1px solid #d4dde6 !important; border-radius: 0 !important; break-inside: avoid !important; color: #172b40 !important; min-height: 0 !important; page-break-inside: avoid !important; padding: 5px 4px !important; }             .demand-row:nth-of-type(even) { background: #f6f9fc !important; print-color-adjust: exact; -webkit-print-color-adjust: exact; }             .demand-table-head > span, .demand-row > * { justify-self: stretch !important; min-width: 0 !important; text-align: center !important; }             .row-demand, .row-title { text-align: left !important; }             .row-title, .row-type, .row-reason, .row-category, .row-owner, .row-status { color: #172b40 !important; font-size: 7.5pt !important; overflow: visible !important; text-overflow: clip !important; white-space: normal !important; }             .row-priority { background: #fff7df !important; color: #634b0b !important; font-size: 7.5pt !important; justify-self: center !important; print-color-adjust: exact; -webkit-print-color-adjust: exact; }             .row-status { border: 1px solid #d3dce6 !important; border-radius: 10px !important; display: inline-block !important; padding: 2px 5px !important; }         }         @media print { .row-status { print-color-adjust: exact; -webkit-print-color-adjust: exact; } }         </style>
+             .table-actions { position: relative; }         .table-actions-menu { background: #fff; border: 1px solid #d5e0ec; border-radius: 8px; box-shadow: 0 8px 24px rgba(15, 23, 42, .16); display: grid; gap: 3px; min-width: 190px; padding: 5px; position: absolute; right: 0; top: calc(100% + 5px); z-index: 20; }         .table-actions-menu[hidden] { display: none; }         .table-actions-menu button { background: transparent; border: 0; border-radius: 5px; color: #193b5b; cursor: pointer; font: inherit; font-size: .7rem; padding: 8px 10px; text-align: left; }         .table-actions-menu button:hover, .table-actions-menu button:focus-visible { background: #eef5fd; outline: none; }         .print-heading { display: none; }         @media print {             @page { size: landscape; margin: 9mm; }             body { background: #fff !important; color: #172b40 !important; font-family: Arial, sans-serif !important; }             body * { visibility: hidden !important; }             .workspace, .workspace * { visibility: visible !important; }             .shell { margin: 0 !important; max-width: none !important; padding: 0 !important; }             .workspace { border: 0 !important; box-shadow: none !important; left: 0 !important; overflow: visible !important; position: absolute !important; top: 0 !important; width: 100% !important; }             .workspace-heading { border: 0 !important; display: block !important; padding: 0 !important; }             .workspace-heading .filters, .table-actions { display: none !important; }             .print-heading { border-bottom: 2px solid #0759ad; display: block !important; margin: 0 0 9px !important; padding: 0 0 7px !important; }             .print-heading h2 { color: #0759ad !important; font-size: 16pt !important; margin: 0 0 3px !important; }             .print-heading p { color: #52647a !important; font-size: 8pt !important; margin: 0 !important; }             .content, .demand-list { max-height: none !important; max-width: none !important; overflow: visible !important; padding: 0 !important; width: 100% !important; }             .list-summary { color: #52647a !important; font-size: 8pt !important; margin: 0 0 5px !important; padding: 0 0 3px !important; }             .demand-table-head, .demand-row { box-sizing: border-box !important; gap: 5px !important; grid-template-columns: 2fr .48fr 1.25fr .78fr 1.55fr 1.05fr 1fr !important; min-width: 0 !important; text-align: center !important; width: 100% !important; }             .demand-table-head { background: #e8f0f8 !important; border: 1px solid #9fb4c9 !important; color: #153d63 !important; font-size: 7.5pt !important; padding: 6px 4px !important; print-color-adjust: exact; -webkit-print-color-adjust: exact; }             .demand-row { appearance: none !important; background: #fff !important; border: 0 !important; border-bottom: 1px solid #d4dde6 !important; border-radius: 0 !important; break-inside: avoid !important; color: #172b40 !important; min-height: 0 !important; page-break-inside: avoid !important; padding: 5px 4px !important; }             .demand-row:nth-of-type(even) { background: #f6f9fc !important; print-color-adjust: exact; -webkit-print-color-adjust: exact; }             .demand-table-head > span, .demand-row > * { justify-self: stretch !important; min-width: 0 !important; text-align: center !important; }             .row-demand, .row-title { text-align: left !important; }             .row-title, .row-type, .row-reason, .row-category, .row-owner, .row-status { color: #172b40 !important; font-size: 7.5pt !important; overflow: visible !important; text-overflow: clip !important; white-space: normal !important; }             .row-priority { background: #fff7df !important; color: #634b0b !important; font-size: 7.5pt !important; justify-self: center !important; print-color-adjust: exact; -webkit-print-color-adjust: exact; }             .row-status { border: 1px solid #d3dce6 !important; border-radius: 10px !important; display: inline-block !important; padding: 2px 5px !important; }         }         @media print { .row-status { print-color-adjust: exact; -webkit-print-color-adjust: exact; } }                 .metric-clickable { cursor: pointer; } .metric-clickable:focus-visible { outline: 2px solid #3281c2; outline-offset: 2px; } .metric-clickable[aria-pressed="true"] { border-color: #9db9d7; box-shadow: 0 0 0 2px rgba(7, 89, 173, .12); }         </style>
 </head>
 <body>
     <main class="shell">
@@ -329,11 +329,11 @@
                 <div class="developer-selector">
                     <label for="developer-filter">Desenvolvedor</label>
                     <select id="developer-filter" disabled>
-                        <option value="">Selecione um desenvolvedor</option>
+                        <option value="">Todos os desenvolvedores</option>
                         <option value="miguel">Miguel Marques</option>
                         <option value="ramon">Ramon Pacheco</option>
                         <option value="gabriel">Gabriel Macial</option>
-                        <option value="guilherme">Guilherme Pardo</option>
+                        <option value="guilherme">Guilherme Pardo</option>                         <option value="admco">Todos (ADM e CO)</option>
                     </select>
                 </div>
 
@@ -341,11 +341,11 @@
         </header>
         <div id="status-message" class="status-message" role="status" aria-live="polite"></div>
         <section class="metrics" aria-label="Resumo das demandas">
-            <article class="metric"><div class="metric-label">Demandas cadastradas</div><div class="metric-value" id="metric-total">—</div></article>
-            <article class="metric"><div class="metric-label">Em andamento</div><div class="metric-value" id="metric-progress">—</div></article>
-            <article class="metric"><div class="metric-label">Em validação</div><div class="metric-value" id="metric-validation">—</div></article>
-            <article class="metric"><div class="metric-label">Bloqueadas ADM</div><div class="metric-value" id="metric-blocked">—</div></article>
-            <article class="metric"><div class="metric-label">Bloqueado TI</div><div class="metric-value" id="metric-blocked-ti">—</div></article>
+            <article class="metric metric-clickable" data-metric-filter="all" role="button" tabindex="0" aria-pressed="false"><div class="metric-label">Demandas cadastradas</div><div class="metric-value" id="metric-total">—</div></article>
+            <article class="metric metric-clickable" data-metric-filter="progress" role="button" tabindex="0" aria-pressed="false"><div class="metric-label">Em andamento</div><div class="metric-value" id="metric-progress">—</div></article>
+            <article class="metric metric-clickable" data-metric-filter="validation" role="button" tabindex="0" aria-pressed="false"><div class="metric-label">Em validação</div><div class="metric-value" id="metric-validation">—</div></article>
+            <article class="metric metric-clickable" data-metric-filter="blocked-adm" role="button" tabindex="0" aria-pressed="false"><div class="metric-label">Bloqueadas ADM</div><div class="metric-value" id="metric-blocked">—</div></article>
+            <article class="metric metric-clickable" data-metric-filter="blocked-ti" role="button" tabindex="0" aria-pressed="false"><div class="metric-label">Bloqueado TI</div><div class="metric-value" id="metric-blocked-ti">—</div></article>
         </section>
         <section class="detail" id="demand-detail" aria-label="Histórico do fluxo">
             <div class="detail-head">
@@ -385,7 +385,7 @@
                     <option value="miguel">Miguel Marques</option>
                     <option value="ramon">Ramon Pacheco</option>
                     <option value="gabriel">Gabriel Macial</option>
-                    <option value="guilherme">Guilherme Pardo</option>
+                    <option value="guilherme">Guilherme Pardo</option>                         <option value="admco">Todos (ADM e CO)</option>
                 </select>
                 <div class="access-file" id="access-file">Selecione para ver o arquivo de dados.</div>
             </div>
@@ -431,16 +431,13 @@
             let jsonRefreshTimer = null;
             let dataRequestId = 0;
             let timelineObserver = null;
-            let expandedTimelineSteps = new Set();             let showAllDemands = false;
+            let expandedTimelineSteps = new Set(); let showAllDemands = false; let activeMetricFilter = null;
 
             const normalize = (value) => String(value ?? "")
                 .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
                 .toLowerCase().replace(/[^a-z0-9]+/g, "");
 
-            function updateAccessFile() {
-                const developer = developers[accessDeveloper.value];
-                accessFile.textContent = developer ? `Arquivo de dados: ${developer.file}` : "Selecione para ver o arquivo de dados.";
-            }
+            function updateAccessFile() { const developer = developers[accessDeveloper.value]; accessFile.textContent = accessDeveloper.value === "admco" ? "Leitor ADM e CO: acesso de leitura a todos os arquivos; não gera JSON." : developer ? "Arquivo de dados: " + developer.file : "Selecione para ver o arquivo de dados."; }
 
             function showAccessGate(developerId = "") {
                 accessDeveloper.value = developerId;
@@ -453,32 +450,7 @@
                 accessKey.focus();
             }
 
-            function unlockDeveloper(event) {
-                event.preventDefault();
-                const developer = developers[accessDeveloper.value];
-                if (!developer) {
-                    accessError.textContent = "Selecione um desenvolvedor.";
-                    return;
-                }
-                if (accessKey.value !== developer.key) {
-                    accessError.textContent = "Chave incorreta. Confira a chave e tente novamente.";
-                    accessKey.select();
-                    return;
-                }
-
-                const developerChanged = currentDeveloper?.id !== developer.id;
-                currentDeveloper = developer;
-                if (developerChanged) {
-                    selectedId = null;
-                    renderDemands([], `${developer.name} · Carregando demandas...`);
-                }
-                developerFilter.value = accessDeveloper.value;
-                developerFilter.disabled = false;
-                document.querySelector(".shell").inert = false;
-                document.body.classList.remove("access-locked");
-                accessGate.hidden = true;
-                loadJsonData();
-            }
+            function unlockDeveloper(event) { event.preventDefault(); const isAdmReader = accessDeveloper.value === "admco"; const developer = isAdmReader ? { id: "admco", name: "ADM e CO", key: "250100" } : developers[accessDeveloper.value]; if (!developer) { accessError.textContent = "Selecione um desenvolvedor."; return; } if (accessKey.value !== developer.key) { accessError.textContent = "Chave incorreta. Confira a chave e tente novamente."; accessKey.select(); return; } const developerChanged = currentDeveloper?.id !== developer.id; currentDeveloper = developer; if (developerChanged) { selectedId = null; activeMetricFilter = null; renderDemands([], developer.name + " · Carregando demandas..."); } developerFilter.value = isAdmReader ? "" : developer.id; developerFilter.disabled = false; document.querySelector(".shell").inert = false; document.body.classList.remove("access-locked"); accessGate.hidden = true; loadJsonData(); }
 
             function showMessage(message, kind) {
                 statusMessage.textContent = message;
@@ -809,7 +781,7 @@
                 statusMessage.className = "status-message";
                 if (!demands.length) dataMeta.textContent = "Carregando demandas...";
                 try {
-                    const url = new URL(developer.file, location.href);
+                    if (developer.id === "admco") { const datasets = await Promise.all(Object.values(developers).map(async (source) => { const sourceUrl = new URL(source.file, location.href); sourceUrl.searchParams.set("_", String(Date.now())); const sourceResponse = await fetch(sourceUrl, { cache: "no-store", headers: { Accept: "application/json" } }); if (!sourceResponse.ok) throw new Error("Não foi possível carregar " + source.file + "."); const sourcePayload = await sourceResponse.json(); return { source, demands: parseDemandsJson(sourcePayload), generatedAt: excelDate(sourcePayload.generatedAt) }; })); const allDemands = datasets.flatMap(({ source, demands: dataset }) => dataset.map((demand) => ({ ...demand, id: source.id + ":" + demand.id, developerId: source.id, developerName: source.name }))); const latest = datasets.map((dataset) => dataset.generatedAt).filter(Boolean).sort((a, b) => a.getTime() - b.getTime()).pop(); if (requestId !== dataRequestId) return; renderDemands(allDemands, "ADM e CO · Todos os desenvolvedores" + (latest ? " · Atualizado em " + displayDate(latest) : "")); return; } const url = new URL(developer.file, location.href);
                     url.searchParams.set("_", String(Date.now()));
                     const response = await fetch(url, { cache: "no-store", headers: { Accept: "application/json" } });
                     if (!response.ok) throw new Error(`Não foi possível carregar ${developer.file}.`);
@@ -827,16 +799,7 @@
                 }
             }
 
-            function renderMetrics() {
-                document.querySelector("#metric-total").textContent = String(demands.length);
-                document.querySelector("#metric-progress").textContent = String(demands.filter((demand) => statusTone(demand.status) === "progress").length);
-                document.querySelector("#metric-validation").textContent = String(demands.filter((demand) => statusTone(demand.status) === "validation").length);
-                document.querySelector("#metric-blocked").textContent = String(demands.filter((demand) => normalize(demand.status).includes("bloqueadoadm")).length);
-                const blockedTi = demands.filter((demand) => normalize(demand.status).includes("bloqueadoti")).length;
-                document.querySelector("#metric-blocked-ti").textContent = String(blockedTi);
-                    
-
-            }
+            function renderMetrics() { const metricDemands = currentDeveloper?.id === "admco" && developerFilter.value && developerFilter.value !== "admco" ? demands.filter((demand) => demand.developerId === developerFilter.value) : demands; document.querySelector("#metric-total").textContent = String(metricDemands.length); document.querySelector("#metric-progress").textContent = String(metricDemands.filter((demand) => statusTone(demand.status) === "progress").length); document.querySelector("#metric-validation").textContent = String(metricDemands.filter((demand) => statusTone(demand.status) === "validation").length); document.querySelector("#metric-blocked").textContent = String(metricDemands.filter((demand) => normalize(demand.status).includes("bloqueadoadm")).length); document.querySelector("#metric-blocked-ti").textContent = String(metricDemands.filter((demand) => normalize(demand.status).includes("bloqueadoti")).length); }
 
             function renderStatusOptions() {
                 const current = statusFilter.value;
@@ -873,11 +836,11 @@
                 const type = typeFilter.value;
                 const status = statusFilter.value;
                 return demands.filter((demand) => {
-                    const searchable = normalize(`${demand.title} ${demand.category} ${demand.type} ${demand.reason} ${demand.status} ${demand.owner} ${demand.priority}`);
+                    const searchable = normalize(`${demand.title} ${demand.category} ${demand.type} ${demand.reason} ${demand.status} ${demand.owner} ${demand.priority} ${demand.developerName || ""}`);
                     return (!query || searchable.includes(query)) &&
                     (!category || demand.category === category) &&
                     (!type || demand.type === type) &&
-                    (!status || demand.status === status);
+                    (!status || demand.status === status) && (currentDeveloper?.id !== "admco" || !developerFilter.value || developerFilter.value === "admco" || demand.developerId === developerFilter.value) && (!activeMetricFilter || activeMetricFilter === "all" || (activeMetricFilter === "progress" && statusTone(demand.status) === "progress") || (activeMetricFilter === "validation" && statusTone(demand.status) === "validation") || (activeMetricFilter === "blocked-adm" && normalize(demand.status).includes("bloqueadoadm")) || (activeMetricFilter === "blocked-ti" && normalize(demand.status).includes("bloqueadoti")));
                 });
             }
 
@@ -1221,13 +1184,13 @@
             }
 
                         const closeTableActionsMenu = () => {                 tableActionsMenu.hidden = true;                 tableActionsToggle.setAttribute("aria-expanded", "false");             };             tableActionsToggle.addEventListener("click", () => {                 const isOpen = !tableActionsMenu.hidden;                 tableActionsMenu.hidden = isOpen;                 tableActionsToggle.setAttribute("aria-expanded", String(!isOpen));             });             document.addEventListener("click", (event) => {                 if (!event.target.closest(".table-actions")) closeTableActionsMenu();             });             document.addEventListener("keydown", (event) => {                 if (event.key === "Escape") closeTableActionsMenu();             });             printTableButton.addEventListener("click", () => {                 closeTableActionsMenu();                 const items = visibleDemands();                 printMeta.textContent = currentDeveloper                     ? currentDeveloper.name + " · " + dataMeta.textContent + " · " + items.length + " demanda(s)"                     : "Dados do painel";                 window.print();             });             exportTableButton.addEventListener("click", () => {                 closeTableActionsMenu();                 if (!currentDeveloper) {                     showMessage("Selecione um desenvolvedor para exportar as demandas.", "error");                     return;                 }                 const priorityNumber = (priority) => {                     const value = String(priority || "").trim().toUpperCase().replace("P", "");                     return value && Number.isFinite(Number(value)) ? Number(value) : Number.POSITIVE_INFINITY;                 };                 const items = visibleDemands().sort((a, b) => {                     const priorityDifference = priorityNumber(a.priority) - priorityNumber(b.priority);                     if (priorityDifference) return priorityDifference;                     if (!a.priority && b.priority) return 1;                     if (a.priority && !b.priority) return -1;                     if (a.priority && b.priority && a.priority !== b.priority) return a.priority.localeCompare(b.priority, "pt-BR");                     return (b.updatedAt?.getTime() || 0) - (a.updatedAt?.getTime() || 0);                 });                 const headers = ["Demanda", "Prioridade", "Categoria", "Tipo", "Motivo", "Ponto focal", "Status"];                 const csvCell = (value) => {                     let text = String(value ?? "");                     if (["=", "+", "-", "@"].some((prefix) => text.trimStart().startsWith(prefix))) text = "'" + text;                     const quote = String.fromCharCode(34);                     return quote + text.split(quote).join(quote + quote) + quote;                 };                 const rows = items.map((demand) => [                     demand.title,                     demand.priority || "—",                     demand.category || "Sem categoria",                     demand.type || "—",                     normalize(demand.type).includes("correc") ? (demand.reason || "Não informado") : "—",                     demand.owner || "Não informado",                     demand.status                 ]);                 const newline = String.fromCharCode(13, 10);                 const csv = String.fromCharCode(65279) + "sep=;" + newline + [headers, ...rows].map((row) => row.map(csvCell).join(";")).join(newline);                 const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });                 const url = URL.createObjectURL(blob);                 const link = document.createElement("a");                 link.href = url;                 link.download = "demandas-" + currentDeveloper.id + "-" + new Date().toISOString().slice(0, 10) + ".csv";                 document.body.append(link);                 link.click();                 link.remove();                 setTimeout(() => URL.revokeObjectURL(url), 1000);             });
-            accessDeveloper.addEventListener("change", () => {
+            for (const card of document.querySelectorAll(".metric-clickable")) { card.addEventListener("click", () => { const filter = card.dataset.metricFilter; activeMetricFilter = filter === "all" || activeMetricFilter === filter ? null : filter; statusFilter.value = ""; for (const metric of document.querySelectorAll(".metric-clickable")) metric.setAttribute("aria-pressed", String(activeMetricFilter === metric.dataset.metricFilter)); updateFilteredList(); }); card.addEventListener("keydown", (event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); card.click(); } }); }             accessDeveloper.addEventListener("change", () => {
                 accessKey.value = "";
                 accessError.textContent = "";
                 updateAccessFile();
             });
             accessForm.addEventListener("submit", unlockDeveloper);
-            developerFilter.addEventListener("change", () => showAccessGate(developerFilter.value));
+            developerFilter.addEventListener("change", () => { if (currentDeveloper?.id === "admco") { renderMetrics(); updateFilteredList(); } else showAccessGate(developerFilter.value); });
             accessGate.addEventListener("keydown", (event) => {
                 if (event.key === "Escape") event.preventDefault();
             });
