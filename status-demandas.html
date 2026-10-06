@@ -178,27 +178,29 @@
         .detail { background: #fff; border: 1px solid var(--line); border-radius: 8px; margin-bottom: 6px; min-width: 0; overflow: hidden; padding: 5px 9px; }
         .detail-head { align-items: baseline; display: flex; flex-wrap: wrap; gap: 5px 10px; margin-bottom: 1px; }
         .detail-head h3 { font-size: .72rem; margin: 0; }
-        .timeline { display: grid; gap: 9px 0; list-style: none; margin: 0; overflow: hidden; padding: 8px 4px 7px; position: relative; }
-        .timeline-path { height: 100%; inset: 0; overflow: visible; pointer-events: none; position: absolute; width: 100%; z-index: 0; }
+        .timeline { align-items: stretch; display: flex; gap: 0; list-style: none; margin: 0; overflow-x: auto; overflow-y: hidden; padding: 8px 4px 9px; position: relative; scrollbar-color: #c4d4e5 transparent; scrollbar-width: thin; }
+        .timeline::-webkit-scrollbar { height: 5px; }
+        .timeline::-webkit-scrollbar-thumb { background: #c4d4e5; border-radius: 999px; }
+        .timeline-path { height: 34px; left: 0; overflow: visible; pointer-events: none; position: absolute; top: 0; z-index: 0; }
         .timeline-path path { fill: none; stroke: url(#timeline-gradient); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.5; }
         .timeline-path polygon { fill: #679bc9; }
-        .timeline-item { min-width: 0; min-height: 73px; padding: 0 7px 2px; position: relative; text-align: center; z-index: 1; }
-        .timeline-item::before { align-items: center; background: #fff; border: 2px solid #9db9d7; border-radius: 50%; box-shadow: 0 2px 7px rgba(24, 62, 100, .12); color: #45698e; content: attr(data-step); display: flex; font-size: .5rem; font-weight: 800; height: 19px; justify-content: center; left: calc(50% - 10px); line-height: 1; position: absolute; top: 0; width: 19px; z-index: 2; }
+        .timeline-item { flex: 0 0 clamp(104px, 8.5vw, 120px); min-height: 0; padding: 0 5px 1px; position: relative; text-align: center; z-index: 1; }
+        .timeline-item::before { align-items: center; background: #fff; border: 2px solid #9db9d7; border-radius: 50%; box-shadow: 0 2px 7px rgba(24, 62, 100, .12); color: #45698e; content: attr(data-step); display: flex; font-size: .47rem; font-weight: 800; height: 17px; justify-content: center; left: calc(50% - 9px); line-height: 1; position: absolute; top: 0; width: 17px; z-index: 2; }
         .timeline-item:first-child::before { background: var(--blue); border-color: var(--blue); box-shadow: 0 0 0 4px #e5f0fc, 0 2px 7px rgba(24, 62, 100, .12); color: white; }
         .timeline-item[data-tone="validation"]::before { border-color: #3281c2; }
         .timeline-item[data-tone="paused"]::before { border-color: #d7a72d; }
         .timeline-item[data-tone="blocked"]::before { border-color: #df665f; }
         .timeline-item[data-tone="done"]::before { border-color: #55a66d; }
-        .timeline-card { background: linear-gradient(155deg, #fff, #f8fbff); border: 1px solid #e5edf6; border-top: 2px solid #91b6dc; border-radius: 9px; box-shadow: 0 4px 12px rgba(23, 54, 88, .065); margin-top: 23px; min-height: 48px; overflow-wrap: anywhere; padding: 0 0 2px; transition: box-shadow .18s, transform .18s; }
+        .timeline-card { background: linear-gradient(155deg, #fff, #f8fbff); border: 1px solid #e5edf6; border-top: 2px solid #91b6dc; border-radius: 7px; box-shadow: 0 3px 8px rgba(23, 54, 88, .05); margin-top: 20px; min-height: 39px; overflow-wrap: anywhere; padding: 0 0 1px; transition: box-shadow .18s, transform .18s; }
         .timeline-item:hover .timeline-card { box-shadow: 0 7px 17px rgba(23, 54, 88, .12); transform: translateY(-2px); }
         .timeline-item[data-tone="validation"] .timeline-card { border-top-color: #3281c2; }
         .timeline-item[data-tone="paused"] .timeline-card { border-top-color: #d7a72d; }
         .timeline-item[data-tone="blocked"] .timeline-card { border-top-color: #df665f; }
         .timeline-item[data-tone="done"] .timeline-card { border-top-color: #55a66d; }
-        .timeline-top { display: flex; flex-direction: column; gap: 2px; padding: 6px 5px 0; }
-        .timeline-action { color: #193957; font-size: .63rem; font-weight: 750; line-height: 1.25; }
-        .timeline-date { color: var(--muted); font-size: .54rem; }
-        .timeline-state { color: #64758a; font-size: .52rem; line-height: 1.3; margin: 2px 5px 5px; }
+        .timeline-top { display: flex; flex-direction: column; gap: 1px; padding: 4px 3px 0; }
+        .timeline-action { color: #193957; font-size: .59rem; font-weight: 750; line-height: 1.2; }
+        .timeline-date { color: var(--muted); font-size: .51rem; }
+        .timeline-state { color: #64758a; font-size: .49rem; line-height: 1.2; margin: 2px 3px 3px; }
         .timeline-empty { color: var(--muted); font-size: .65rem; padding: 5px 2px; }
         .loading-note { color: var(--muted); font-size: .72rem; }
         .visually-hidden { clip: rect(0, 0, 0, 0); clip-path: inset(50%); height: 1px; overflow: hidden; position: absolute; white-space: nowrap; width: 1px; }
@@ -224,6 +226,8 @@
             .workspace-heading { align-items: flex-start; flex-direction: column; gap: 6px; padding: 8px; }
             .filters { flex-direction: column; width: 100%; }
             .filters input, .filters select { width: 100%; }
+            .timeline-item { flex-basis: 96px; }
+            .timeline-card { margin-top: 20px; }
             .demand-table-head, .demand-row { gap: 4px; grid-template-columns: minmax(0, 1.2fr) 38px minmax(0, .9fr) minmax(0, .8fr) minmax(0, .9fr); }
             .demand-row > *, .demand-table-head > * { min-width: 0; }
             .demand-table-head { font-size: .52rem; }
@@ -287,6 +291,7 @@
         (() => {
             "use strict";
 
+
             const statusMessage = document.querySelector("#status-message");
             const dataMeta = document.querySelector("#data-meta");
             const refreshJsonButton = document.querySelector("#refresh-json");
@@ -304,14 +309,17 @@
             let jsonRequestInProgress = false;
             let timelineObserver = null;
 
+
             const normalize = (value) => String(value ?? "")
                 .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
                 .toLowerCase().replace(/[^a-z0-9]+/g, "");
+
 
             function showMessage(message, kind) {
                 statusMessage.textContent = message;
                 statusMessage.className = `status-message visible ${kind}`;
             }
+
 
             function columnIndex(reference) {
                 const letters = reference.match(/[A-Z]+/i)?.[0]?.toUpperCase() || "";
@@ -319,6 +327,7 @@
                 for (const letter of letters) index = index * 26 + letter.charCodeAt(0) - 64;
                 return index - 1;
             }
+
 
             function normalizeZipPath(path) {
                 const parts = [];
@@ -329,6 +338,7 @@
                 }
                 return parts.join("/");
             }
+
 
             function readZipDirectory(bytes) {
                 const view = new DataView(bytes);
@@ -341,6 +351,7 @@
                     }
                 }
                 if (endOffset < 0) throw new Error("O arquivo não parece ser uma planilha .xlsx/.xlsm válida.");
+
 
                 const entries = view.getUint16(endOffset + 10, true);
                 let offset = view.getUint32(endOffset + 16, true);
@@ -361,6 +372,7 @@
                 return { view, files };
             }
 
+
             async function unzipEntry(bytes, archive, path) {
                 const entry = archive.files.get(path);
                 if (!entry) return null;
@@ -376,11 +388,13 @@
                 return new Response(stream).arrayBuffer();
             }
 
+
             function xmlDocument(bytes) {
                 const doc = new DOMParser().parseFromString(new TextDecoder().decode(bytes), "application/xml");
                 if (doc.querySelector("parsererror")) throw new Error("Uma parte da planilha está corrompida ou em formato não reconhecido.");
                 return doc;
             }
+
 
             async function parseWorkbook(file) {
                 const bytes = await file.arrayBuffer();
@@ -388,6 +402,7 @@
                 const workbookBytes = await unzipEntry(bytes, archive, "xl/workbook.xml");
                 const relationshipsBytes = await unzipEntry(bytes, archive, "xl/_rels/workbook.xml.rels");
                 if (!workbookBytes || !relationshipsBytes) throw new Error("Não encontrei a estrutura de abas esperada neste arquivo Excel.");
+
 
                 const workbook = xmlDocument(workbookBytes);
                 const relationships = xmlDocument(relationshipsBytes);
@@ -403,6 +418,7 @@
                     if (path) sheets.set(normalize(sheet.getAttribute("name")), path);
                 }
 
+
                 let sharedStrings = [];
                 const stringsBytes = await unzipEntry(bytes, archive, "xl/sharedStrings.xml");
                 if (stringsBytes) {
@@ -410,6 +426,7 @@
                     sharedStrings = Array.from(stringsDoc.getElementsByTagName("si"), (item) =>
                         Array.from(item.getElementsByTagName("t"), (text) => text.textContent || "").join(""));
                 }
+
 
                 async function readSheet(name) {
                     const path = sheets.get(normalize(name));
@@ -433,10 +450,12 @@
                     return rows;
                 }
 
+
                 const activityRows = await readSheet("activities");
                 const logRows = await readSheet("logs");
                 return { activityRows, logRows };
             }
+
 
             function findTable(rows, requiredHeaders, sheetName) {
                 const headerIndex = rows.findIndex((row) => {
@@ -453,6 +472,7 @@
                 return { column, records, headerIndex };
             }
 
+
             const aliases = {
                 id: ["activityid", "idatividade", "iddemanda"],
                 title: ["titulo", "titulodademanda", "demanda"],
@@ -463,6 +483,7 @@
                 status: ["status", "situacao"],
                 date: ["data", "datadoevento", "dataatualizacao"]
             };
+
 
             function excelDate(value) {
                 if (typeof value === "number" || /^\d+(\.\d+)?$/.test(String(value).trim())) {
@@ -479,9 +500,11 @@
                 return Number.isNaN(parsed.getTime()) ? null : parsed;
             }
 
+
             function displayDate(date) {
                 return date ? new Intl.DateTimeFormat("pt-BR", { dateStyle: "medium", timeStyle: "short" }).format(date) : "Data não informada";
             }
+
 
             function statusTone(value) {
                 const status = normalize(value);
@@ -493,6 +516,7 @@
                 if (status.includes("desenvolv") || status.includes("execu") || status.includes("andamento") || status.includes("iniciado") || status.includes("retomado")) return "progress";
                 return "";
             }
+
 
             function buildDemands(activityRows, logRows) {
                 const activityTable = findTable(activityRows, [aliases.id, aliases.title], "activities");
@@ -519,6 +543,7 @@
                     return b.order - a.order;
                 });
 
+
                 const seen = new Set();
                 return activityTable.records.map((record) => {
                     const id = String(activityField(record, "id")).trim();
@@ -542,6 +567,7 @@
                     };
                 }).filter(Boolean);
             }
+
 
             function parseDemandsJson(payload) {
                 if (!payload || typeof payload !== "object" || !Array.isArray(payload.demands)) {
@@ -601,6 +627,7 @@
                 });
             }
 
+
             function renderDemands(nextDemands, sourceLabel) {
                 const previousSelection = selectedId;
                 demands = nextDemands;
@@ -619,6 +646,7 @@
                 searchInput.disabled = false;
                 dataMeta.textContent = sourceLabel;
             }
+
 
             async function loadJsonData() {
                 if (jsonRequestInProgress) return;
@@ -646,6 +674,7 @@
                 }
             }
 
+
             function renderMetrics() {
                 document.querySelector("#metric-total").textContent = String(demands.length);
                 document.querySelector("#metric-progress").textContent = String(demands.filter((demand) => statusTone(demand.status) === "progress").length);
@@ -657,6 +686,7 @@
                     : "—";
             }
 
+
             function renderStatusOptions() {
                 const current = statusFilter.value;
                 const statuses = [...new Set(demands.map((demand) => demand.status))].sort((a, b) => a.localeCompare(b, "pt-BR"));
@@ -665,6 +695,7 @@
                 if (statuses.includes(current)) statusFilter.value = current;
                 statusFilter.disabled = false;
             }
+
 
             function renderCategoryOptions() {
                 const current = categoryFilter.value;
@@ -675,6 +706,7 @@
                 if (categories.includes(current)) categoryFilter.value = current;
                 categoryFilter.disabled = false;
             }
+
 
             function visibleDemands() {
                 const query = normalize(searchInput.value);
@@ -687,6 +719,7 @@
                     (!status || demand.status === status);
                 });
             }
+
 
             function renderList() {
                 const items = visibleDemands();
@@ -761,27 +794,19 @@
                 }
             }
 
+
             function layoutTimeline(timeline, items, path, pathSvg) {
-                const width = timeline.clientWidth;
-                if (!width || !items.length) return;
-                const columnCount = Math.max(1, Math.floor(width / 148));
-                timeline.style.gridTemplateColumns = `repeat(${columnCount}, minmax(0, 1fr))`;
-                items.forEach((item, index) => {
-                    const row = Math.floor(index / columnCount);
-                    const positionInRow = index % columnCount;
-                    const column = row % 2 === 0 ? positionInRow + 1 : columnCount - positionInRow;
-                    item.style.gridColumn = String(column);
-                    item.style.gridRow = String(row + 1);
-                });
+                if (!timeline.clientWidth || !items.length) return;
                 timeline.getBoundingClientRect();
-                const height = timeline.clientHeight;
+                const width = timeline.scrollWidth;
+                const height = timeline.scrollHeight;
                 if (!height) return;
                 path.setAttribute("viewBox", `0 0 ${width} ${height}`);
                 path.setAttribute("width", String(width));
                 path.setAttribute("height", String(height));
                 const points = items.map((item) => ({
                     x: item.offsetLeft + item.offsetWidth / 2,
-                    y: item.offsetTop + 10
+                    y: item.offsetTop + 8.5
                 }));
                 let pathData = `M ${points[0].x} ${points[0].y}`;
                 const arrows = [];
@@ -789,16 +814,10 @@
                     const previous = points[index - 1];
                     const point = points[index];
                     const dx = point.x - previous.x;
-                    const dy = point.y - previous.y;
-                    let firstControl = { x: previous.x + dx * 0.42, y: previous.y + dy * 0.08 };
-                    let secondControl = { x: point.x - dx * 0.42, y: point.y - dy * 0.08 };
-                    if (Math.abs(dx) < 1 && dy > 0) {
-                        const turnSide = previous.x > width / 2 ? 1 : -1;
-                        const turnRadius = Math.min(18, width * 0.035);
-                        firstControl = { x: previous.x + turnSide * turnRadius, y: previous.y + dy * 0.4 };
-                        secondControl = { x: point.x + turnSide * turnRadius, y: point.y - dy * 0.4 };
-                    }
+                    const firstControl = { x: previous.x + dx * 0.42, y: previous.y };
+                    const secondControl = { x: point.x - dx * 0.42, y: point.y };
                     pathData += ` C ${firstControl.x} ${firstControl.y}, ${secondControl.x} ${secondControl.y}, ${point.x} ${point.y}`;
+
 
                     const t = 0.55;
                     const inverse = 1 - t;
@@ -833,6 +852,7 @@
                 pathSvg.replaceChildren(pathSvg.querySelector("defs"), path, ...arrows);
             }
 
+
             function renderDetail(demand) {
                 if (timelineObserver) timelineObserver.disconnect();
                 timelineObserver = null;
@@ -842,6 +862,7 @@
                 const title = document.createElement("h3");
                 title.textContent = demand ? demand.title : "Selecione uma demanda";
                 head.append(title);
+
 
                 const timeline = document.createElement("ol");
                 timeline.className = "timeline";
@@ -929,6 +950,7 @@
                     timelineObserver.observe(timeline);
                 }
             }
+
 
             refreshJsonButton.addEventListener("click", loadJsonData);
             searchInput.addEventListener("input", renderList);
