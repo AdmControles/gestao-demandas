@@ -178,21 +178,27 @@
         .detail { background: #fff; border: 1px solid var(--line); border-radius: 8px; margin-bottom: 6px; min-width: 0; overflow: hidden; padding: 5px 9px; }
         .detail-head { align-items: baseline; display: flex; flex-wrap: wrap; gap: 5px 10px; margin-bottom: 1px; }
         .detail-head h3 { font-size: .72rem; margin: 0; }
-        .timeline { display: grid; gap: 2px 0; list-style: none; margin: 0; overflow: hidden; padding: 5px 4px 4px; position: relative; }
+        .timeline { display: grid; gap: 9px 0; list-style: none; margin: 0; overflow: hidden; padding: 8px 4px 7px; position: relative; }
         .timeline-path { height: 100%; inset: 0; overflow: visible; pointer-events: none; position: absolute; width: 100%; z-index: 0; }
-        .timeline-path path { fill: none; stroke: #9dbfe2; stroke-linecap: round; stroke-width: 2; }
-        .timeline-path polygon { fill: #6d9dcc; }
-        .timeline-item { min-width: 0; min-height: 43px; padding: 0 5px 3px; position: relative; text-align: center; z-index: 1; }
-        .timeline-item::before { align-items: center; background: #fff; border: 2px solid #8ab5e1; border-radius: 50%; color: var(--blue-dark); content: attr(data-step); display: flex; font-size: .47rem; font-weight: 800; height: 15px; justify-content: center; left: calc(50% - 8px); line-height: 1; position: absolute; top: 0; width: 15px; z-index: 1; }
-        .timeline-item:first-child::before { background: var(--blue); border-color: var(--blue); box-shadow: 0 0 0 3px #e5f0fc; color: white; }
+        .timeline-path path { fill: none; stroke: url(#timeline-gradient); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.5; }
+        .timeline-path polygon { fill: #679bc9; }
+        .timeline-item { min-width: 0; min-height: 73px; padding: 0 7px 2px; position: relative; text-align: center; z-index: 1; }
+        .timeline-item::before { align-items: center; background: #fff; border: 2px solid #9db9d7; border-radius: 50%; box-shadow: 0 2px 7px rgba(24, 62, 100, .12); color: #45698e; content: attr(data-step); display: flex; font-size: .5rem; font-weight: 800; height: 19px; justify-content: center; left: calc(50% - 10px); line-height: 1; position: absolute; top: 0; width: 19px; z-index: 2; }
+        .timeline-item:first-child::before { background: var(--blue); border-color: var(--blue); box-shadow: 0 0 0 4px #e5f0fc, 0 2px 7px rgba(24, 62, 100, .12); color: white; }
         .timeline-item[data-tone="validation"]::before { border-color: #3281c2; }
         .timeline-item[data-tone="paused"]::before { border-color: #d7a72d; }
         .timeline-item[data-tone="blocked"]::before { border-color: #df665f; }
         .timeline-item[data-tone="done"]::before { border-color: #55a66d; }
-        .timeline-top { display: flex; flex-direction: column; gap: 1px; padding-top: 18px; }
-        .timeline-action { font-size: .62rem; font-weight: 750; line-height: 1.25; }
-        .timeline-date { color: var(--muted); font-size: .53rem; }
-        .timeline-state { color: var(--muted); font-size: .53rem; line-height: 1.25; margin-top: 2px; }
+        .timeline-card { background: linear-gradient(155deg, #fff, #f8fbff); border: 1px solid #e5edf6; border-top: 2px solid #91b6dc; border-radius: 9px; box-shadow: 0 4px 12px rgba(23, 54, 88, .065); margin-top: 23px; min-height: 48px; overflow-wrap: anywhere; padding: 0 0 2px; transition: box-shadow .18s, transform .18s; }
+        .timeline-item:hover .timeline-card { box-shadow: 0 7px 17px rgba(23, 54, 88, .12); transform: translateY(-2px); }
+        .timeline-item[data-tone="validation"] .timeline-card { border-top-color: #3281c2; }
+        .timeline-item[data-tone="paused"] .timeline-card { border-top-color: #d7a72d; }
+        .timeline-item[data-tone="blocked"] .timeline-card { border-top-color: #df665f; }
+        .timeline-item[data-tone="done"] .timeline-card { border-top-color: #55a66d; }
+        .timeline-top { display: flex; flex-direction: column; gap: 2px; padding: 6px 5px 0; }
+        .timeline-action { color: #193957; font-size: .63rem; font-weight: 750; line-height: 1.25; }
+        .timeline-date { color: var(--muted); font-size: .54rem; }
+        .timeline-state { color: #64758a; font-size: .52rem; line-height: 1.3; margin: 2px 5px 5px; }
         .timeline-empty { color: var(--muted); font-size: .65rem; padding: 5px 2px; }
         .loading-note { color: var(--muted); font-size: .72rem; }
         .visually-hidden { clip: rect(0, 0, 0, 0); clip-path: inset(50%); height: 1px; overflow: hidden; position: absolute; white-space: nowrap; width: 1px; }
@@ -758,7 +764,7 @@
             function layoutTimeline(timeline, items, path, pathSvg) {
                 const width = timeline.clientWidth;
                 if (!width || !items.length) return;
-                const columnCount = Math.max(1, Math.floor(width / 112));
+                const columnCount = Math.max(1, Math.floor(width / 148));
                 timeline.style.gridTemplateColumns = `repeat(${columnCount}, minmax(0, 1fr))`;
                 items.forEach((item, index) => {
                     const row = Math.floor(index / columnCount);
@@ -767,59 +773,64 @@
                     item.style.gridColumn = String(column);
                     item.style.gridRow = String(row + 1);
                 });
-                requestAnimationFrame(() => {
-                    const height = timeline.clientHeight;
-                    if (!height) return;
-                    path.setAttribute("viewBox", `0 0 ${width} ${height}`);
-                    path.setAttribute("width", String(width));
-                    path.setAttribute("height", String(height));
-                    const points = items.map((item) => ({
-                        x: item.offsetLeft + item.offsetWidth / 2,
-                        y: item.offsetTop + 5
-                    }));
-                    let pathData = `M ${points[0].x} ${points[0].y}`;
-                    const arrows = [];
-                    for (let index = 1; index < points.length; index += 1) {
-                        const previous = points[index - 1];
-                        const point = points[index];
-                        const dx = point.x - previous.x;
-                        const dy = point.y - previous.y;
-                        const firstControl = { x: previous.x + dx * 0.42, y: previous.y + dy * 0.08 };
-                        const secondControl = { x: point.x - dx * 0.42, y: point.y - dy * 0.08 };
-                        pathData += ` C ${firstControl.x} ${firstControl.y}, ${secondControl.x} ${secondControl.y}, ${point.x} ${point.y}`;
-
-                        const t = 0.55;
-                        const inverse = 1 - t;
-                        const arrowX = inverse ** 3 * previous.x +
-                            3 * inverse ** 2 * t * firstControl.x +
-                            3 * inverse * t ** 2 * secondControl.x +
-                            t ** 3 * point.x;
-                        const arrowY = inverse ** 3 * previous.y +
-                            3 * inverse ** 2 * t * firstControl.y +
-                            3 * inverse * t ** 2 * secondControl.y +
-                            t ** 3 * point.y;
-                        const tangentX = 3 * inverse ** 2 * (firstControl.x - previous.x) +
-                            6 * inverse * t * (secondControl.x - firstControl.x) +
-                            3 * t ** 2 * (point.x - secondControl.x);
-                        const tangentY = 3 * inverse ** 2 * (firstControl.y - previous.y) +
-                            6 * inverse * t * (secondControl.y - firstControl.y) +
-                            3 * t ** 2 * (point.y - secondControl.y);
-                        const tangentLength = Math.hypot(tangentX, tangentY) || 1;
-                        const directionX = tangentX / tangentLength;
-                        const directionY = tangentY / tangentLength;
-                        const perpendicularX = -directionY;
-                        const perpendicularY = directionX;
-                        const arrow = document.createElementNS(svgNamespace, "polygon");
-                        arrow.setAttribute("points", [
-                            `${arrowX + directionX * 4},${arrowY + directionY * 4}`,
-                            `${arrowX - directionX * 3 + perpendicularX * 2.5},${arrowY - directionY * 3 + perpendicularY * 2.5}`,
-                            `${arrowX - directionX * 3 - perpendicularX * 2.5},${arrowY - directionY * 3 - perpendicularY * 2.5}`
-                        ].join(" "));
-                        arrows.push(arrow);
+                timeline.getBoundingClientRect();
+                const height = timeline.clientHeight;
+                if (!height) return;
+                path.setAttribute("viewBox", `0 0 ${width} ${height}`);
+                path.setAttribute("width", String(width));
+                path.setAttribute("height", String(height));
+                const points = items.map((item) => ({
+                    x: item.offsetLeft + item.offsetWidth / 2,
+                    y: item.offsetTop + 10
+                }));
+                let pathData = `M ${points[0].x} ${points[0].y}`;
+                const arrows = [];
+                for (let index = 1; index < points.length; index += 1) {
+                    const previous = points[index - 1];
+                    const point = points[index];
+                    const dx = point.x - previous.x;
+                    const dy = point.y - previous.y;
+                    let firstControl = { x: previous.x + dx * 0.42, y: previous.y + dy * 0.08 };
+                    let secondControl = { x: point.x - dx * 0.42, y: point.y - dy * 0.08 };
+                    if (Math.abs(dx) < 1 && dy > 0) {
+                        const turnSide = previous.x > width / 2 ? 1 : -1;
+                        const turnRadius = Math.min(18, width * 0.035);
+                        firstControl = { x: previous.x + turnSide * turnRadius, y: previous.y + dy * 0.4 };
+                        secondControl = { x: point.x + turnSide * turnRadius, y: point.y - dy * 0.4 };
                     }
-                    path.setAttribute("d", pathData);
-                    pathSvg.replaceChildren(path, ...arrows);
-                });
+                    pathData += ` C ${firstControl.x} ${firstControl.y}, ${secondControl.x} ${secondControl.y}, ${point.x} ${point.y}`;
+
+                    const t = 0.55;
+                    const inverse = 1 - t;
+                    const arrowX = inverse ** 3 * previous.x +
+                        3 * inverse ** 2 * t * firstControl.x +
+                        3 * inverse * t ** 2 * secondControl.x +
+                        t ** 3 * point.x;
+                    const arrowY = inverse ** 3 * previous.y +
+                        3 * inverse ** 2 * t * firstControl.y +
+                        3 * inverse * t ** 2 * secondControl.y +
+                        t ** 3 * point.y;
+                    const tangentX = 3 * inverse ** 2 * (firstControl.x - previous.x) +
+                        6 * inverse * t * (secondControl.x - firstControl.x) +
+                        3 * t ** 2 * (point.x - secondControl.x);
+                    const tangentY = 3 * inverse ** 2 * (firstControl.y - previous.y) +
+                        6 * inverse * t * (secondControl.y - firstControl.y) +
+                        3 * t ** 2 * (point.y - secondControl.y);
+                    const tangentLength = Math.hypot(tangentX, tangentY) || 1;
+                    const directionX = tangentX / tangentLength;
+                    const directionY = tangentY / tangentLength;
+                    const perpendicularX = -directionY;
+                    const perpendicularY = directionX;
+                    const arrow = document.createElementNS(svgNamespace, "polygon");
+                    arrow.setAttribute("points", [
+                        `${arrowX + directionX * 4},${arrowY + directionY * 4}`,
+                        `${arrowX - directionX * 3 + perpendicularX * 2.5},${arrowY - directionY * 3 + perpendicularY * 2.5}`,
+                        `${arrowX - directionX * 3 - perpendicularX * 2.5},${arrowY - directionY * 3 - perpendicularY * 2.5}`
+                    ].join(" "));
+                    arrows.push(arrow);
+                }
+                path.setAttribute("d", pathData);
+                pathSvg.replaceChildren(pathSvg.querySelector("defs"), path, ...arrows);
             }
 
             function renderDetail(demand) {
@@ -834,6 +845,7 @@
 
                 const timeline = document.createElement("ol");
                 timeline.className = "timeline";
+                detail.append(head, timeline);
                 if (!demand?.logs.length) {
                     const empty = document.createElement("li");
                     empty.className = "timeline-empty";
@@ -845,8 +857,23 @@
                     const pathSvg = document.createElementNS(svgNamespace, "svg");
                     pathSvg.classList.add("timeline-path");
                     pathSvg.setAttribute("aria-hidden", "true");
+                    const definitions = document.createElementNS(svgNamespace, "defs");
+                    const gradient = document.createElementNS(svgNamespace, "linearGradient");
+                    gradient.setAttribute("id", "timeline-gradient");
+                    gradient.setAttribute("x1", "0");
+                    gradient.setAttribute("y1", "0");
+                    gradient.setAttribute("x2", "1");
+                    gradient.setAttribute("y2", "0");
+                    const gradientStart = document.createElementNS(svgNamespace, "stop");
+                    gradientStart.setAttribute("offset", "0%");
+                    gradientStart.setAttribute("stop-color", "#6fa3d4");
+                    const gradientEnd = document.createElementNS(svgNamespace, "stop");
+                    gradientEnd.setAttribute("offset", "100%");
+                    gradientEnd.setAttribute("stop-color", "#b3cce5");
+                    gradient.append(gradientStart, gradientEnd);
+                    definitions.append(gradient);
                     const path = document.createElementNS(svgNamespace, "path");
-                    pathSvg.append(path);
+                    pathSvg.append(definitions, path);
                     timeline.append(pathSvg);
                     const timelineItems = [];
                     for (const log of chronologicalLogs) {
@@ -854,6 +881,8 @@
                         item.className = "timeline-item";
                         item.dataset.tone = statusTone(log.status);
                         item.dataset.step = String(timelineItems.length + 1);
+                        const card = document.createElement("div");
+                        card.className = "timeline-card";
                         const top = document.createElement("div");
                         top.className = "timeline-top";
                         const action = document.createElement("span");
@@ -890,7 +919,8 @@
                         const state = document.createElement("div");
                         state.className = "timeline-state";
                         state.textContent = description || (mappedLifecycleAction ? "" : log.status);
-                        item.append(top, state);
+                        card.append(top, state);
+                        item.append(card);
                         timeline.append(item);
                         timelineItems.push(item);
                     }
@@ -898,7 +928,6 @@
                     timelineObserver = new ResizeObserver(() => layoutTimeline(timeline, timelineItems, path, pathSvg));
                     timelineObserver.observe(timeline);
                 }
-                detail.append(head, timeline);
             }
 
             refreshJsonButton.addEventListener("click", loadJsonData);
