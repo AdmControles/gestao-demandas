@@ -1132,6 +1132,14 @@
                                 line.append(label, value);
                                 tooltip.append(line);
                             }
+                            requestAnimationFrame(() => {
+                                const cardRect = card.getBoundingClientRect();
+                                const tooltipWidth = tooltip.offsetWidth;
+                                if (!tooltipWidth) return;
+                                const left = Math.min(Math.max(cardRect.left + cardRect.width / 2 - tooltipWidth / 2, 8), window.innerWidth - tooltipWidth - 8);
+                                tooltip.style.left = `${left - cardRect.left}px`;
+                                tooltip.style.transform = "none";
+                            });
                             card.setAttribute("aria-label", rows.map((row) => `${row.label}: ${row.value}`).join(". "));
                         };
                         updateDurationTooltip();
