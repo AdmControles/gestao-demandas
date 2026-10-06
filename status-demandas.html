@@ -1189,10 +1189,10 @@
                             revealButton.type = "button";
                             revealButton.className = "timeline-step-toggle";
                             revealButton.textContent = String(logIndex + 1);
-                            revealButton.title = `Mostrar etapa ${logIndex + 1}: ${actionLabel}`;
-                            revealButton.title = `Mostrar etapa ${logIndex + 1}: ${actionLabel}`;
+                            revealButton.setAttribute("aria-label", `Expandir etapa ${logIndex + 1}: ${actionLabel}`); revealButton.title = `Expandir etapa ${logIndex + 1}: ${actionLabel}`;
+                            revealButton.setAttribute("aria-label", `Expandir etapa ${logIndex + 1}: ${actionLabel}`); revealButton.title = `Expandir etapa ${logIndex + 1}: ${actionLabel}`;
                                 
-                                const isCollapsed = item.classList.toggle("timeline-collapsed"); if (isCollapsed) expandedTimelineSteps.delete(logIndex); else expandedTimelineSteps.add(logIndex);
+                                revealButton.addEventListener("click", () => { const isCollapsed = item.classList.toggle("timeline-collapsed"); if (isCollapsed) expandedTimelineSteps.delete(logIndex); else expandedTimelineSteps.add(logIndex);
                                 const toggleLabel = isCollapsed ? "Expandir" : "Recolher"; revealButton.setAttribute("aria-label", `${toggleLabel} etapa ${logIndex + 1}: ${actionLabel}`); revealButton.title = `${toggleLabel} etapa ${logIndex + 1}: ${actionLabel}`;
                                 
                                 requestAnimationFrame(() => {
