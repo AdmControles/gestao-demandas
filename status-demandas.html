@@ -85,34 +85,6 @@
             outline-offset: 2px;
         }
         .file-meta { color: var(--muted); font-size: .72rem; text-align: right; }
-        .connection-panel {
-            background: var(--surface);
-            border: 1px solid var(--line);
-            border-radius: 12px;
-            box-shadow: 0 3px 10px rgba(22, 48, 82, .025);
-            margin-bottom: 16px;
-            padding: 15px 18px;
-        }
-        .connection-top { align-items: center; display: flex; gap: 12px; justify-content: space-between; }
-        .connection-title { font-size: .83rem; font-weight: 700; }
-        .connection-description, .privacy-note { color: var(--muted); font-size: .75rem; }
-        .connection-description { margin: 2px 0 0; }
-        .privacy-note { margin: 11px 2px 0; }
-        .connection-setup { border-top: 1px solid var(--line); margin-top: 14px; padding-top: 12px; }
-        .connection-setup summary { color: var(--blue-dark); cursor: pointer; font-size: .75rem; font-weight: 650; }
-        .setup-help { color: var(--muted); font-size: .72rem; margin: 10px 0 0; }
-        .json-example {
-            background: #f3f6fa;
-            border-radius: 8px;
-            color: var(--blue-dark);
-            font: .7rem/1.55 Consolas, "Courier New", monospace;
-            margin-top: 10px;
-            overflow-x: auto;
-            padding: 12px;
-        }
-        .manual-import { margin-top: 10px; }
-        .manual-import summary { color: var(--blue-dark); cursor: pointer; font-size: .72rem; }
-        .manual-import .primary-button { margin-top: 9px; }
         .status-message { border-radius: 9px; display: none; margin: 0 0 14px; padding: 11px 14px; }
         .status-message.visible { display: block; }
         .status-message.error { background: #fff1f0; border: 1px solid #ffd4d0; color: #9a2c22; }
@@ -145,6 +117,25 @@
         }
         .workspace-heading h2 { font-size: .98rem; margin: 0; }
         .workspace-heading p { color: var(--muted); font-size: .75rem; margin: 2px 0 0; }
+        .status-shortcuts { border-bottom: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 18px; }
+        .status-shortcut {
+            align-items: center;
+            background: #f5f7fa;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            color: #4b5e75;
+            display: inline-flex;
+            font-size: .72rem;
+            font-weight: 650;
+            gap: 7px;
+            min-height: 32px;
+            padding: 0 11px;
+            transition: background .15s, border-color .15s, color .15s;
+        }
+        .status-shortcut:hover, .status-shortcut[aria-pressed="true"] { background: var(--soft-blue); border-color: #c7ddf5; color: var(--blue-dark); }
+        .shortcut-count { color: var(--muted); font-size: .67rem; font-weight: 750; }
+        .status-shortcut[aria-pressed="true"] .shortcut-count { color: var(--blue); }
+        .status-shortcut:focus-visible { outline: 3px solid #8fc1f7; outline-offset: 2px; }
         .filters { display: flex; gap: 8px; }
         .filters input, .filters select {
             background: #fff;
@@ -177,6 +168,11 @@
         .card-title { display: block; font-size: .83rem; font-weight: 670; line-height: 1.35; margin: 5px 0 7px; }
         .card-bottom { align-items: center; display: flex; gap: 8px; justify-content: space-between; }
         .card-category { color: var(--muted); font-size: .69rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .card-owner { color: var(--muted); font-size: .67rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .card-context, .card-meta { align-items: center; display: flex; gap: 7px; min-width: 0; }
+        .card-meta { flex: 0 0 auto; }
+        .card-priority { background: #fff7df; border-radius: 5px; color: #80600c; font-size: .64rem; font-weight: 750; padding: 2px 5px; }
+        .demand-date { color: var(--muted); font-size: .66rem; white-space: nowrap; }
         .pill {
             background: #eff3f8;
             border: 1px solid transparent;
@@ -224,7 +220,6 @@
         .timeline-state { color: var(--muted); font-size: .72rem; margin-top: 2px; }
         .timeline-empty { color: var(--muted); font-size: .77rem; }
         .loading-note { color: var(--muted); font-size: .72rem; }
-        .footer { color: var(--muted); font-size: .7rem; padding: 15px 2px 0; text-align: center; }
         .visually-hidden { clip: rect(0, 0, 0, 0); clip-path: inset(50%); height: 1px; overflow: hidden; position: absolute; white-space: nowrap; width: 1px; }
         @media (max-width: 820px) {
             .shell { padding: 16px 12px 28px; }
@@ -237,7 +232,6 @@
             .detail { min-height: 330px; padding: 19px; }
         }
         @media (max-width: 560px) {
-            .connection-top { align-items: flex-start; flex-direction: column; }
             .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
             .metric { min-height: 78px; padding: 12px; }
             .metric-value { font-size: 1.35rem; }
@@ -261,44 +255,11 @@
             </div>
             <div class="hero-actions">
                 <div class="hero-buttons">
-                    <button class="primary-button" id="refresh-json" type="button">Atualizar dados</button>
-                    <a class="secondary-button" id="open-sharepoint" href="https://brfcorp.sharepoint.com/:x:/r/sites/arquivoscompartilhadosriscos/_layouts/15/doc2.aspx?sourcedoc=%7B4D9DDF0B-1E57-4875-B066-C68DA8F39A63%7D&amp;file=Miguel%20Marques.xlsm&amp;action=default&amp;mobileredirect=true" target="_blank" rel="noopener noreferrer">Abrir planilha fonte</a>
+                    <button class="primary-button" id="refresh-json" type="button">Atualizar painel</button>
                 </div>
-                <div class="file-meta" id="data-meta" aria-live="polite">Aguardando demandas.json...</div>
-                <details class="manual-import">
-                    <summary>Importar arquivo Excel manualmente</summary>
-                    <label class="primary-button" for="workbook-file">Escolher arquivo .xlsm</label>
-                </details>
-                <input class="visually-hidden" id="workbook-file" type="file" accept=".xlsm,.xlsx">
-                <div class="file-meta" id="file-meta"></div>
+                <div class="file-meta" id="data-meta" aria-live="polite">Carregando demandas...</div>
             </div>
         </header>
-        <section class="connection-panel" aria-label="Fonte e privacidade dos dados">
-            <div class="connection-top">
-                <div>
-                    <div class="connection-title">Atualização automática pelo JSON</div>
-                    <p class="connection-description">O painel lê <code>demandas.json</code> publicado junto desta página e verifica atualizações a cada cinco minutos. Um fluxo autorizado deve gerar esse JSON a partir das abas <strong>activities</strong> e <strong>logs</strong> da planilha.</p>
-                </div>
-            </div>
-            <p class="privacy-note"><strong>Privacidade:</strong> arquivos no GitHub Pages público podem ser lidos por qualquer pessoa, inclusive o JSON. Não publique nele dados internos/confidenciais; para isso, o destino do JSON e o painel precisam de controle de acesso corporativo.</p>
-            <details class="connection-setup">
-                <summary>Formato esperado para demandas.json</summary>
-                <p class="setup-help">O processo que exportar a planilha deve criar um objeto com <code>schemaVersion</code> igual a 1, <code>generatedAt</code> em data/hora ISO 8601 e <code>demands</code> como lista. Cada demanda tem <code>id</code>, <code>title</code>, <code>category</code>, <code>type</code> e <code>logs</code>; cada evento contém <code>action</code>, <code>status</code> e <code>date</code>. O evento mais recente determina o status exibido.</p>
-                <pre class="json-example"><code>{
-  "schemaVersion": 1,
-  "generatedAt": "2026-10-02T20:00:00Z",
-  "demands": [{
-    "id": "6219",
-    "title": "Exemplo de título",
-    "category": "Categoria",
-    "type": "Melhoria",
-    "logs": [
-      { "action": "Cadastrar", "status": "Não Iniciado", "date": "2026-10-01T12:00:00Z" }
-    ]
-  }]
-}</code></pre>
-            </details>
-        </section>
         <div id="status-message" class="status-message" role="status" aria-live="polite"></div>
         <section class="metrics" aria-label="Resumo das demandas">
             <article class="metric"><div class="metric-label">Demandas cadastradas</div><div class="metric-value" id="metric-total">—</div></article>
@@ -310,7 +271,7 @@
             <header class="workspace-heading">
                 <div>
                     <h2 id="workspace-title">Demandas</h2>
-                    <p>Selecione uma demanda para consultar o histórico cronológico do fluxo.</p>
+                    <p>Veja o andamento e abra uma demanda para consultar o histórico.</p>
                 </div>
                 <div class="filters">
                     <label class="visually-hidden" for="search">Buscar demanda</label>
@@ -319,43 +280,49 @@
                     <select id="status-filter" disabled><option value="">Todos os status</option></select>
                 </div>
             </header>
+            <nav class="status-shortcuts" aria-label="Filtrar demandas por situação">
+                <button class="status-shortcut" type="button" data-status-shortcut="" aria-pressed="true">Todas <span class="shortcut-count" data-shortcut-count="">0</span></button>
+                <button class="status-shortcut" type="button" data-status-shortcut="progress" aria-pressed="false">Em andamento <span class="shortcut-count" data-shortcut-count="progress">0</span></button>
+                <button class="status-shortcut" type="button" data-status-shortcut="blocked" aria-pressed="false">Bloqueadas <span class="shortcut-count" data-shortcut-count="blocked">0</span></button>
+                <button class="status-shortcut" type="button" data-status-shortcut="paused" aria-pressed="false">Pausadas <span class="shortcut-count" data-shortcut-count="paused">0</span></button>
+                <button class="status-shortcut" type="button" data-status-shortcut="done" aria-pressed="false">Concluídas <span class="shortcut-count" data-shortcut-count="done">0</span></button>
+                <button class="status-shortcut" type="button" data-status-shortcut="new" aria-pressed="false">Não iniciadas <span class="shortcut-count" data-shortcut-count="new">0</span></button>
+            </nav>
             <div class="content">
                 <div class="demand-list" id="demand-list" aria-label="Lista de demandas" aria-live="polite">
                     <div class="detail-empty" id="list-empty">
                         <div class="empty-mark" aria-hidden="true">↻</div>
                         <strong>Aguardando dados de demandas</strong>
-                        <p>O painel será preenchido assim que demandas.json for publicado.</p>
+                        <p>As demandas aparecerão aqui quando os dados forem atualizados.</p>
                     </div>
                 </div>
                 <section class="detail" id="demand-detail" aria-label="Detalhes da demanda">
                     <div class="detail-empty">
                         <div class="empty-mark" aria-hidden="true">↗</div>
                         <strong>O fluxo aparece aqui</strong>
-                        <p>Escolha uma demanda na lista para ver o status atual e cada etapa registrada na planilha.</p>
+                        <p>Escolha uma demanda na lista para ver o status e as etapas do fluxo.</p>
                     </div>
                 </section>
             </div>
         </section>
-        <footer class="footer">Fonte de dados: demandas.json. O painel atualiza automaticamente a cada cinco minutos quando aberto.</footer>
     </main>
     <script>
         (() => {
             "use strict";
 
-            const fileInput = document.querySelector("#workbook-file");
             const statusMessage = document.querySelector("#status-message");
-            const fileMeta = document.querySelector("#file-meta");
             const dataMeta = document.querySelector("#data-meta");
             const refreshJsonButton = document.querySelector("#refresh-json");
             const searchInput = document.querySelector("#search");
             const statusFilter = document.querySelector("#status-filter");
+            const statusShortcuts = [...document.querySelectorAll("[data-status-shortcut]")];
             const demandList = document.querySelector("#demand-list");
             const detail = document.querySelector("#demand-detail");
             const jsonUrl = new URL("demandas.json", location.href);
             const jsonRefreshInterval = 5 * 60 * 1000;
             let demands = [];
             let selectedId = null;
-            let sourceFileName = "";
+            let quickStatusFilter = "";
             let jsonRefreshTimer = null;
             let jsonRequestInProgress = false;
 
@@ -579,11 +546,18 @@
                     const title = String(activityField(record, "title") || "Demanda sem título").trim();
                     const category = String(activityField(record, "category") || "").trim();
                     const type = String(activityField(record, "type") || "").trim();
+                    const activityData = record;
+                    const fieldValue = (...names) => {
+                        const match = Object.entries(activityData).find(([key]) => names.includes(normalize(key)));
+                        return match ? String(match[1] ?? "").trim() : "";
+                    };
                     if (!id || seen.has(id)) return null;
                     seen.add(id);
                     const logs = logsById.get(id) || [];
                     return {
                         id, title, category, type, logs,
+                        owner: fieldValue("pontofocal", "responsavel"),
+                        priority: fieldValue("prioridade"),
                         status: logs[0]?.status || "Sem movimentação registrada",
                         updatedAt: logs.find((log) => log.date)?.date || null
                     };
@@ -624,11 +598,18 @@
                         if (b.date) return 1;
                         return b.order - a.order;
                     });
+                    const activityData = item.activityData && typeof item.activityData === "object" ? item.activityData : {};
+                    const activityValue = (...names) => {
+                        const match = Object.entries(activityData).find(([key]) => names.includes(normalize(key)));
+                        return match ? String(match[1] ?? "").trim() : "";
+                    };
                     return {
                         id,
                         title: String(item.title).trim(),
                         category: String(item.category || "").trim(),
                         type: String(item.type || "").trim(),
+                        owner: String(item.owner || activityValue("pontofocal", "responsavel")).trim(),
+                        priority: String(item.priority || activityValue("prioridade")).trim(),
                         status: logs[0]?.status || String(item.status || "Sem movimentação registrada").trim(),
                         updatedAt: logs.find((log) => log.date)?.date || excelDate(item.updatedAt),
                         logs
@@ -648,12 +629,13 @@
                     ? previousSelection
                     : demands[0]?.id || null;
                 renderStatusOptions();
+                renderStatusShortcuts();
                 renderMetrics();
                 renderList();
                 if (selectedId) {
                     renderDetail(demands.find((demand) => demand.id === selectedId));
                 } else {
-                    detail.innerHTML = `<div class="detail-empty"><div class="empty-mark" aria-hidden="true">↗</div><strong>Aguardando uma demanda</strong><p>Nenhuma demanda foi publicada no arquivo JSON.</p></div>`;
+                    detail.innerHTML = `<div class="detail-empty"><div class="empty-mark" aria-hidden="true">↗</div><strong>Aguardando uma demanda</strong><p>Nenhuma demanda disponível no momento.</p></div>`;
                 }
                 searchInput.disabled = false;
                 dataMeta.textContent = sourceLabel;
@@ -664,23 +646,22 @@
                 jsonRequestInProgress = true;
                 refreshJsonButton.disabled = true;
                 statusMessage.className = "status-message";
-                if (!demands.length) dataMeta.textContent = "Buscando demandas.json...";
+                if (!demands.length) dataMeta.textContent = "Carregando demandas...";
                 try {
                     const url = new URL(jsonUrl);
                     url.searchParams.set("_", String(Date.now()));
                     const response = await fetch(url, { cache: "no-store", headers: { Accept: "application/json" } });
-                    if (!response.ok) throw new Error(`Não foi possível carregar demandas.json (${response.status}). Confirme se o arquivo está publicado junto ao painel.`);
+                    if (!response.ok) throw new Error("Não foi possível atualizar as demandas.");
                     const payload = await response.json();
                     const nextDemands = parseDemandsJson(payload);
                     const generatedAt = excelDate(payload.generatedAt);
-                    renderDemands(nextDemands, `JSON atualizado${generatedAt ? ` em ${displayDate(generatedAt)}` : ""} · ${nextDemands.length} demanda(s)`);
-                    showMessage(`Dados sincronizados: ${nextDemands.length} demandas lidas de demandas.json.`, "success");
-                    sourceFileName = "";
+                    renderDemands(nextDemands, `Atualizado${generatedAt ? ` em ${displayDate(generatedAt)}` : ""}`);
+                    showMessage("Painel atualizado.", "success");
                 } catch (error) {
                     dataMeta.textContent = demands.length
-                        ? `${demands.length} demanda(s) · última sincronização JSON falhou`
-                        : "Aguardando demandas.json válido.";
-                    showMessage(error instanceof Error ? error.message : "Falha ao sincronizar demandas.json.", "error");
+                        ? "Não foi possível atualizar"
+                        : "Aguardando atualização";
+                    showMessage("Não foi possível atualizar as demandas. Tente novamente mais tarde.", "error");
                 } finally {
                     jsonRequestInProgress = false;
                     refreshJsonButton.disabled = false;
@@ -704,12 +685,25 @@
                 statusFilter.disabled = false;
             }
 
+            function renderStatusShortcuts() {
+                for (const button of statusShortcuts) {
+                    const tone = button.dataset.statusShortcut;
+                    const count = tone
+                        ? demands.filter((demand) => statusTone(demand.status) === tone).length
+                        : demands.length;
+                    button.querySelector("[data-shortcut-count]").textContent = String(count);
+                    button.setAttribute("aria-pressed", String(quickStatusFilter === tone));
+                }
+            }
+
             function visibleDemands() {
                 const query = normalize(searchInput.value);
                 const status = statusFilter.value;
                 return demands.filter((demand) => {
-                    const searchable = normalize(`${demand.id} ${demand.title} ${demand.category} ${demand.type} ${demand.status}`);
-                    return (!query || searchable.includes(query)) && (!status || demand.status === status);
+                    const searchable = normalize(`${demand.id} ${demand.title} ${demand.category} ${demand.type} ${demand.status} ${demand.owner} ${demand.priority}`);
+                    return (!query || searchable.includes(query)) &&
+                        (!status || demand.status === status) &&
+                        (!quickStatusFilter || statusTone(demand.status) === quickStatusFilter);
                 });
             }
 
@@ -725,7 +719,7 @@
                     empty.className = "timeline-empty";
                     empty.textContent = demands.length
                         ? "Nenhuma demanda corresponde aos filtros selecionados."
-                        : "Nenhuma demanda foi publicada no arquivo demandas.json.";
+                        : "Nenhuma demanda disponível no momento.";
                     demandList.append(empty);
                     return;
                 }
@@ -750,13 +744,31 @@
                     title.textContent = demand.title;
                     const bottom = document.createElement("span");
                     bottom.className = "card-bottom";
+                    const context = document.createElement("span");
+                    context.className = "card-context";
                     const category = document.createElement("span");
                     category.className = "card-category";
                     category.textContent = demand.category || demand.type || "Sem categoria";
+                    context.append(category);
+                    if (demand.owner) {
+                        const owner = document.createElement("span");
+                        owner.className = "card-owner";
+                        owner.textContent = `· ${demand.owner}`;
+                        context.append(owner);
+                    }
+                    const meta = document.createElement("span");
+                    meta.className = "card-meta";
+                    if (demand.priority) {
+                        const priority = document.createElement("span");
+                        priority.className = "card-priority";
+                        priority.textContent = demand.priority;
+                        meta.append(priority);
+                    }
                     const date = document.createElement("span");
-                    date.className = "demand-id";
+                    date.className = "demand-date";
                     date.textContent = demand.updatedAt ? displayDate(demand.updatedAt) : "Sem data";
-                    bottom.append(category, date);
+                    meta.append(date);
+                    bottom.append(context, meta);
                     button.append(top, title, bottom);
                     button.addEventListener("click", () => {
                         selectedId = demand.id;
@@ -834,36 +846,13 @@
                 detail.append(head, current, heading, timeline);
             }
 
-            async function loadWorkbook(file) {
-                if (!file) return;
-                fileMeta.textContent = `Lendo ${file.name}...`;
-                try {
-                    const { activityRows, logRows } = await parseWorkbook(file);
-                    const nextDemands = buildDemands(activityRows, logRows);
-                    if (!nextDemands.length) throw new Error("Não encontrei demandas válidas na aba activities.");
-                    nextDemands.sort((a, b) => {
-                        if (a.updatedAt && b.updatedAt) return b.updatedAt - a.updatedAt;
-                        if (a.updatedAt) return -1;
-                        if (b.updatedAt) return 1;
-                        return a.title.localeCompare(b.title, "pt-BR");
-                    });
-                    sourceFileName = file.name;
-                    renderDemands(nextDemands, `Importado localmente: ${file.name} · ${nextDemands.length} demanda(s)`);
-                    fileMeta.textContent = `${file.name} · ${demands.length} demanda(s)`;
-                    showMessage(`Arquivo carregado: ${demands.length} demandas e ${demands.reduce((total, demand) => total + demand.logs.length, 0)} registros de fluxo.`, "success");
-                } catch (error) {
-                    fileMeta.textContent = sourceFileName ? `${sourceFileName} · última importação válida` : "Aguardando uma planilha válida.";
-                    throw error;
-                }
-            }
-
             refreshJsonButton.addEventListener("click", loadJsonData);
-            fileInput.addEventListener("change", async () => {
-                try {
-                    await loadWorkbook(fileInput.files?.[0]);
-                } catch (error) {
-                    showMessage(error instanceof Error ? error.message : "Falha inesperada ao ler a planilha.", "error");
-                }
+            statusShortcuts.forEach((button) => {
+                button.addEventListener("click", () => {
+                    quickStatusFilter = button.dataset.statusShortcut;
+                    renderStatusShortcuts();
+                    renderList();
+                });
             });
             searchInput.addEventListener("input", renderList);
             statusFilter.addEventListener("change", renderList);
