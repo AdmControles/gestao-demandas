@@ -511,8 +511,8 @@
                 if (status.includes("paus")) return "paused";
                 if (status.includes("conclu") || status.includes("finaliz") || status.includes("encerr")) return "done";
                 if (status.includes("valid")) return "validation";
-                if (status.includes("desenvolv") || status.includes("execu") || status.includes("andamento") || status.includes("iniciado") || status.includes("retomado")) return "progress";
                 if (!status || status.includes("naoiniciado") || status.includes("cadastrar")) return "new";
+                if (status.includes("desenvolv") || status.includes("execu") || status.includes("andamento") || status.includes("iniciado") || status.includes("retomado")) return "progress";
                 return "";
             }
 
