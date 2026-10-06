@@ -133,7 +133,7 @@
         }
         .filters input { min-width: 190px; }
         .content { display: flex; flex-direction: column; min-width: 0; }
-        .demand-list { max-width: 100%; min-width: 0; overflow-x: auto; padding: 2px 8px 7px; }
+        .demand-list { max-height: 302px; max-width: 100%; min-width: 0; overflow-x: auto; overflow-y: auto; padding: 2px 8px 7px; scrollbar-color: #c4d4e5 transparent; scrollbar-width: thin; }
         .list-summary { color: var(--muted); font-size: .59rem; padding: 2px; }
         .demand-table-head, .demand-row { align-items: center; display: grid; gap: 8px; grid-template-columns: minmax(180px, 1.4fr) 62px minmax(125px, 1fr) minmax(100px, .8fr) minmax(110px, .9fr); min-width: 760px; }
         .demand-table-head { color: var(--muted); font-size: .58rem; font-weight: 700; padding: 4px 8px; text-transform: uppercase; }
@@ -150,7 +150,7 @@
             width: 100%;
         }
         .demand-row:hover, .demand-row[aria-current="true"] { background: #f3f8ff; border-color: #cfe1f7; }
-        .row-demand { min-width: 0; }
+        .row-demand { min-width: 0; text-align: left !important; } .row-title { text-align: left !important; }
         .row-title { display: block; font-size: .68rem; font-weight: 670; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .row-priority { background: #fff7df; border-radius: 4px; color: #80600c; font-size: .62rem; font-weight: 750; justify-self: start; padding: 2px 6px; }
         .row-category { color: #52647a; font-size: .62rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -300,7 +300,7 @@
         .timeline-item[data-tone="blocked"] .timeline-action { color: #a8322d; }
         .timeline-item[data-tone="paused"] .timeline-action { color: #475467; }
         .timeline-item[data-tone="done"] .timeline-action { color: #216c40; }
-        @media print { .demand-table-head, .demand-row { grid-template-columns: repeat(7, minmax(0, 1fr)) !important; min-width: 0 !important; } }
+        @media print { .demand-list { max-height: none !important; overflow: visible !important; } .demand-table-head, .demand-row { grid-template-columns: repeat(7, minmax(0, 1fr)) !important; min-width: 0 !important; } }
     
         h1 { color: var(--blue); }
         .hero-copy .file-meta { margin-top: 4px; text-align: left; }
@@ -468,7 +468,7 @@
 
                 const developerChanged = currentDeveloper?.id !== developer.id;
                 currentDeveloper = developer;
-                if (developerChanged) { showAllDemands = false;
+                if (developerChanged) {
                     selectedId = null;
                     renderDemands([], `${developer.name} · Carregando demandas...`);
                 }
@@ -921,7 +921,7 @@
                 for (const [index, demand] of items.entries()) {
                     const row = document.createElement("button");
                     row.type = "button";
-                    row.className = `demand-row${index >= 8 && !showAllDemands ? " demand-row-hidden" : ""}`;
+                    row.className = "demand-row";
                     row.setAttribute("aria-current", String(demand.id === selectedId));
                     row.setAttribute("aria-label", `${demand.title}. Prioridade ${demand.priority || "não informada"}. Categoria ${demand.category || "não informada"}. Tipo ${demand.type || "não informado"}. Motivo ${demand.reason || "não informado"}. Ponto focal ${demand.owner || "não informado"}. Status ${demand.status}.`);
                     const name = document.createElement("span");
@@ -957,7 +957,7 @@
                         renderList();
                         renderDetail(demand);
                     });
-                    demandList.append(row);                     if (index === items.length - 1 && items.length > 8) {                         const toggleList = document.createElement("button");                         toggleList.type = "button";                         toggleList.className = "demand-list-toggle";                         toggleList.setAttribute("aria-expanded", String(showAllDemands));                         toggleList.textContent = showAllDemands                             ? "Mostrar menos demandas"                             : `Mostrar outras ${items.length - 8} demandas`;                         toggleList.addEventListener("click", () => {                             showAllDemands = !showAllDemands;                             renderList();                         });                         demandList.append(toggleList);                     }
+                    demandList.append(row);                     
                 }
             }
 
