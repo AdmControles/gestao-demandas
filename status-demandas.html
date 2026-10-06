@@ -338,7 +338,7 @@
             .row-reason { white-space: normal !important; }
         }
         
-        .timeline { justify-content: space-between; }     </style>
+        .timeline { justify-content: space-between; }     .timeline.timeline-scrollable{justify-content:flex-start}.timeline.timeline-scrollable::-webkit-scrollbar-thumb{background:#d5e0ec}.timeline-tooltip:not([hidden]){display:block;z-index:10000;pointer-events:none}</style>
 </head>
 <body>
     <main class="shell">
@@ -1052,7 +1052,7 @@
                 return value ? `Ação: ${value}` : "Ação não informada";
             }
 
-            function renderDetail(demand) {
+            function renderDetail(demand) { document.querySelectorAll(".timeline-tooltip").forEach((tooltip) => tooltip.remove());
                 if (timelineObserver) timelineObserver.disconnect();
                 timelineObserver = null;
                 expandedTimelineSteps = new Set();
@@ -1064,7 +1064,7 @@
                 head.append(title);
 
                 const timeline = document.createElement("ol");
-                timeline.className = "timeline";
+                timeline.className = "timeline";                 if (demand.logs.length > 11) timeline.classList.add("timeline-scrollable");
                 detail.append(head, timeline);
                 if (!demand?.logs.length) {
                     const empty = document.createElement("li");
@@ -1104,17 +1104,17 @@
                         item.className = "timeline-item";
                         item.dataset.tone = statusTone(log.status);
                         item.dataset.step = String(timelineItems.length + 1);                         item.dataset.progress = logIndex === chronologicalLogs.length - 1 ? "current" : "past";
-                        const canToggleStep = chronologicalLogs.length > 3 && logIndex > 0 && logIndex < chronologicalLogs.length - 1;                         const isInitiallyVisible = chronologicalLogs.length <= 3 || logIndex === 0 || logIndex === chronologicalLogs.length - 1 || expandedTimelineSteps.has(logIndex);
+                        const canToggleStep = false;                         const isInitiallyVisible = true;
                         if (!isInitiallyVisible) item.classList.add("timeline-collapsed");
                         const card = document.createElement("div");
                         card.className = "timeline-card";
                         card.tabIndex = 0;
                         const tooltip = document.createElement("div");
-                        tooltip.className = "timeline-tooltip";
+                        tooltip.className = "timeline-tooltip"; tooltip.hidden = true; document.body.append(tooltip);
                         tooltip.setAttribute("role", "tooltip");
                         tooltip.id = `timeline-tooltip-${logIndex + 1}`;
                         card.setAttribute("aria-describedby", tooltip.id);
-                        const updateDurationTooltip = () => {
+                        const updateDurationTooltip = (show = true) => {
                             const rows = timelineTooltipRows(log, actionLabel, nextLog, actionLabels[logIndex + 1]);
                             tooltip.replaceChildren();
                             for (const row of rows) {
@@ -1130,12 +1130,12 @@
                                 tooltip.append(line);
                             }
                             requestAnimationFrame(() => {
-                                const cardRect = card.getBoundingClientRect();
+                                tooltip.hidden = !show; if (!show) return; document.querySelectorAll(".timeline-tooltip:not([hidden])").forEach((openTooltip) => { if (openTooltip !== tooltip) openTooltip.hidden = true; }); const cardRect = card.getBoundingClientRect();
                                 const tooltipWidth = tooltip.offsetWidth;
                                 if (!tooltipWidth) return;
-                                const left = Math.min(Math.max(cardRect.left + cardRect.width / 2 - tooltipWidth / 2, 8), window.innerWidth - tooltipWidth - 8);
-                                const top = cardRect.bottom + 9;
-                                tooltip.classList.add("below");
+                                const left = Math.max(8, Math.min(cardRect.left + cardRect.width / 2 - tooltipWidth / 2, window.innerWidth - tooltipWidth - 8));
+                                const tooltipHeight = tooltip.offsetHeight; const gap = 8; const belowTop = cardRect.bottom + gap; const top = belowTop + tooltipHeight <= window.innerHeight - 8 ? belowTop : Math.max(8, cardRect.top - tooltipHeight - gap); tooltip.classList.toggle("below", top >= cardRect.bottom);
+                                
                                 tooltip.style.left = `${left}px`;
                                 tooltip.style.top = `${top}px`;
                                 tooltip.style.transform = "none";
@@ -1149,18 +1149,18 @@
                             });
                             card.setAttribute("aria-label", rows.map((row) => `${row.label}: ${row.value}`).join(". "));
                         };
-                        updateDurationTooltip();
-                        const closeTimelineTooltipSpace = () => {
+                        updateDurationTooltip(false);
+                        const closeTimelineTooltipSpace = () => { tooltip.hidden = true;
                             
                             
                             
                         };
                         card.addEventListener("mouseenter", updateDurationTooltip);
-                        card.addEventListener("mouseleave", () => {
+                        card.addEventListener("mouseleave", () => { closeTimelineTooltipSpace();
                             
                         });
                         card.addEventListener("focus", updateDurationTooltip);
-                        card.addEventListener("blur", () => {
+                        card.addEventListener("blur", () => { closeTimelineTooltipSpace();
                             
                         });
                         const top = document.createElement("div");
@@ -1190,7 +1190,7 @@
                         state.className = "timeline-state";
                         state.textContent = description || (mappedLifecycleAction ? "" : log.status);
                         card.append(top, state);
-                        card.append(tooltip);
+                        tooltip.hidden = true;
                         item.append(card);
                         if (canToggleStep) { item.classList.add("has-toggle");
                             const revealButton = document.createElement("button");
