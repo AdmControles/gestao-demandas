@@ -1457,6 +1457,7 @@ body{background:#f4f7fb;color:#26354a}
  list.addEventListener("click",event=>{const row=event.target.closest(".demand-row");if(!row)return;const selected=row.getAttribute("aria-current")==="true";if(openedByRowClick&&selected){openedByRowClick=false;setFlow(false);}else if(document.body.classList.contains("view-table")){openedByRowClick=true;setFlow(true);}scrollToLast();},true);
 })();
 </script>
+<style id="dashboard-type-alignment">.view-flow .row-type { justify-self:center !important; }</style>
 
 </body>
 </html>
