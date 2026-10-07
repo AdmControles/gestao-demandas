@@ -1439,6 +1439,24 @@ body{background:#f4f7fb;color:#26354a}
     .view-flow .timeline-item::before { top:12px; }
     .view-flow .timeline-item .timeline-card { position:absolute; top:24px; right:5px; bottom:auto; left:5px; width:auto; min-width:166px; height:76px; min-height:76px; max-height:76px; transform:none; }
     </style>
+<style id="dashboard-requested-refinements">
+.view-flow .demand-list { max-height:none; }
+.view-flow .row-demand { color:#52647a; }
+.view-flow .row-type { justify-self:center; text-align:center; }
+.view-flow .detail,.view-flow .timeline,.view-flow .timeline-card { border-radius:4px; }
+.view-flow .timeline { padding-right:8px; padding-left:8px; }
+</style>
+<script id="dashboard-flow-last-step">
+(()=>{
+ const flow=document.getElementById("view-flow-button"),table=document.getElementById("view-table-button"),list=document.getElementById("demand-list"),reduce=window.matchMedia("(prefers-reduced-motion: reduce)");
+ let openedByRowClick=false;
+ const scrollToLast=()=>requestAnimationFrame(()=>requestAnimationFrame(()=>{const timeline=document.querySelector("#demand-detail .timeline");if(!timeline||!timeline.clientWidth)return;timeline.scrollTo({left:Math.max(0,timeline.scrollWidth-timeline.clientWidth),behavior:reduce.matches?"auto":"smooth"});}));
+ const setFlow=enabled=>{document.body.classList.toggle("view-flow",enabled);document.body.classList.toggle("view-table",!enabled);flow.setAttribute("aria-pressed",String(enabled));table.setAttribute("aria-pressed",String(!enabled));if(enabled)scrollToLast();};
+ flow.addEventListener("click",()=>{openedByRowClick=false;scrollToLast();});
+ table.addEventListener("click",()=>{openedByRowClick=false;});
+ list.addEventListener("click",event=>{const row=event.target.closest(".demand-row");if(!row)return;const selected=row.getAttribute("aria-current")==="true";if(openedByRowClick&&selected){openedByRowClick=false;setFlow(false);}else if(document.body.classList.contains("view-table")){openedByRowClick=true;setFlow(true);}scrollToLast();},true);
+})();
+</script>
 
 </body>
 </html>
