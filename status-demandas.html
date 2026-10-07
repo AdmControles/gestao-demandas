@@ -1465,6 +1465,11 @@ body{background:#f4f7fb;color:#26354a}
 .view-flow .timeline-item[data-progress="current"]::before { width:11px; height:11px; background:#4f9572; box-shadow:0 0 0 2px #4f957226; }
 .view-flow .timeline-item[data-tone="blocked"][data-progress="current"]::before { background:#b66d67; box-shadow:0 0 0 2px #b66d6726; }
 </style>
+<style id="dashboard-flow-transition">
+.view-table #demand-detail { transition:flex-grow .48s cubic-bezier(.22,.68,0,1),flex-basis .48s cubic-bezier(.22,.68,0,1),min-height .48s cubic-bezier(.22,.68,0,1),height .48s cubic-bezier(.22,.68,0,1),max-height .48s cubic-bezier(.22,.68,0,1),opacity .28s ease,transform .48s cubic-bezier(.22,.68,0,1),padding .35s ease,border-width .35s ease,visibility 0s linear .48s; transform:translateY(22px); visibility:hidden; }
+.view-flow #demand-detail { transition:flex-grow .48s cubic-bezier(.22,.68,0,1),flex-basis .48s cubic-bezier(.22,.68,0,1),min-height .48s cubic-bezier(.22,.68,0,1),height .48s cubic-bezier(.22,.68,0,1),max-height .48s cubic-bezier(.22,.68,0,1),opacity .28s ease,transform .48s cubic-bezier(.22,.68,0,1),padding .35s ease,border-width .35s ease,visibility 0s; transform:translateY(0); visibility:visible; }
+@media(prefers-reduced-motion:reduce){.view-table #demand-detail,.view-flow #demand-detail{transition:none;}}
+</style>
 
 </body>
 </html>
