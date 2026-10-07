@@ -1421,5 +1421,20 @@ body{background:#f4f7fb;color:#26354a}
  update();new MutationObserver(update).observe(document.body,{childList:true,subtree:true});
 })();
 </script>
+    <style id="dashboard-flow-compact">
+@media (min-width: 761px) {
+    .view-flow .workspace { flex: 1 1 0; min-height: 170px; }
+    .view-flow .detail { flex: 0 0 150px; height: 150px; min-height: 150px; max-height: 150px; padding: 6px 9px; }
+    .view-flow .detail-head { flex-basis: 23px; min-height: 23px; margin-bottom: 2px; }
+    .view-flow .timeline { padding-top: 3px; padding-bottom: 3px; }
+}
+@media (max-width: 760px) {
+    .view-flow .workspace { flex-basis: 220px; height: 220px; max-height: 220px; }
+    .view-flow .detail { flex: 0 0 188px; height: 188px; min-height: 188px; max-height: 188px; padding: 6px 8px; }
+    .view-flow .detail-head { flex-basis: 23px; min-height: 23px; }
+    .view-flow .timeline { padding-top: 3px; padding-bottom: 3px; }
+}
+</style>
+
 </body>
 </html>
