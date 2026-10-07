@@ -1460,6 +1460,11 @@ body{background:#f4f7fb;color:#26354a}
 <style id="dashboard-type-alignment">.view-flow .row-type { justify-self:center !important; }</style>
 <style id="dashboard-table-type-and-title">.demand-row > .row-type { justify-self:center !important; text-align:center !important; }
 .row-demand { color:#52647a; }</style>
+<style id="dashboard-timeline-marker-refinement">
+.view-flow .timeline-item::before { width:10px; height:10px; border:2px solid #f7f9fc; background:#8492a6; box-shadow:0 0 0 1px #8492a633; }
+.view-flow .timeline-item[data-progress="current"]::before { width:11px; height:11px; background:#4f9572; box-shadow:0 0 0 2px #4f957226; }
+.view-flow .timeline-item[data-tone="blocked"][data-progress="current"]::before { background:#b66d67; box-shadow:0 0 0 2px #b66d6726; }
+</style>
 
 </body>
 </html>
