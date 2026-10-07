@@ -339,8 +339,51 @@
         }
         
         .timeline { justify-content: space-between; }     .timeline.timeline-scrollable{justify-content:flex-start}.timeline.timeline-scrollable::-webkit-scrollbar-thumb{background:#d5e0ec}.timeline-tooltip:not([hidden]){display:block;z-index:10000;pointer-events:none}</style>
+
+:root { --dashboard-blue:#14387F; --dashboard-green:#1FAE69; --dashboard-red:#C00000; }
+body { overflow-x:hidden; } .shell { max-width:1600px; min-height:100vh; padding:8px 12px 12px; }
+.hero { margin-bottom:6px; padding:8px 12px; } .eyebrow,h1,.detail-head h3,.workspace-heading h2 { color:var(--dashboard-blue); }
+.eyebrow { font-size:.68rem; letter-spacing:.1em; } h1 { font-size:clamp(1.32rem,2vw,1.65rem); }
+.hero-actions { align-items:center; flex-direction:row; gap:12px; }
+.view-mode-buttons { align-items:center; background:#e8edf5; border:1px solid #d5deea; border-radius:8px; display:inline-flex; gap:3px; padding:3px; }
+.view-mode-buttons button { background:transparent; border:0; border-radius:6px; color:#43546c; font-weight:700; min-height:32px; padding:5px 14px; transition:background .24s ease,color .24s ease,box-shadow .24s ease; }
+.view-mode-buttons button[aria-pressed="true"] { background:var(--dashboard-blue); box-shadow:0 2px 6px #14387f30; color:#fff; }
+.view-mode-buttons button:focus-visible { outline:3px solid #75a7ed; outline-offset:2px; }
+.metrics { gap:6px; margin-bottom:6px; }
+.detail { max-height:330px; margin-bottom:6px; overflow:hidden; padding:6px 9px; position:relative; transition:max-height .34s ease,margin .34s ease,padding .34s ease,opacity .28s ease,transform .34s ease; }
+.detail-head { margin-bottom:3px; } .detail-head h3 { font-size:.86rem; }
+.view-table #demand-detail { border-width:0; margin:0; max-height:0; opacity:0; padding-bottom:0; padding-top:0; transform:translateY(-8px); visibility:hidden; }
+.view-flow #demand-detail { max-height:330px; opacity:1; transform:translateY(0); visibility:visible; }
+.demand-list { transition:max-height .34s ease,opacity .28s ease; } .view-flow .demand-list { max-height:190px; } .view-table .demand-list { max-height:calc(100dvh - 220px); }
+.demand-table-head,.demand-row { grid-template-columns:minmax(110px,1fr) minmax(82px,.78fr) minmax(190px,1.65fr) minmax(120px,1fr) minmax(72px,.62fr) minmax(135px,1.15fr) minmax(205px,1.55fr) minmax(145px,1.1fr) !important; min-width:1120px !important; }
+.demand-table-head { font-size:.61rem; text-transform:none !important; } .demand-table-head>span,.demand-row>* { min-width:0; } .demand-row { min-height:34px; }
+.row-demand { display:block; min-width:0; } .row-title { display:block; }
+.row-reason { color:#52647a; display:block; font-size:.65rem; line-height:1.3; margin:0; max-height:2.6em; overflow:hidden; text-overflow:ellipsis; white-space:normal; }
+.row-duration { color:#334155; display:block; font-size:.65rem; line-height:1.3; }
+.timeline { align-items:stretch; height:258px; justify-content:flex-start; min-height:258px; overflow-x:auto; overflow-y:hidden; padding:0 8px; scroll-behavior:smooth; }
+.timeline-item { flex:0 0 196px; height:258px; min-height:258px; padding:0; }
+.timeline-item::before { border-color:#aeb8c6; height:22px; left:calc(50% - 11px); top:calc(50% - 11px); width:22px; z-index:2; }
+.timeline-item[data-progress="past"] .timeline-card { border-top-color:var(--dashboard-blue); }
+.timeline-card { background:#fff; border:1px solid #dce4ee; border-radius:9px; box-shadow:0 3px 10px #132c4b12; height:112px; left:10px; margin:0; min-height:112px; overflow:hidden; padding:8px 9px; position:absolute; width:176px; }
+.timeline-item:nth-of-type(odd) .timeline-card { top:3px; } .timeline-item:nth-of-type(even) .timeline-card { bottom:3px; }
+.timeline-top { align-items:flex-start; border-bottom:1px solid #e6ebf2; display:flex; flex-direction:column; gap:3px; padding-bottom:5px; }
+.timeline-action { color:var(--dashboard-blue); font-size:.71rem; font-weight:750; line-height:1.2; } .timeline-date { color:#64748b; font-size:.61rem; }
+.timeline-state { color:#40516a; font-size:.65rem; line-height:1.3; margin-top:5px; max-height:2.6em; overflow:hidden; }
+.timeline-path path { fill:none !important; stroke:#cbd3de !important; stroke-dasharray:5 6; stroke-width:2; } .timeline-path polygon { display:none; }
+.timeline-item[data-progress="current"] .timeline-card { border-color:#b6dfca; border-top:3px solid var(--dashboard-green); background:#f7fcf9; }
+.timeline-item[data-progress="current"]::before { border-color:var(--dashboard-green); background:var(--dashboard-green); box-shadow:0 0 0 4px #1fae6920; color:#fff; }
+.timeline-item[data-progress="current"] .timeline-action { color:var(--dashboard-green); }
+.timeline-item[data-progress="current"][data-tone="blocked"] .timeline-card { background:#fff8f8; border-color:#edc1c1; border-top-color:var(--dashboard-red); }
+.timeline-item[data-progress="current"][data-tone="blocked"]::before { background:var(--dashboard-red); border-color:var(--dashboard-red); box-shadow:0 0 0 4px #c0000020; }
+.timeline-item[data-progress="current"][data-tone="blocked"] .timeline-action { color:var(--dashboard-red); }
+.workspace-heading { flex-wrap:wrap; gap:8px; } .workspace-heading h2 { font-size:.95rem; } .filters { flex-wrap:wrap; }
+@media(max-height:700px) { .view-flow .demand-list { max-height:120px; } .timeline,.timeline-item { height:220px; min-height:220px; } .view-flow #demand-detail { max-height:292px; } }
+@media(max-width:720px) { .shell { padding:6px 7px 10px; } .hero { align-items:flex-start; flex-wrap:wrap; } .hero-actions { align-items:flex-start; flex-wrap:wrap; gap:7px; } .view-table .demand-list { max-height:calc(100dvh - 250px); } }
+@media(prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto !important; transition-duration:.01ms !important; animation-duration:.01ms !important; animation-iteration-count:1 !important; } }
+@media print { .view-mode-buttons { display:none !important; } .demand-table-head,.demand-row { grid-template-columns:1fr .8fr 1.5fr 1fr .7fr 1fr 1.4fr 1fr !important; min-width:0 !important; } .row-reason,.row-duration { white-space:normal !important; } }
+</style>
 </head>
-<body>
+<body class="view-flow">
     <main class="shell">
         <header class="hero">
             <div class="hero-copy">
@@ -349,6 +392,7 @@
                 <div class="file-meta" id="data-meta" aria-live="polite">Aguardando acesso</div>
             </div>
             <div class="hero-actions">
+<div class="view-mode-buttons" id="view-mode-buttons" role="group" aria-label="Modo de visualização"><button id="view-flow-button" type="button" aria-pressed="true">Fluxo</button><button id="view-table-button" type="button" aria-pressed="false">Tabela</button></div>
                 <div class="developer-selector">
                     <label for="developer-filter">Desenvolvedor</label>
                     <select id="developer-filter" disabled>
@@ -877,7 +921,7 @@
                 const tableHead = document.createElement("div");
                 tableHead.className = "demand-table-head";
                 tableHead.setAttribute("aria-hidden", "true");
-                for (const label of ["Categoria", "Tipo", "Título", "Ponto focal", "Prioridade", "Status"]) {
+                for (const label of ["Categoria", "Tipo", "Título", "Ponto focal", "Prioridade", "Status", "Motivo da correção", "Tempo no status"]) {
                     const cell = document.createElement("span");
                     cell.textContent = label;
                     tableHead.append(cell);
@@ -929,7 +973,6 @@
                     reason.className = "row-reason";
                     reason.textContent = normalize(demand.type).includes("correc") ? (demand.reason || "Não informado") : "—";
                     reason.title = reason.textContent;
-                    if (normalize(demand.type).includes("correc")) name.append(reason);
                     const owner = document.createElement("span");
                     owner.className = "row-owner";
                     owner.textContent = demand.owner || "Não informado";
@@ -938,7 +981,16 @@
                     const tone = statusTone(demand.status);
                     if (tone) status.dataset.tone = tone;
                     status.textContent = demand.status;
-                    row.append(category, type, name, owner, priority, status);
+                    const statusSince = demand.logs?.find((log) => normalize(log.status) === normalize(demand.status) && log.date)?.date || null;
+                    const statusDuration = document.createElement("span");
+                    statusDuration.className = "row-duration";
+                    if (statusSince instanceof Date && !Number.isNaN(statusSince.getTime())) {
+                        statusDuration.dataset.since = String(statusSince.getTime());
+                        statusDuration.textContent = formatElapsed(Date.now() - statusSince.getTime());
+                    } else statusDuration.textContent = "Indisponível";
+                    statusDuration.title = statusSince ? "No status desde " + new Intl.DateTimeFormat("pt-BR", { dateStyle: "short", timeStyle: "short" }).format(statusSince) : "Data de início do status não informada";
+                    row.setAttribute("aria-label", demand.title + ". Categoria " + (demand.category || "não informada") + ". Tipo " + (demand.type || "não informado") + ". Motivo " + reason.textContent + ". Ponto focal " + (demand.owner || "não informado") + ". Status " + demand.status + ". Tempo no status " + statusDuration.textContent + ".");
+                    row.append(category, type, name, owner, priority, status, reason, statusDuration);
                     row.addEventListener("click", () => {
                         selectedId = demand.id;
                         renderList();
@@ -959,7 +1011,7 @@
                 pathSvg.setAttribute("height", String(height));
                 const points = items.map((item) => ({
                     x: item.offsetLeft + item.offsetWidth / 2,
-                    y: item.offsetTop + 8.5
+                    y: item.offsetTop + item.offsetHeight / 2
                 }));
                 let pathData = `M ${points[0].x} ${points[0].y}`;
                 const arrows = [];
@@ -1228,15 +1280,15 @@
                 renderList();
             }
 
-                        const closeTableActionsMenu = () => {                 tableActionsMenu.hidden = true;                 tableActionsToggle.setAttribute("aria-expanded", "false");             };             tableActionsToggle.addEventListener("click", () => {                 const isOpen = !tableActionsMenu.hidden;                 tableActionsMenu.hidden = isOpen;                 tableActionsToggle.setAttribute("aria-expanded", String(!isOpen));             });             document.addEventListener("click", (event) => {                 if (!event.target.closest(".table-actions")) closeTableActionsMenu();             });             document.addEventListener("keydown", (event) => {                 if (event.key === "Escape") closeTableActionsMenu();             });             printTableButton.addEventListener("click", () => {                 closeTableActionsMenu();                 const items = visibleDemands();                 printMeta.textContent = currentDeveloper                     ? currentDeveloper.name + " · " + dataMeta.textContent + " · " + items.length + " demanda(s)"                     : "Dados do painel";                 window.print();             });             exportTableButton.addEventListener("click", () => {                 closeTableActionsMenu();                 if (!currentDeveloper) {                     showMessage("Selecione um desenvolvedor para exportar as demandas.", "error");                     return;                 }                 const priorityNumber = (priority) => {                     const value = String(priority || "").trim().toUpperCase().replace("P", "");                     return value && Number.isFinite(Number(value)) ? Number(value) : Number.POSITIVE_INFINITY;                 };                 const items = visibleDemands().sort((a, b) => {                     const priorityDifference = priorityNumber(a.priority) - priorityNumber(b.priority);                     if (priorityDifference) return priorityDifference;                     if (!a.priority && b.priority) return 1;                     if (a.priority && !b.priority) return -1;                     if (a.priority && b.priority && a.priority !== b.priority) return a.priority.localeCompare(b.priority, "pt-BR");                     return (b.updatedAt?.getTime() || 0) - (a.updatedAt?.getTime() || 0);                 });                 const headers = ["Categoria", "Tipo", "Título", "Ponto focal", "Prioridade", "Status"];                 const csvCell = (value) => {                     let text = String(value ?? "");                     if (["=", "+", "-", "@"].some((prefix) => text.trimStart().startsWith(prefix))) text = "'" + text;                     const quote = String.fromCharCode(34);                     return quote + text.split(quote).join(quote + quote) + quote;                 };                 const rows = items.map((demand) => [
+                        const closeTableActionsMenu = () => {                 tableActionsMenu.hidden = true;                 tableActionsToggle.setAttribute("aria-expanded", "false");             };             tableActionsToggle.addEventListener("click", () => {                 const isOpen = !tableActionsMenu.hidden;                 tableActionsMenu.hidden = isOpen;                 tableActionsToggle.setAttribute("aria-expanded", String(!isOpen));             });             document.addEventListener("click", (event) => {                 if (!event.target.closest(".table-actions")) closeTableActionsMenu();             });             document.addEventListener("keydown", (event) => {                 if (event.key === "Escape") closeTableActionsMenu();             });             printTableButton.addEventListener("click", () => {                 closeTableActionsMenu();                 const items = visibleDemands();                 printMeta.textContent = currentDeveloper                     ? currentDeveloper.name + " · " + dataMeta.textContent + " · " + items.length + " demanda(s)"                     : "Dados do painel";                 window.print();             });             exportTableButton.addEventListener("click", () => {                 closeTableActionsMenu();                 if (!currentDeveloper) {                     showMessage("Selecione um desenvolvedor para exportar as demandas.", "error");                     return;                 }                 const priorityNumber = (priority) => {                     const value = String(priority || "").trim().toUpperCase().replace("P", "");                     return value && Number.isFinite(Number(value)) ? Number(value) : Number.POSITIVE_INFINITY;                 };                 const items = visibleDemands().sort((a, b) => {                     const priorityDifference = priorityNumber(a.priority) - priorityNumber(b.priority);                     if (priorityDifference) return priorityDifference;                     if (!a.priority && b.priority) return 1;                     if (a.priority && !b.priority) return -1;                     if (a.priority && b.priority && a.priority !== b.priority) return a.priority.localeCompare(b.priority, "pt-BR");                     return (b.updatedAt?.getTime() || 0) - (a.updatedAt?.getTime() || 0);                 });                 const headers = ["Categoria", "Tipo", "Título", "Ponto focal", "Prioridade", "Status", "Motivo da correção", "Tempo no status"];                 const csvCell = (value) => {                     let text = String(value ?? "");                     if (["=", "+", "-", "@"].some((prefix) => text.trimStart().startsWith(prefix))) text = "'" + text;                     const quote = String.fromCharCode(34);                     return quote + text.split(quote).join(quote + quote) + quote;                 };                 const rows = items.map((demand) => [
                     demand.category || "Sem categoria",
                     demand.type || "—",
-                    normalize(demand.type).includes("correc") && demand.reason
-                        ? `${demand.title} — Motivo: ${demand.reason}`
-                        : demand.title,
+                    demand.title,
                     demand.owner || "Não informado",
                     demand.priority || "—",
-                    demand.status
+                    demand.status,
+                    normalize(demand.type).includes("correc") ? (demand.reason || "Não informado") : "—",
+                    (() => { const since = demand.logs?.find((log) => normalize(log.status) === normalize(demand.status) && log.date)?.date; return since ? formatElapsed(Date.now() - since.getTime()) : "Indisponível"; })()
                 ]);                 const newline = String.fromCharCode(13, 10);                 const csv = String.fromCharCode(65279) + "sep=;" + newline + [headers, ...rows].map((row) => row.map(csvCell).join(";")).join(newline);                 const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });                 const url = URL.createObjectURL(blob);                 const link = document.createElement("a");                 link.href = url;                 link.download = "demandas-" + currentDeveloper.id + "-" + new Date().toISOString().slice(0, 10) + ".csv";                 document.body.append(link);                 link.click();                 link.remove();                 setTimeout(() => URL.revokeObjectURL(url), 1000);             });
             for (const card of document.querySelectorAll(".metric-clickable")) { card.addEventListener("click", () => { const filter = card.dataset.metricFilter; activeMetricFilter = filter === "all" || activeMetricFilter === filter ? null : filter; statusFilter.value = ""; for (const metric of document.querySelectorAll(".metric-clickable")) metric.setAttribute("aria-pressed", String(activeMetricFilter === metric.dataset.metricFilter)); updateFilteredList(); }); card.addEventListener("keydown", (event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); card.click(); } }); }             accessDeveloper.addEventListener("change", () => {
                 accessKey.value = "";
@@ -1258,5 +1310,16 @@
             }, jsonRefreshInterval);
         })();
     </script>
+
+<script id="dashboard-view-behavior">
+(() => {
+ const flow=document.getElementById("view-flow-button"), table=document.getElementById("view-table-button"), reduce=window.matchMedia("(prefers-reduced-motion: reduce)");
+ const center=()=>requestAnimationFrame(()=>requestAnimationFrame(()=>{ const list=document.querySelector("#demand-detail .timeline"), current=list&&list.querySelector('.timeline-item[data-progress="current"]'); if(!list||!current||!list.clientWidth)return; list.scrollTo({left:Math.max(0,current.offsetLeft+current.offsetWidth/2-list.clientWidth/2),behavior:reduce.matches?"auto":"smooth"}); }));
+ const mode=value=>{ document.body.classList.toggle("view-flow",value==="flow"); document.body.classList.toggle("view-table",value==="table"); flow.setAttribute("aria-pressed",String(value==="flow")); table.setAttribute("aria-pressed",String(value==="table")); if(value==="flow")center(); };
+ flow.addEventListener("click",()=>mode("flow")); table.addEventListener("click",()=>mode("table"));
+ document.getElementById("demand-list").addEventListener("click",event=>{if(event.target.closest(".demand-row"))requestAnimationFrame(center);}); mode("flow");
+ const tick=()=>document.querySelectorAll(".row-duration[data-since]").forEach(cell=>{const n=Math.max(0,Math.floor((Date.now()-Number(cell.dataset.since))/60000)),d=Math.floor(n/1440),h=Math.floor(n%1440/60),m=n%60,parts=[];if(d)parts.push(d+" dia(s)");if(h)parts.push(h+" hora(s)");if(m)parts.push(m+" minuto(s)");cell.textContent=parts.join(" ")||"menos de 1 minuto";}); window.setInterval(tick,60000);
+})();
+</script>
 </body>
 </html>
