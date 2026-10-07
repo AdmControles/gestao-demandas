@@ -345,10 +345,6 @@ body { overflow-x:hidden; } .shell { max-width:1600px; min-height:100vh; padding
 .hero { margin-bottom:6px; padding:8px 12px; } .eyebrow,h1,.detail-head h3,.workspace-heading h2 { color:var(--dashboard-blue); }
 .eyebrow { font-size:.68rem; letter-spacing:.1em; } h1 { font-size:clamp(1.32rem,2vw,1.65rem); }
 .hero-actions { align-items:center; flex-direction:row; gap:12px; }
-.view-mode-buttons { align-items:center; background:#e8edf5; border:1px solid #d5deea; border-radius:8px; display:inline-flex; gap:3px; padding:3px; }
-.view-mode-buttons button { background:transparent; border:0; border-radius:6px; color:#43546c; font-weight:700; min-height:32px; padding:5px 14px; transition:background .24s ease,color .24s ease,box-shadow .24s ease; }
-.view-mode-buttons button[aria-pressed="true"] { background:var(--dashboard-blue); box-shadow:0 2px 6px #14387f30; color:#fff; }
-.view-mode-buttons button:focus-visible { outline:3px solid #75a7ed; outline-offset:2px; }
 .metrics { gap:6px; margin-bottom:6px; }
 .detail { max-height:330px; margin-bottom:6px; overflow:hidden; padding:6px 9px; position:relative; transition:max-height .34s ease,margin .34s ease,padding .34s ease,opacity .28s ease,transform .34s ease; }
 .detail-head { margin-bottom:3px; } .detail-head h3 { font-size:.86rem; }
@@ -380,10 +376,10 @@ body { overflow-x:hidden; } .shell { max-width:1600px; min-height:100vh; padding
 @media(max-height:700px) { .view-flow .demand-list { max-height:120px; } .timeline,.timeline-item { height:220px; min-height:220px; } .view-flow #demand-detail { max-height:292px; } }
 @media(max-width:720px) { .shell { padding:6px 7px 10px; } .hero { align-items:flex-start; flex-wrap:wrap; } .hero-actions { align-items:flex-start; flex-wrap:wrap; gap:7px; } .view-table .demand-list { max-height:calc(100dvh - 250px); } }
 @media(prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto !important; transition-duration:.01ms !important; animation-duration:.01ms !important; animation-iteration-count:1 !important; } }
-@media print { .view-mode-buttons { display:none !important; } .demand-table-head,.demand-row { grid-template-columns:1fr .8fr 1.5fr 1fr .7fr 1fr 1.4fr 1fr !important; min-width:0 !important; } .row-reason,.row-duration { white-space:normal !important; } }
+@media print { .demand-table-head,.demand-row { grid-template-columns:1fr .8fr 1.5fr 1fr .7fr 1fr 1.4fr 1fr !important; min-width:0 !important; } .row-reason,.row-duration { white-space:normal !important; } }
 </style>
 </head>
-<body class="view-flow">
+<body class="view-table">
     <main class="shell">
         <header class="hero">
             <div class="hero-copy">
@@ -392,7 +388,7 @@ body { overflow-x:hidden; } .shell { max-width:1600px; min-height:100vh; padding
                 <div class="file-meta" id="data-meta" aria-live="polite">Aguardando acesso</div>
             </div>
             <div class="hero-actions">
-<div class="view-mode-buttons" id="view-mode-buttons" role="group" aria-label="Modo de visualização"><button id="view-flow-button" type="button" aria-pressed="true">Fluxo</button><button id="view-table-button" type="button" aria-pressed="false">Tabela</button></div>
+
                 <div class="developer-selector">
                     <label for="developer-filter">Desenvolvedor</label>
                     <select id="developer-filter" disabled>
@@ -1313,11 +1309,9 @@ body { overflow-x:hidden; } .shell { max-width:1600px; min-height:100vh; padding
 
 <script id="dashboard-view-behavior">
 (() => {
- const flow=document.getElementById("view-flow-button"), table=document.getElementById("view-table-button"), reduce=window.matchMedia("(prefers-reduced-motion: reduce)");
+ const reduce=window.matchMedia("(prefers-reduced-motion: reduce)");
  const center=()=>requestAnimationFrame(()=>requestAnimationFrame(()=>{ const list=document.querySelector("#demand-detail .timeline"), current=list&&list.querySelector('.timeline-item[data-progress="current"]'); if(!list||!current||!list.clientWidth)return; list.scrollTo({left:Math.max(0,current.offsetLeft+current.offsetWidth/2-list.clientWidth/2),behavior:reduce.matches?"auto":"smooth"}); }));
- const mode=value=>{ document.body.classList.toggle("view-flow",value==="flow"); document.body.classList.toggle("view-table",value==="table"); flow.setAttribute("aria-pressed",String(value==="flow")); table.setAttribute("aria-pressed",String(value==="table")); if(value==="flow")center(); };
- flow.addEventListener("click",()=>mode("flow")); table.addEventListener("click",()=>mode("table"));
- document.getElementById("demand-list").addEventListener("click",event=>{if(event.target.closest(".demand-row"))requestAnimationFrame(center);}); mode("flow");
+ document.getElementById("demand-list").addEventListener("click",event=>{if(event.target.closest(".demand-row"))requestAnimationFrame(center);});
  const tick=()=>document.querySelectorAll(".row-duration[data-since]").forEach(cell=>{const n=Math.max(0,Math.floor((Date.now()-Number(cell.dataset.since))/60000)),d=Math.floor(n/1440),h=Math.floor(n%1440/60),m=n%60,parts=[];if(d)parts.push(d+" dia(s)");if(h)parts.push(h+" hora(s)");if(m)parts.push(m+" minuto(s)");cell.textContent=parts.join(" ")||"menos de 1 minuto";}); window.setInterval(tick,60000);
 })();
 </script>
@@ -1335,11 +1329,6 @@ body{background:#f4f7fb;color:#26354a}
 .developer-selector{align-items:center;flex-direction:row;gap:6px}
 .developer-selector label{color:#66778c}
 .developer-selector select{min-height:30px;border:1px solid #d7e0eb;border-radius:7px;color:#354961;font-size:11px}
-.view-mode-buttons{box-sizing:border-box;display:inline-flex;align-items:center;gap:2px;height:32px;padding:2px;border:1px solid #d7e0eb;border-radius:9px;background:#f7f9fc;box-shadow:0 1px 2px #1a34500a}
-.view-mode-buttons button{min-width:48px;height:26px;padding:4px 9px;border:0;border-radius:6px;background:transparent;color:#64748a;font-size:10px;font-weight:550;line-height:1;transition:background-color .18s ease,color .18s ease,box-shadow .18s ease}
-.view-mode-buttons button:hover{background:#edf2f8;color:#294c73}
-.view-mode-buttons button[aria-pressed=true]{background:#e5edf7;color:#214b79;font-weight:650;box-shadow:inset 0 0 0 1px #d4e0ef}
-.view-mode-buttons button:focus-visible{outline:2px solid #7395bc;outline-offset:2px}
 .metrics{display:flex;align-items:center;justify-content:flex-start;flex:0 0 34px;height:34px;min-height:34px;gap:0;margin:0;padding:0 6px;border:0;background:transparent}
 .metrics .metric{position:relative;display:flex;align-items:center;flex:0 0 auto;gap:5px;width:auto;min-height:0;height:100%;margin-right:13px;padding:3px 13px 3px 0;border:0;border-radius:0;background:transparent;box-shadow:none}
 .metrics .metric:not(:last-child)::after{position:absolute;top:50%;right:0;transform:translate(50%,-50%);color:#9aa7b7;content:"·";font-size:14px}
@@ -1388,16 +1377,15 @@ body{background:#f4f7fb;color:#26354a}
 .view-table .workspace{flex:1 1 auto;min-height:0;box-shadow:0 3px 12px #172b4d0c}
 .view-table .detail{flex:0 0 0;min-height:0;height:0;max-height:0;padding-top:0;padding-bottom:0;border-width:0;opacity:0;transform:translateY(10px);pointer-events:none;box-shadow:none}
 @media(max-width:760px){html,body{height:auto;min-height:100%;overflow:auto}.shell{height:auto;min-height:100dvh;max-height:none;overflow:visible;padding:7px}.hero{flex:0 0 auto;min-height:82px;height:auto;flex-wrap:wrap}.hero h1{font-size:23px}.hero-actions{width:100%;justify-content:flex-end;gap:6px}.developer-selector select{min-width:130px}.metrics{flex:0 0 auto;height:34px;min-height:34px;overflow-x:auto}.metrics .metric{flex:0 0 auto;margin-right:10px;padding-right:10px}.metrics .metric-label{font-size:9px}.metrics .metric-value{font-size:13px}.workspace{flex:0 0 220px;height:220px;max-height:220px}.demand-table-head,.demand-row{min-width:900px}.detail{flex:0 0 215px;min-height:215px;height:215px}.view-table .workspace{flex:0 0 min(65vh,520px);height:min(65vh,520px)}.view-table .detail{flex:0 0 0;height:0}}
-@media(prefers-reduced-motion:reduce){.detail,.workspace,.view-mode-buttons button{transition:none!important}}
+@media(prefers-reduced-motion:reduce){.detail,.workspace{transition:none!important}}
 </style>
 <script id="dashboard-flow-enhancements">
 (()=>{
- const shell=document.querySelector(".shell"),workspace=document.querySelector(".workspace"),detail=document.querySelector("#demand-detail"),actions=document.querySelector(".hero-actions"),developer=document.querySelector(".developer-selector"),modes=document.querySelector(".view-mode-buttons"),list=document.querySelector("#demand-list");
+ const shell=document.querySelector(".shell"),workspace=document.querySelector(".workspace"),detail=document.querySelector("#demand-detail"),actions=document.querySelector(".hero-actions"),developer=document.querySelector(".developer-selector"),list=document.querySelector("#demand-list");
  const normalize=value=>String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLocaleLowerCase("pt-BR");
  const orderChildren=(parent,ordered)=>{if(!parent)return;const current=[...parent.children];if(current.length===ordered.length&&current.every((node,index)=>node===ordered[index]))return;ordered.forEach(node=>parent.append(node));};
  const arrange=()=>{
   if(shell&&workspace&&detail&&workspace.nextElementSibling!==detail)shell.insertBefore(workspace,detail);
-  if(actions&&developer&&modes&&actions.firstElementChild!==developer){actions.insertBefore(developer,modes);}
   if(!list)return;
   const head=list.querySelector(".demand-table-head");
   if(head){const labels=[...head.children],find=text=>labels.find(cell=>cell.textContent.trim()===text);const wanted=["Categoria","Tipo","Título","Motivo da correção","Ponto focal","Prioridade","Status","Tempo no status"].map(find).filter(Boolean);if(wanted.length===labels.length)orderChildren(head,wanted);}
@@ -1448,13 +1436,11 @@ body{background:#f4f7fb;color:#26354a}
 </style>
 <script id="dashboard-flow-last-step">
 (()=>{
- const flow=document.getElementById("view-flow-button"),table=document.getElementById("view-table-button"),list=document.getElementById("demand-list"),reduce=window.matchMedia("(prefers-reduced-motion: reduce)");
+ const list=document.getElementById("demand-list"),reduce=window.matchMedia("(prefers-reduced-motion: reduce)");
  let openedByRowClick=false;
  const scrollToLast=()=>requestAnimationFrame(()=>requestAnimationFrame(()=>{const timeline=document.querySelector("#demand-detail .timeline");if(!timeline||!timeline.clientWidth)return;timeline.scrollTo({left:Math.max(0,timeline.scrollWidth-timeline.clientWidth),behavior:reduce.matches?"auto":"smooth"});}));
- const setFlow=enabled=>{document.body.classList.toggle("view-flow",enabled);document.body.classList.toggle("view-table",!enabled);flow.setAttribute("aria-pressed",String(enabled));table.setAttribute("aria-pressed",String(!enabled));if(enabled)scrollToLast();};
- flow.addEventListener("click",()=>{openedByRowClick=false;scrollToLast();});
- table.addEventListener("click",()=>{openedByRowClick=false;});
- list.addEventListener("click",event=>{const row=event.target.closest(".demand-row");if(!row)return;const selected=row.getAttribute("aria-current")==="true";if(openedByRowClick&&selected){openedByRowClick=false;setFlow(false);}else if(document.body.classList.contains("view-table")){openedByRowClick=true;setFlow(true);}scrollToLast();},true);
+ const setFlow=enabled=>{document.body.classList.toggle("view-flow",enabled);document.body.classList.toggle("view-table",!enabled);if(enabled)scrollToLast();};
+ list.addEventListener("click",event=>{const row=event.target.closest(".demand-row");if(!row)return;const selected=row.getAttribute("aria-current")==="true";if(openedByRowClick&&selected){openedByRowClick=false;setFlow(false);}else{openedByRowClick=true;setFlow(true);}scrollToLast();},true);
 })();
 </script>
 <style id="dashboard-type-alignment">.view-flow .row-type { justify-self:center !important; }</style>
