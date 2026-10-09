@@ -1754,5 +1754,18 @@ html,body{height:100%;overflow:hidden;background:#f2f5f9;color:var(--ux-ink)}
   refresh();
 })();
 </script>
+<style id="dashboard-dynamic-flow">
+.view-flow #demand-detail{box-sizing:border-box;flex:0 0 clamp(180px,34dvh,320px)!important;height:clamp(180px,34dvh,320px)!important;min-height:0;max-height:none!important;overflow:hidden;padding:8px!important}
+.view-flow #demand-detail .detail-head{flex:0 0 auto;min-height:27px;margin:0 0 6px}
+.view-flow #demand-detail .timeline{box-sizing:border-box;flex:1 1 auto;width:100%;height:auto!important;min-height:0!important;max-height:none!important;align-items:stretch;gap:12px;overflow-x:auto!important;overflow-y:auto!important;padding:10px 14px 14px!important;scroll-behavior:smooth;scroll-snap-type:x proximity;scrollbar-color:#aebdca transparent;scrollbar-width:thin;overscroll-behavior:contain}
+.view-flow #demand-detail .timeline::-webkit-scrollbar{width:6px;height:6px}
+.view-flow #demand-detail .timeline::-webkit-scrollbar-thumb{border-radius:6px;background:#aebdca}
+.view-flow #demand-detail .timeline-item{box-sizing:border-box;flex:0 0 196px;width:196px;height:auto!important;min-height:100%;align-items:center;justify-content:center;margin:0;padding:0 2px!important}
+.view-flow #demand-detail .timeline-item .timeline-card{position:relative;top:auto;right:auto;bottom:auto;left:auto;display:flex;flex:0 0 auto;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:6px;box-sizing:border-box;width:100%;min-width:0;height:auto!important;min-height:104px;max-height:none!important;margin:0!important;padding:9px 11px!important;overflow:visible!important;transform:none!important;border-radius:8px;text-align:left;white-space:normal}
+.view-flow #demand-detail .timeline-item:nth-of-type(odd) .timeline-card,.view-flow #demand-detail .timeline-item:nth-of-type(even) .timeline-card{align-self:center;transform:none!important}
+.view-flow #demand-detail .timeline-action,.view-flow #demand-detail .timeline-date,.view-flow #demand-detail .timeline-state{max-height:none!important;overflow:visible!important;text-overflow:clip;white-space:normal;overflow-wrap:anywhere;line-height:1.35}
+@media(max-width:760px){.view-flow #demand-detail{flex-basis:clamp(240px,42dvh,360px)!important;height:clamp(240px,42dvh,360px)!important;padding:8px!important}.view-flow #demand-detail .timeline{gap:10px;padding:10px!important}.view-flow #demand-detail .timeline-item{flex-basis:184px;width:184px}}
+@media(prefers-reduced-motion:reduce){.view-flow #demand-detail .timeline{scroll-behavior:auto}}
+</style>
 </body>
 </html>
