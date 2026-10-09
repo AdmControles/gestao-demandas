@@ -1657,32 +1657,36 @@ html,body{height:100%;overflow:hidden;background:#f2f5f9;color:var(--ux-ink)}
 
   const headers = ["Categoria", "Tipo", "Título", "Motivo da correção", "Ponto focal", "Prioridade", "Status", "Tempo no status"];
   const cellClasses = ["row-category", "row-type", "row-demand", "row-reason", "row-owner", "row-priority", "row-status", "row-duration"];
+  const valueSelectors = [".row-category", ".row-type", ".row-title", ".row-reason", ".row-owner", ".row-priority", ".row-status", ".row-duration"];
   const collator = new Intl.Collator("pt-BR", { numeric: true, sensitivity: "base" });
   let activeColumn = 5;
   let direction = 1;
-  let sorting = false;
   let scheduled = false;
   const getRows = () => [...list.querySelectorAll(".demand-row")];
-  const getValue = (row, index) => row.querySelector("." + cellClasses[index])?.textContent.trim() || "";
-  const priority = value => {
-    const match = value.match(/^Ps*(d+)$/i);
-    return match ? Number(match[1]) : null;
-  };
-  const compareValues = (left, right) => {
-    if (activeColumn === 5) {
-      const a = priority(left);
-      const b = priority(right);
-      if (a !== null && b !== null) return (a - b) * direction;
-      if (a !== null) return -1;
-      if (b !== null) return 1;
+  const getValue = (row, index) => row.querySelector(valueSelectors[index])?.textContent.trim() || "";
+  const compareValues = (left, right, index) => {
+    if (index === 5) {
+      const a = left.match(/^P?\s*(\d+)$/i);
+      const b = right.match(/^P?\s*(\d+)$/i);
+      const aNumber = a ? Number(a[1]) : null;
+      const bNumber = b ? Number(b[1]) : null;
+      if (aNumber !== null && bNumber !== null) return (aNumber - bNumber) * direction;
+      if (aNumber !== null) return -1;
+      if (bNumber !== null) return 1;
     }
     return collator.compare(left, right) * direction;
   };
   const updateHeader = () => {
     const head = list.querySelector(".demand-table-head");
-    
-    
-    [...head.children].forEach((cell, index) => {
+    if (!head) return;
+    if (head.dataset.dashboardColumnsNormalized !== "true") {
+      const cellsByLabel = new Map([...head.children].map(cell => [cell.textContent.trim(), cell]));
+      const orderedCells = headers.map(label => cellsByLabel.get(label));
+      if (orderedCells.every(Boolean) && orderedCells.some((cell, index) => cell !== head.children[index])) head.append(...orderedCells);
+      head.dataset.dashboardColumnsNormalized = "true";
+    }
+    head.removeAttribute("aria-hidden");
+    [...head.children].slice(0, headers.length).forEach((cell, index) => {
       const label = headers[index];
       const textNode = [...cell.childNodes].find(node => node.nodeType === Node.TEXT_NODE);
       if (textNode) textNode.data = label;
@@ -1697,26 +1701,23 @@ html,body{height:100%;overflow:hidden;background:#f2f5f9;color:var(--ux-ink)}
     for (const row of getRows()) {
       const reason = row.querySelector(".row-reason");
       if (reason) {
-        const description = reason.textContent.trim().replace(/^s*d+s*.s*/, "");
+        const description = reason.textContent.trim().replace(/^\s*\d+\s*\.\s*/, "");
         if (description !== reason.textContent.trim()) reason.textContent = description || "—";
         reason.title = reason.textContent;
       }
       const desired = cellClasses.map(className => [...row.children].find(cell => cell.classList.contains(className))).filter(Boolean);
       if (desired.length === cellClasses.length && desired.some((cell, index) => cell !== row.children[index])) row.append(...desired);
-      const cells = Object.fromEntries(cellClasses.map(className => [className, row.querySelector("." + className)?.textContent.trim() || ""]));
-      row.setAttribute("aria-label", cells["row-demand"] + ". Categoria " + cells["row-category"] + ". Tipo " + cells["row-type"] + ". Motivo " + cells["row-reason"] + ". Ponto focal " + cells["row-owner"] + ". Prioridade " + cells["row-priority"] + ". Status " + cells["row-status"] + ". Tempo no status " + cells["row-duration"] + ".");
+      const title = row.querySelector(".row-title")?.textContent.trim() || "";
+      const values = cellClasses.map(className => row.querySelector("." + className)?.textContent.trim() || "");
+      row.setAttribute("aria-label", title + ". Categoria " + values[0] + ". Tipo " + values[1] + ". Motivo " + values[3] + ". Ponto focal " + values[4] + ". Prioridade " + values[5] + ". Status " + values[6] + ". Tempo no status " + values[7] + ".");
     }
   };
   const sortRows = () => {
-    if (sorting) return;
     const current = getRows();
     const ordered = current.map((row, index) => ({ row, index, value: getValue(row, activeColumn) }))
-      .sort((a, b) => compareValues(a.value, b.value) || a.index - b.index)
+      .sort((a, b) => compareValues(a.value, b.value, activeColumn) || a.index - b.index)
       .map(item => item.row);
-    if (ordered.every((row, index) => row === current[index])) return;
-    sorting = true;
-    ordered.forEach(row => list.append(row));
-    sorting = false;
+    if (!ordered.every((row, index) => row === current[index])) ordered.forEach(row => list.append(row));
   };
   const refresh = () => {
     scheduled = false;
@@ -1734,17 +1735,20 @@ html,body{height:100%;overflow:hidden;background:#f2f5f9;color:var(--ux-ink)}
     if (!cell || !list.contains(cell) || event.target.closest(".column-resizer")) return;
     const index = [...cell.parentElement.children].indexOf(cell);
     if (index < 0 || index >= headers.length) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
     if (index === activeColumn) direction *= -1;
     else { activeColumn = index; direction = 1; }
     updateHeader();
     sortRows();
-  });
+  }, true);
   list.addEventListener("keydown", event => {
     const cell = event.target.closest(".demand-table-head > span");
     if (!cell || (event.key !== "Enter" && event.key !== " ")) return;
     event.preventDefault();
+    event.stopImmediatePropagation();
     cell.click();
-  });
+  }, true);
   const observer = new MutationObserver(scheduleRefresh);
   observer.observe(list, { childList: true, subtree: true, characterData: true });
   refresh();
