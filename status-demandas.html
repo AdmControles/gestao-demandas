@@ -1866,5 +1866,9 @@ body.view-flow #demand-detail.flow-closing{animation:flow-drop .24s ease-in both
 #preview-filter-panel.filters{right:0;left:auto}
 @media(max-width:760px){.hero{justify-content:space-between}.hero h1{font-size:20px}.hero-actions{order:1;flex:0 0 auto;flex-direction:row;align-items:center;margin:0 0 0 auto}#preview-filter-panel.filters{right:0;left:auto;width:min(350px,calc(100vw - 24px))}}
 </style>
+<style id="dashboard-status-color-refinement">
+.demand-row > .row-status[data-tone="validation"]{color:#27814f!important}
+.demand-row > .row-status[data-tone="blocked"]{color:#b43f3b!important}
+</style>
 </body>
 </html>
