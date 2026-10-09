@@ -1857,5 +1857,14 @@ body.view-flow #demand-detail.flow-closing{animation:flow-drop .24s ease-in both
 .hero-actions{position:relative;z-index:110;order:-1;display:flex;flex:0 0 auto;flex-direction:row;align-items:center;justify-content:flex-start;width:auto;min-width:0;margin-right:2px}
 @media(max-width:760px){.hero-actions{order:-1;flex:0 0 auto;flex-direction:row;margin:0;align-self:center}}
 </style>
+<style id="dashboard-specifor-header-refinement">
+.hero{justify-content:space-between;gap:14px}
+.hero .eyebrow{display:none}
+.hero h1{margin:0;color:#3e6078;font-size:27px;font-weight:500;letter-spacing:-.04em;line-height:1.15}
+.hero h1::before{display:none;content:none}
+.hero-actions{order:1;flex:0 0 auto;flex-direction:row;align-items:center;justify-content:flex-end;width:auto;min-width:0;margin:0 0 0 auto}
+#preview-filter-panel.filters{right:0;left:auto}
+@media(max-width:760px){.hero{justify-content:space-between}.hero h1{font-size:20px}.hero-actions{order:1;flex:0 0 auto;flex-direction:row;align-items:center;margin:0 0 0 auto}#preview-filter-panel.filters{right:0;left:auto;width:min(350px,calc(100vw - 24px))}}
+</style>
 </body>
 </html>
