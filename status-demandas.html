@@ -740,7 +740,6 @@ body { overflow-x:hidden; } .shell { max-width:1600px; min-height:100vh; padding
                         id, title, category, type, logs,
                         owner: fieldValue("pontofocal", "responsavel"),
                         priority: fieldValue("prioridade"),
-                        forms: normalize(fieldValue("temforms")) === "sim" ? "Sim" : "Não",
                         status: logs[0]?.status || "Sem movimentação registrada",
                         updatedAt: logs.find((log) => log.date)?.date || null
                     };
@@ -799,7 +798,6 @@ body { overflow-x:hidden; } .shell { max-width:1600px; min-height:100vh; padding
                         title: String(item.title).trim(),
                         category: String(item.category || "").trim(),
                         type: String(item.type || activityValue("tipo") || "").trim(),
-                        forms: normalize(activityValue("temforms")) === "sim" ? "Sim" : "Não",
                         reason: String(item.reason || activityValue("motivo") || logValue("motivo") || activityValue("observacoes") || logValue("observacoes") || activityValue("detalhes") || logValue("detalhes")).trim(),
                         owner: String(item.owner || activityValue("pontofocal", "responsavel") || logValue("pontofocal", "responsavel")).trim(),
                         priority: String(item.priority || activityValue("prioridade") || logValue("prioridade")).trim(),
@@ -897,7 +895,7 @@ body { overflow-x:hidden; } .shell { max-width:1600px; min-height:100vh; padding
                 const type = typeFilter.value;
                 const status = statusFilter.value;
                 return demands.filter((demand) => {
-                    const searchable = normalize(`${demand.title} ${demand.category} ${demand.type} ${demand.reason} ${demand.status} ${demand.owner} ${demand.priority} ${demand.forms} ${demand.developerName || ""}`);
+                    const searchable = normalize(`${demand.title} ${demand.category} ${demand.type} ${demand.reason} ${demand.status} ${demand.owner} ${demand.priority} ${demand.developerName || ""}`);
                     return (!query || searchable.includes(query)) &&
                     (!category || demand.category === category) &&
                     (!type || demand.type === type) &&
@@ -915,7 +913,7 @@ body { overflow-x:hidden; } .shell { max-width:1600px; min-height:100vh; padding
                 const tableHead = document.createElement("div");
                 tableHead.className = "demand-table-head";
                 tableHead.setAttribute("aria-hidden", "true");
-                for (const label of ["Categoria", "Tipo", "Título", "Ponto focal", "Prioridade", "Status", "Motivo da correção", "Tempo no status", "Tem Forms?"]) {
+                for (const label of ["Categoria", "Tipo", "Título", "Ponto focal", "Prioridade", "Status", "Motivo da correção", "Tempo no status"]) {
                     const cell = document.createElement("span");
                     cell.textContent = label;
                     tableHead.append(cell);
@@ -983,12 +981,8 @@ body { overflow-x:hidden; } .shell { max-width:1600px; min-height:100vh; padding
                         statusDuration.textContent = formatElapsed(Date.now() - statusSince.getTime());
                     } else statusDuration.textContent = "Indisponível";
                     statusDuration.title = statusSince ? "No status desde " + new Intl.DateTimeFormat("pt-BR", { dateStyle: "short", timeStyle: "short" }).format(statusSince) : "Data de início do status não informada";
-                    const forms = document.createElement("span");
-                    forms.className = "row-forms";
-                    forms.textContent = demand.forms || "Não";
-                    forms.dataset.tone = normalize(forms.textContent) === "sim" ? "yes" : "no";
-                    row.setAttribute("aria-label", demand.title + ". Categoria " + (demand.category || "não informada") + ". Tipo " + (demand.type || "não informado") + ". Motivo " + reason.textContent + ". Ponto focal " + (demand.owner || "não informado") + ". Status " + demand.status + ". Tempo no status " + statusDuration.textContent + ". Tem Forms? " + forms.textContent + ".");
-                    row.append(category, type, name, owner, priority, status, reason, statusDuration, forms);
+                    row.setAttribute("aria-label", demand.title + ". Categoria " + (demand.category || "não informada") + ". Tipo " + (demand.type || "não informado") + ". Motivo " + reason.textContent + ". Ponto focal " + (demand.owner || "não informado") + ". Status " + demand.status + ". Tempo no status " + statusDuration.textContent + ".");
+                    row.append(category, type, name, owner, priority, status, reason, statusDuration);
                     row.addEventListener("click", () => {
                         selectedId = demand.id;
                         renderList();
@@ -1272,7 +1266,7 @@ body { overflow-x:hidden; } .shell { max-width:1600px; min-height:100vh; padding
                 renderList();
             }
 
-                        const closeTableActionsMenu = () => {                 tableActionsMenu.hidden = true;                 tableActionsToggle.setAttribute("aria-expanded", "false");             };             tableActionsToggle.addEventListener("click", () => {                 const isOpen = !tableActionsMenu.hidden;                 tableActionsMenu.hidden = isOpen;                 tableActionsToggle.setAttribute("aria-expanded", String(!isOpen));             });             document.addEventListener("click", (event) => {                 if (!event.target.closest(".table-actions")) closeTableActionsMenu();             });             document.addEventListener("keydown", (event) => {                 if (event.key === "Escape") closeTableActionsMenu();             });             printTableButton.addEventListener("click", () => {                 closeTableActionsMenu();                 const items = visibleDemands();                 printMeta.textContent = currentDeveloper                     ? currentDeveloper.name + " · " + dataMeta.textContent + " · " + items.length + " demanda(s)"                     : "Dados do painel";                 window.print();             });             exportTableButton.addEventListener("click", () => {                 closeTableActionsMenu();                 if (!currentDeveloper) {                     showMessage("Selecione um desenvolvedor para exportar as demandas.", "error");                     return;                 }                 const priorityNumber = (priority) => {                     const value = String(priority || "").trim().toUpperCase().replace("P", "");                     return value && Number.isFinite(Number(value)) ? Number(value) : Number.POSITIVE_INFINITY;                 };                 const items = visibleDemands().sort((a, b) => {                     const priorityDifference = priorityNumber(a.priority) - priorityNumber(b.priority);                     if (priorityDifference) return priorityDifference;                     if (!a.priority && b.priority) return 1;                     if (a.priority && !b.priority) return -1;                     if (a.priority && b.priority && a.priority !== b.priority) return a.priority.localeCompare(b.priority, "pt-BR");                     return (b.updatedAt?.getTime() || 0) - (a.updatedAt?.getTime() || 0);                 });                 const headers = ["Categoria", "Tipo", "Título", "Ponto focal", "Prioridade", "Status", "Motivo da correção", "Tempo no status", "Tem Forms?"];                 const csvCell = (value) => {                     let text = String(value ?? "");                     if (["=", "+", "-", "@"].some((prefix) => text.trimStart().startsWith(prefix))) text = "'" + text;                     const quote = String.fromCharCode(34);                     return quote + text.split(quote).join(quote + quote) + quote;                 };                 const rows = items.map((demand) => [
+                        const closeTableActionsMenu = () => {                 tableActionsMenu.hidden = true;                 tableActionsToggle.setAttribute("aria-expanded", "false");             };             tableActionsToggle.addEventListener("click", () => {                 const isOpen = !tableActionsMenu.hidden;                 tableActionsMenu.hidden = isOpen;                 tableActionsToggle.setAttribute("aria-expanded", String(!isOpen));             });             document.addEventListener("click", (event) => {                 if (!event.target.closest(".table-actions")) closeTableActionsMenu();             });             document.addEventListener("keydown", (event) => {                 if (event.key === "Escape") closeTableActionsMenu();             });             printTableButton.addEventListener("click", () => {                 closeTableActionsMenu();                 const items = visibleDemands();                 printMeta.textContent = currentDeveloper                     ? currentDeveloper.name + " · " + dataMeta.textContent + " · " + items.length + " demanda(s)"                     : "Dados do painel";                 window.print();             });             exportTableButton.addEventListener("click", () => {                 closeTableActionsMenu();                 if (!currentDeveloper) {                     showMessage("Selecione um desenvolvedor para exportar as demandas.", "error");                     return;                 }                 const priorityNumber = (priority) => {                     const value = String(priority || "").trim().toUpperCase().replace("P", "");                     return value && Number.isFinite(Number(value)) ? Number(value) : Number.POSITIVE_INFINITY;                 };                 const items = visibleDemands().sort((a, b) => {                     const priorityDifference = priorityNumber(a.priority) - priorityNumber(b.priority);                     if (priorityDifference) return priorityDifference;                     if (!a.priority && b.priority) return 1;                     if (a.priority && !b.priority) return -1;                     if (a.priority && b.priority && a.priority !== b.priority) return a.priority.localeCompare(b.priority, "pt-BR");                     return (b.updatedAt?.getTime() || 0) - (a.updatedAt?.getTime() || 0);                 });                 const headers = ["Categoria", "Tipo", "Título", "Ponto focal", "Prioridade", "Status", "Motivo da correção", "Tempo no status"];                 const csvCell = (value) => {                     let text = String(value ?? "");                     if (["=", "+", "-", "@"].some((prefix) => text.trimStart().startsWith(prefix))) text = "'" + text;                     const quote = String.fromCharCode(34);                     return quote + text.split(quote).join(quote + quote) + quote;                 };                 const rows = items.map((demand) => [
                     demand.category || "Sem categoria",
                     demand.type || "—",
                     demand.title,
@@ -1281,7 +1275,6 @@ body { overflow-x:hidden; } .shell { max-width:1600px; min-height:100vh; padding
                     demand.status,
                     normalize(demand.type).includes("correc") ? (demand.reason || "Não informado") : "—",
                     (() => { const since = demand.logs?.find((log) => normalize(log.status) === normalize(demand.status) && log.date)?.date; return since ? formatElapsed(Date.now() - since.getTime()) : "Indisponível"; })(),
-                    demand.forms || "Não"
                 ]);                 const newline = String.fromCharCode(13, 10);                 const csv = String.fromCharCode(65279) + "sep=;" + newline + [headers, ...rows].map((row) => row.map(csvCell).join(";")).join(newline);                 const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });                 const url = URL.createObjectURL(blob);                 const link = document.createElement("a");                 link.href = url;                 link.download = "demandas-" + currentDeveloper.id + "-" + new Date().toISOString().slice(0, 10) + ".csv";                 document.body.append(link);                 link.click();                 link.remove();                 setTimeout(() => URL.revokeObjectURL(url), 1000);             });
             for (const card of document.querySelectorAll(".metric-clickable")) { card.addEventListener("click", () => { const filter = card.dataset.metricFilter; activeMetricFilter = filter === "all" || activeMetricFilter === filter ? null : filter; statusFilter.value = ""; for (const metric of document.querySelectorAll(".metric-clickable")) metric.setAttribute("aria-pressed", String(activeMetricFilter === metric.dataset.metricFilter)); updateFilteredList(); }); card.addEventListener("keydown", (event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); card.click(); } }); }             accessDeveloper.addEventListener("change", () => {
                 accessKey.value = "";
@@ -1385,8 +1378,8 @@ body{background:#f4f7fb;color:#26354a}
   if(shell&&workspace&&detail&&workspace.nextElementSibling!==detail)shell.insertBefore(workspace,detail);
   if(!list)return;
   const head=list.querySelector(".demand-table-head");
-  if(head){const labels=[...head.children],find=text=>labels.find(cell=>cell.textContent.trim()===text);const wanted=["Categoria","Tipo","Título","Motivo da correção","Ponto focal","Prioridade","Status","Tempo no status","Tem Forms?"].map(find).filter(Boolean);if(wanted.length===labels.length)orderChildren(head,wanted);}
-  for(const row of list.querySelectorAll(".demand-row")){const cells=[...row.children],byClass=name=>cells.find(cell=>cell.classList.contains(name));const wanted=["row-category","row-type","row-demand","row-reason","row-owner","row-priority","row-status","row-duration","row-forms"].map(byClass).filter(Boolean);if(wanted.length===cells.length)orderChildren(row,wanted);const type=row.querySelector(".row-type");if(type)type.classList.toggle("is-correction",normalize(type.textContent).includes("corre"));}
+  if(head){const labels=[...head.children],find=text=>labels.find(cell=>cell.textContent.trim()===text);const wanted=["Categoria","Tipo","Título","Motivo da correção","Ponto focal","Prioridade","Status","Tempo no status"].map(find).filter(Boolean);if(wanted.length===labels.length)orderChildren(head,wanted);}
+  for(const row of list.querySelectorAll(".demand-row")){const cells=[...row.children],byClass=name=>cells.find(cell=>cell.classList.contains(name));const wanted=["row-category","row-type","row-demand","row-reason","row-owner","row-priority","row-status","row-duration"].map(byClass).filter(Boolean);if(wanted.length===cells.length)orderChildren(row,wanted);const type=row.querySelector(".row-type");if(type)type.classList.toggle("is-correction",normalize(type.textContent).includes("corre"));}
  };
  const decorate=()=>{
   if(!detail)return;
@@ -1485,7 +1478,7 @@ html,body{height:100%;overflow:hidden;background:#f5f7fa;color:var(--ux-ink)}
 .workspace .content{display:flex;flex:1 1 0;min-height:0;overflow:hidden}
 .demand-list{position:relative;box-sizing:border-box;flex:1 1 0;width:100%;min-width:0;min-height:0;height:auto;max-height:none;padding:0 14px 12px;overflow:auto;scrollbar-color:#cbd5e1 transparent;scrollbar-width:thin}
 .list-summary{padding:11px 2px 9px;color:#8490a1;font-size:10px}
-.demand-table-head,.demand-row{box-sizing:border-box;display:grid;grid-template-columns:var(--dashboard-column-widths,minmax(82px,.82fr) minmax(76px,.7fr) minmax(150px,1.5fr) minmax(92px,.9fr) minmax(82px,.8fr) minmax(48px,.46fr) minmax(105px,.94fr) minmax(112px,1fr) minmax(60px,.55fr))!important;align-items:center;gap:8px;width:100%;min-width:0;padding-right:8px;padding-left:8px}
+.demand-table-head,.demand-row{box-sizing:border-box;display:grid;grid-template-columns:var(--dashboard-column-widths,minmax(82px,.82fr) minmax(76px,.7fr) minmax(150px,1.5fr) minmax(92px,.9fr) minmax(82px,.8fr) minmax(48px,.46fr) minmax(105px,.94fr) minmax(112px,1fr))!important;align-items:center;gap:8px;width:100%;min-width:0;padding-right:8px;padding-left:8px}
 .demand-table-head{position:sticky;top:0;z-index:2;min-height:31px;padding-top:5px;padding-bottom:5px;border-bottom:1px solid #e9edf2;background:#f8fafc;color:#7a8798;font-size:10px;font-weight:650}
 .demand-table-head>span{position:relative;overflow:visible;text-align:center!important}
 .demand-row{min-height:37px;height:auto;margin:0;padding-top:4px;padding-bottom:4px;border:0;border-bottom:1px solid #f0f2f5;border-radius:0;background:#fff;color:var(--ux-ink);font-size:11px;line-height:1.35;text-align:left;transition:background .16s ease}
@@ -1515,8 +1508,8 @@ body.is-resizing-columns,body.is-resizing-columns *{cursor:col-resize!important;
 <script id="dashboard-column-resizing">
 (()=>{
  const list=document.getElementById("demand-list");if(!list)return;
- const columns=["Categoria","Tipo","Título","Motivo da correção","Ponto focal","Prioridade","Status","Tempo no status","Tem Forms?"];
- const minimumByColumn={"Categoria":82,"Tipo":76,"Título":128,"Motivo da correção":82,"Ponto focal":76,"Prioridade":46,"Status":96,"Tempo no status":100,"Tem Forms?":60};
+ const columns=["Categoria","Tipo","Título","Motivo da correção","Ponto focal","Prioridade","Status","Tempo no status"];
+ const minimumByColumn={"Categoria":82,"Tipo":76,"Título":128,"Motivo da correção":82,"Ponto focal":76,"Prioridade":46,"Status":96,"Tempo no status":100};
  let widths=null,activeHead=null,headObserver=null;
  const currentLabels=head=>[...head.children].map(cell=>cell.textContent.replace(/\s+/g," ").trim());
  const applyWidths=()=>{if(widths)list.style.setProperty("--dashboard-column-widths",widths.map(width=>Math.round(width)+"px").join(" "));};
@@ -1577,7 +1570,7 @@ html,body{height:100%;overflow:hidden;background:#f2f5f9;color:var(--ux-ink)}
 .workspace .content{display:flex;flex:1 1 auto;flex-direction:column;min-height:0;overflow:hidden}
 .demand-list{position:relative;display:block;flex:1 1 auto;width:100%;min-width:0;min-height:0;height:auto;max-height:none;padding:0 7px 4px;overflow:hidden;scrollbar-width:thin}
 .list-summary{height:16px;padding:2px 2px 1px;color:#748292;font-size:9px;line-height:13px}
-.demand-table-head,.demand-row{box-sizing:border-box;display:grid;grid-template-columns:var(--dashboard-column-widths,minmax(82px,.82fr) minmax(76px,.7fr) minmax(150px,1.5fr) minmax(92px,.9fr) minmax(82px,.8fr) minmax(48px,.46fr) minmax(105px,.94fr) minmax(112px,1fr) minmax(60px,.55fr))!important;align-items:center;gap:5px;width:100%;min-width:0;padding-right:6px;padding-left:6px}
+.demand-table-head,.demand-row{box-sizing:border-box;display:grid;grid-template-columns:var(--dashboard-column-widths,minmax(82px,.82fr) minmax(76px,.7fr) minmax(150px,1.5fr) minmax(92px,.9fr) minmax(82px,.8fr) minmax(48px,.46fr) minmax(105px,.94fr) minmax(112px,1fr))!important;align-items:center;gap:5px;width:100%;min-width:0;padding-right:6px;padding-left:6px}
 .demand-table-head{position:sticky;top:0;z-index:2;min-height:22px;height:22px;padding-top:3px;padding-bottom:3px;border:1px solid #dce5eb;border-radius:3px;background:#f3f6f8;color:#425466;font-size:9px;font-weight:600;text-transform:none}
 .demand-table-head>span{position:relative;overflow:visible;text-align:center;cursor:pointer}
 .demand-table-head>span:focus-visible{outline:2px solid #8fb8cd;outline-offset:1px}
@@ -1596,9 +1589,6 @@ html,body{height:100%;overflow:hidden;background:#f2f5f9;color:var(--ux-ink)}
 .demand-row>.row-status[data-tone=progress]{color:#27814f}
 .demand-row>.row-status[data-tone=blocked]{color:#b43f3b}
 .demand-row>.row-duration{color:#17191b;font-size:9px;font-weight:400}
-.demand-row>.row-forms{justify-self:center;color:#b43f3b;font-size:10px;font-weight:600}
-.demand-row>.row-forms[data-tone="yes"]{color:#27814f}
-.demand-row>.row-forms[data-tone="no"]{color:#b43f3b}
 .column-resizer{right:-5px;width:10px}
 .timeline-empty{color:#738197}
 .view-table .workspace{flex:1 1 auto;min-height:0}
@@ -1665,9 +1655,9 @@ html,body{height:100%;overflow:hidden;background:#f2f5f9;color:var(--ux-ink)}
     if (event.key === "Escape") closeFilters();
   });
 
-  const headers = ["Categoria", "Tipo", "Título", "Motivo da correção", "Ponto focal", "Prioridade", "Status", "Tempo no status", "Tem Forms?"];
-  const cellClasses = ["row-category", "row-type", "row-demand", "row-reason", "row-owner", "row-priority", "row-status", "row-duration", "row-forms"];
-  const valueSelectors = [".row-category", ".row-type", ".row-title", ".row-reason", ".row-owner", ".row-priority", ".row-status", ".row-duration", ".row-forms"];
+  const headers = ["Categoria", "Tipo", "Título", "Motivo da correção", "Ponto focal", "Prioridade", "Status", "Tempo no status"];
+  const cellClasses = ["row-category", "row-type", "row-demand", "row-reason", "row-owner", "row-priority", "row-status", "row-duration"];
+  const valueSelectors = [".row-category", ".row-type", ".row-title", ".row-reason", ".row-owner", ".row-priority", ".row-status", ".row-duration"];
   const collator = new Intl.Collator("pt-BR", { numeric: true, sensitivity: "base" });
   let activeColumn = 5;
   let direction = 1;
@@ -1719,7 +1709,7 @@ html,body{height:100%;overflow:hidden;background:#f2f5f9;color:var(--ux-ink)}
       if (desired.length === cellClasses.length && desired.some((cell, index) => cell !== row.children[index])) row.append(...desired);
       const title = row.querySelector(".row-title")?.textContent.trim() || "";
       const values = cellClasses.map(className => row.querySelector("." + className)?.textContent.trim() || "");
-      row.setAttribute("aria-label", title + ". Categoria " + values[0] + ". Tipo " + values[1] + ". Motivo " + values[3] + ". Ponto focal " + values[4] + ". Prioridade " + values[5] + ". Status " + values[6] + ". Tempo no status " + values[7] + ". Tem Forms? " + values[8] + ".");
+      row.setAttribute("aria-label", title + ". Categoria " + values[0] + ". Tipo " + values[1] + ". Motivo " + values[3] + ". Ponto focal " + values[4] + ". Prioridade " + values[5] + ". Status " + values[6] + ". Tempo no status " + values[7] + ".");
     }
   };
   const sortRows = () => {
@@ -1884,10 +1874,6 @@ body.view-flow #demand-detail.flow-closing{animation:flow-drop .24s ease-in both
 <style id="demand-row-spacing-adjustment">
 @media (min-width: 761px){.demand-row{height:15px!important;min-height:15px!important;line-height:14px!important}}
 </style>
-<style id="demand-forms-column">
-.demand-row>.row-forms[data-tone="yes"]{color:#27814f!important}
-.demand-row>.row-forms[data-tone="no"]{color:#b43f3b!important}
-@media print{.demand-table-head,.demand-row{grid-template-columns:1.1fr .9fr 1.6fr 1fr .8fr .9fr 1fr 1.1fr .65fr!important;min-width:0!important}.demand-row>.row-forms{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
-</style>
+
 </body>
 </html>
