@@ -1427,7 +1427,7 @@ body{background:#f4f7fb;color:#26354a}
  const list=document.getElementById("demand-list"),reduce=window.matchMedia("(prefers-reduced-motion: reduce)");
  let openedByRowClick=false;
  const scrollToLast=()=>requestAnimationFrame(()=>requestAnimationFrame(()=>{const timeline=document.querySelector("#demand-detail .timeline");if(!timeline||!timeline.clientWidth)return;timeline.scrollTo({left:Math.max(0,timeline.scrollWidth-timeline.clientWidth),behavior:reduce.matches?"auto":"smooth"});}));
- const setFlow=enabled=>{document.body.classList.toggle("view-flow",enabled);document.body.classList.toggle("view-table",!enabled);if(enabled)scrollToLast();};
+ const setFlow=enabled=>{document.body.classList.toggle("view-flow",enabled);document.body.classList.toggle("view-table",!enabled);if(enabled)scrollToLast();};window.resetDemandFlowClickState=()=>{openedByRowClick=false;};
  list.addEventListener("click",event=>{const row=event.target.closest(".demand-row");if(!row)return;const selected=row.getAttribute("aria-current")==="true";if(openedByRowClick&&selected){openedByRowClick=false;setFlow(false);}else{openedByRowClick=true;setFlow(true);}scrollToLast();},true);
 })();
 </script>
@@ -1779,6 +1779,29 @@ html,body{height:100%;overflow:hidden;background:#f2f5f9;color:var(--ux-ink)}
 .view-flow #demand-detail .timeline-state{max-height:none!important;margin:0!important;overflow:visible!important;color:#24344b!important;font-size:9px;font-weight:400;line-height:1.35;text-overflow:clip;white-space:normal;overflow-wrap:anywhere}
 @media(max-width:760px){.view-flow #demand-detail{flex-basis:clamp(200px,34dvh,300px)!important;height:clamp(200px,34dvh,300px)!important;padding:7px!important}.view-flow #demand-detail .timeline{gap:8px;padding:21px 7px 7px!important}.view-flow #demand-detail .timeline-item{flex-basis:184px;width:184px}}
 @media(prefers-reduced-motion:reduce){.view-flow #demand-detail .timeline{scroll-behavior:auto}}
-</style>
-</body>
+
+/* Entrada do fluxo como uma segunda tela */
+.hero{flex:0 0 auto;min-height:68px;height:auto;padding:9px 16px;border:1px solid #dfe7ef;border-radius:12px;background:linear-gradient(112deg,#fff 0%,#fff 58%,#f2f7fb 100%);box-shadow:0 4px 14px rgba(31,52,70,.055)}
+.hero::before{inset:10px auto 10px 0;width:3px;border-radius:0 3px 3px 0;background:linear-gradient(180deg,#397fa3,#8bb7c9)}
+.hero::after{position:absolute;z-index:-1;top:-74px;right:112px;width:190px;height:190px;border-radius:50%;background:radial-gradient(circle,rgba(99,159,190,.10),transparent 68%);content:"";pointer-events:none}
+.hero-copy{gap:1px;padding-left:3px}
+.hero .eyebrow{margin:0;color:#628097;font-size:8px;font-weight:700;letter-spacing:.15em;line-height:1.3}
+.hero h1{gap:7px;margin:0;color:#1e354a;font-size:22px;font-weight:650;letter-spacing:-.04em;line-height:1.2}
+.hero h1::before{flex-basis:19px;width:19px;height:19px;border-radius:6px;background-color:#347a9e;background-image:linear-gradient(#fff,#fff),linear-gradient(#fff,#fff),linear-gradient(#fff,#fff);background-repeat:no-repeat;background-position:4px 10px,8px 7px,12px 4px;background-size:2px 4px,2px 7px,2px 10px}
+.hero .file-meta{display:inline-block;width:fit-content;max-width:min(70vw,640px);margin:2px 0 0;padding:2px 8px;border:1px solid #e7edf2;border-radius:999px;background:rgba(255,255,255,.78);color:#718092;font-size:9px;line-height:1.35;text-overflow:ellipsis}
+.hero-actions{position:relative;z-index:1}
+#demand-detail{z-index:202;box-sizing:border-box}
+body.view-flow::before{position:fixed;z-index:200;inset:0;background:rgba(20,35,53,.32);backdrop-filter:blur(3px);content:"";animation:flow-dim-in .42s ease both;pointer-events:auto}
+body.view-flow #demand-detail{position:fixed;z-index:201;inset:clamp(58px,9vh,86px) 18px 18px;display:flex!important;flex:0 0 auto!important;flex-direction:column;width:auto;height:auto!important;min-height:0;max-height:none!important;margin:0;padding:16px!important;overflow:hidden;border:1px solid #e0e7ed;border-radius:16px;background:linear-gradient(180deg,#fff 0%,#f8fafc 100%);box-shadow:0 24px 70px rgba(20,35,53,.24);opacity:1;transform:translateY(0);animation:flow-rise .58s cubic-bezier(.2,.75,.25,1) both;visibility:visible}
+body.view-flow #demand-detail::before{display:block;flex:0 0 auto;margin:0 0 10px;padding:1px 0 10px;border-bottom:1px solid #e8edf2;color:#253b51;content:"Fluxo da demanda";font-size:17px;font-weight:650;letter-spacing:-.025em;line-height:1.3}
+body.view-flow #demand-detail::after{display:block;flex:0 0 auto;padding-top:8px;color:#6d7e8f;content:"Histórico da demanda  ·  deslize para acompanhar todas as etapas";font-size:10px;line-height:1.4}
+body.view-flow #demand-detail .timeline{flex:1 1 auto;min-height:0!important;height:auto!important;max-height:none!important;padding-top:20px!important;padding-bottom:8px!important}
+body.view-flow #demand-detail .flow-close{position:absolute;z-index:5;top:12px;right:14px;display:inline-flex;align-items:center;justify-content:center;min-width:70px;height:30px;padding:0 12px;border:1px solid #dfe6ed;border-radius:7px;background:#fff;color:#45596b;font-size:11px;font-weight:600;transition:background-color .18s ease,border-color .18s ease,transform .18s ease}
+body.view-flow #demand-detail .flow-close:hover{transform:translateY(-1px);border-color:#c8d6e1;background:#f4f8fb}
+body.view-flow #demand-detail.flow-closing{animation:flow-drop .32s cubic-bezier(.55,.05,.8,.35) both}
+@keyframes flow-dim-in{from{opacity:0}to{opacity:1}}
+@keyframes flow-rise{from{opacity:0;transform:translateY(110vh)}to{opacity:1;transform:translateY(0)}}
+@keyframes flow-drop{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(110vh)}}
+@media(max-width:760px){.hero{min-height:64px;padding:7px 11px;border-radius:10px}.hero h1{font-size:18px}.hero .eyebrow{font-size:7px}.hero .file-meta{max-width:72vw;font-size:8px}body.view-flow #demand-detail{inset:auto 8px 8px;height:min(78dvh,680px)!important;max-height:calc(100dvh - 24px)!important;padding:12px!important;border-radius:14px}body.view-flow #demand-detail::before{font-size:15px}body.view-flow #demand-detail .flow-close{top:9px;right:10px}}
+@media(prefers-reduced-motion:reduce){body.view-flow::before{animation:none}body.view-flow #demand-detail{animation:none}body.view-flow #demand-detail.flow-closing{animation:none}body.v<script id="dashboard-flow-dismissal">(()=>{const detail=document.querySelector("#demand-detail");if(!detail)return;const close=document.createElement("button");close.type="button";close.className="flow-close";close.setAttribute("aria-label","Fechar fluxo");close.textContent="Fechar";detail.prepend(close);const setFlow=enabled=>{document.body.classList.toggle("view-flow",enabled);document.body.classList.toggle("view-table",!enabled);};window.closeDemandFlow=()=>{if(!document.body.classList.contains("view-flow"))return;window.resetDemandFlowClickState?.();detail.classList.add("flow-closing");setTimeout(()=>{detail.classList.remove("flow-closing");setFlow(false);},320);};close.addEventListener("click",window.closeDemandFlow);document.addEventListener("keydown",event=>{if(event.key==="Escape")window.closeDemandFlow();});document.addEventListener("click",event=>{if(event.target===document.body)window.closeDemandFlow();});})();</script>rget===document.body)window.closeDemandFlow();});})();</script></body>
 </html>
