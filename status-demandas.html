@@ -1852,5 +1852,10 @@ body.view-flow #demand-detail.flow-closing{animation:flow-drop .24s ease-in both
 @media(max-width:760px){.hero{flex:0 0 62px;min-height:62px;height:62px;gap:8px;padding:6px 9px}.hero-actions.filters-anchor{order:-1;flex:0 0 auto;margin:0;align-self:center}.hero h1{font-size:18px}.hero .eyebrow{font-size:7px}.hero .file-meta{font-size:8px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.metrics .metric{min-height:48px;height:48px;padding:6px 9px}.metrics .metric:nth-child(5){grid-column:1/-1}#preview-filter-panel.filters{left:0;right:auto;width:min(350px,calc(100vw - 24px))}}
 @media(prefers-reduced-motion:reduce){.metrics .metric,#preview-filter-toggle{transition:none!important}}
 </style>
+<style id="dashboard-specifor-filter-position">
+.hero{justify-content:flex-start;gap:12px}
+.hero-actions{position:relative;z-index:110;order:-1;display:flex;flex:0 0 auto;flex-direction:row;align-items:center;justify-content:flex-start;width:auto;min-width:0;margin-right:2px}
+@media(max-width:760px){.hero-actions{order:-1;flex:0 0 auto;flex-direction:row;margin:0;align-self:center}}
+</style>
 </body>
 </html>
